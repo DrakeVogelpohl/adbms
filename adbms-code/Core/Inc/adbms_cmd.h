@@ -2,8 +2,8 @@
 
 /* configuration registers commands */
 static uint16_t WRCFGA        = 0x0001;
-static uint16_t WRCFGB      = 0x0024;
-static uint16_t RDCFGA       = 0x0002;
+static uint16_t WRCFGB        = 0x0024;
+static uint16_t RDCFGA        = 0x0002;
 static uint16_t RDCFGB        = 0x0026;
 
 /* Read cell voltage result registers commands */

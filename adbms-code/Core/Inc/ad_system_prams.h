@@ -6,7 +6,7 @@
 
 #define NUM_CHIPS 10					/* Number of ICs 					*/
 #define NUM_VOLTAGES_CHIP 14			/* Number of Cells to read per IC 	*/
-#define NUM_TEMPS_CHIP 8
+#define NUM_TEMPS_CHIP 8				/* Number of Temps to read per IC 	*/
 
 #define OVERVOLTAGE 4.2					/* Overvoltage Threshold 	*/
 #define UNDERVOLTAGE 2.5				/* Undervoltage Threshold 	*/
@@ -28,6 +28,17 @@
 #define NUM_DATA_CAN_VOLTAGE_MSGS (NUM_CHIPS * NUM_VOLTAGES_CHIP) / NUM_DATA_CAN_VOLTAGES_PER_MSG
 #define NUM_DATA_CAN_TEMPS_PER_MSG 8    // will break if this is changed. Based on how data can and DBC are set up
 #define NUM_DATA_CAN_TEMP_MSGS (NUM_CHIPS * NUM_TEMPS_CHIP) / NUM_DATA_CAN_TEMPS_PER_MSG
+
+// BMS IC Parameters
+#define CELLS 	16														  /* Bms ic number of Cells                */
+#define CELL_REG_GRP 6
+#define AUX		12														  /* Bms ic number of Aux             	   */
+#define AUX_REG_GRP 4
+#define VOLTAGES_REG_GRP 3
+#define CMD_LEN  2                                                        /* Number of CMD Bytes                   */
+#define DATA_LEN 6                                                        /* Number of Data Bytes                  */
+#define PEC_LEN  2                                                        /* Number of PEC Bytes                   */
+#define DATABUF_LEN (CMD_LEN + PEC_LEN) + (DATA_LEN + PEC_LEN)*NUM_CHIPS  /* CMD Msg + PEC and (DATA + PEC) per IC */
 
 
 // ENUMERATES

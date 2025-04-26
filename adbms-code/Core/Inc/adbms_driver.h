@@ -4,29 +4,14 @@
 #include <string.h>
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
+#include "adbms_cmd.h"
 #include "ad_system_prams.h"
-
-// BMS IC Parameters
-#define CELL 16                     /* Number of cells             */
-#define AUX  12                     /* Number of Aux               */ /* includes VPV and VMV as described in the MM section of the datasheet */
-#define RAUX 10                     /* Number of RAux              */
-#define PWMA 12                     /* Number of PWMA              */
-#define PWMB 4                      /* Number of PWMB              */
-#define COMM 3                      /* GPIO communication comm reg */
-#define RSID 6                      /* Number of SID bytes         */
-
-#define CMD_LEN  2                                                        /* Number of CMD Bytes                   */
-#define DATA_LEN 6                                                        /* Number of Data Bytes                  */
-#define PEC_LEN  2                                                        /* Number of PEC Bytes                   */
-#define DATABUF_LEN (CMD_LEN + PEC_LEN) + (DATA_LEN + PEC_LEN)*NUM_CHIPS  /* CMD Msg + PEC and (DATA + PEC) per IC */
-#define REG_GROUPS 2                                                      /* Number of grous i.e. cell, aux, ect.  */
 
 // TODO: Change this value
 #define SPI_TIME_OUT HAL_MAX_DELAY  /* SPI Time out delay */
-
 typedef struct
 {
-    SPI_HandleTypeDef hspi;
+    SPI_HandleTypeDef *hspi;
 
     uint8_t spi_dataBuf[DATABUF_LEN];
 
@@ -34,24 +19,55 @@ typedef struct
     uint8_t cfg_a[NUM_CHIPS][DATA_LEN];
     uint8_t cfg_b[NUM_CHIPS][DATA_LEN];
 
-    // Cell Groups a-f
-    uint8_t cellg_a[NUM_CHIPS][DATA_LEN];
-    uint8_t cellg_b[NUM_CHIPS][DATA_LEN];
-    uint8_t cellg_c[NUM_CHIPS][DATA_LEN];
-    uint8_t cellg_d[NUM_CHIPS][DATA_LEN];
-    uint8_t cellg_e[NUM_CHIPS][DATA_LEN];
-    uint8_t cellg_f[NUM_CHIPS][DATA_LEN];
+    // TODO: Figure out a better way to handle these
+    uint16_t ADCV;
+    uint16_t ADSV;
+    uint16_t ADAX; 
+    uint16_t ADAX2; 
 
-    // Aux Groups a-d
-    uint8_t auxg_a[NUM_CHIPS][DATA_LEN];
-    uint8_t auxg_b[NUM_CHIPS][DATA_LEN];
-    uint8_t auxg_c[NUM_CHIPS][DATA_LEN];
-    uint8_t auxg_d[NUM_CHIPS][DATA_LEN];
+    uint8_t cell[CELL_REG_GRP][NUM_CHIPS][DATA_LEN];
+    uint8_t aux[AUX_REG_GRP][NUM_CHIPS][DATA_LEN];
 
 } adbms6830_ICs;
 
+typedef struct
+{
+  uint8_t       refon   :1;
+  uint8_t       cth     :3;
+  uint8_t       flag_d  :8;
+  uint8_t       soakon  :1;
+  uint8_t       owrng   :1;
+  uint8_t       owa     :3;
+  uint16_t      gpo     :10;
+  uint8_t       snap    :1;
+  uint8_t       mute_st :1;
+  uint8_t       comm_bk :1;
+  uint8_t       fc      :3;
+}cfa_;
+
+/* For ADBMS6830 config register structure */
+typedef struct
+{
+  uint16_t 	vuv     :12;
+  uint16_t 	vov     :12;
+  uint8_t 	dtmen   :1;
+  uint8_t 	dtrng   :1;
+  uint8_t 	dcto    :6;
+  uint16_t 	dcc     :16;
+}cfb_;
+
 uint16_t Pec15_Calc(uint8_t len, uint8_t *data);
 uint16_t Pec10_Calc(bool isRxCmd, int len, uint8_t *data);
+
+uint16_t Set_UnderOver_Voltage_Threshold(float voltage);
+
+void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t **cfg_a_tx_buffer);
+void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t **cfg_b_tx_buffer);
+
+void ADBMS_WakeUP_ICs(SPI_HandleTypeDef *hspi);
+void ADBMS_Write_CMD(SPI_HandleTypeDef *hspi, uint16_t tx_cmd);
+void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t **data, uint8_t *spi_dataBuf);
+bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t **data, uint8_t *spi_dataBuf);
 
 /* Precomputed CRC15 Table */
 const uint16_t Crc15Table[256] = 
