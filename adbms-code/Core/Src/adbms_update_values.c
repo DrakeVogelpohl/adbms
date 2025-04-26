@@ -29,7 +29,7 @@ void ADBMS_Initialize(adbms_ *adbms)
     adbms->ICs.ADAX = 0x810;  // Everything off
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.ADCV);
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.ADAX);
-    Delay_ms(1); // ADCs are updated at their conversion rate of 1ms
+    HAL_Delay(10); // ADCs are updated at their conversion rate of 1ms
 }
 
 void ADBMS_UpdateVoltages(adbms_ *adbms)

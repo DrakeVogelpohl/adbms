@@ -4,7 +4,7 @@
 // Note for NFR25 we precharged across the negative contactor. 
 // This might change in future years, if so change which contactors are closed accoringly in the FSM 
 
-#define NUM_CHIPS 10					/* Number of ICs 					*/
+#define NUM_CHIPS 1						/* Number of ICs 					*/
 #define NUM_VOLTAGES_CHIP 14			/* Number of Cells to read per IC 	*/
 #define NUM_TEMPS_CHIP 8				/* Number of Temps to read per IC 	*/
 
@@ -19,8 +19,8 @@
 #define CB_THRESHOLD 0.01				/* Threshold Away From Lowest Cell to Start Cell Balancing when CB is enabled */
 #define CB_MIN_V_THRESHOLD 3			/* Cells under this threshold will not be balanced even when CB is enabled */
 
-#define ENABLE_PRINTF_DEBUG_COMMS 0		/* Flag to enable Printf debug comms */
-#define ENABLE_USB_COMMS 1				/* Flag to enable USB comms */
+#define ENABLE_PRINTF_DEBUG_COMMS 1	/* Flag to enable Printf debug comms */
+#define ENABLE_USB_COMMS 0				/* Flag to enable USB comms */
 
 #define NUM_CURRENT_OFFSET_CYCLES 10	/* Numbeer of Cycles to get ADC Offset */
 

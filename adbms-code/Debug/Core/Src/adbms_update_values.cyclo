@@ -1,0 +1,9 @@
+../Core/Src/adbms_update_values.c:3:6:ADBMS_Initialize	2
+../Core/Src/adbms_update_values.c:35:6:ADBMS_UpdateVoltages	1
+../Core/Src/adbms_update_values.c:51:6:ADBMS_UpdateTemps	1
+../Core/Src/adbms_update_values.c:69:6:ADBMS_CalculateValues_Voltages	11
+../Core/Src/adbms_update_values.c:117:6:ADBMS_CalculateValues_Temps	16
+../Core/Src/adbms_update_values.c:177:6:UpdateADInternalFault	9
+../Core/Src/adbms_update_values.c:243:7:ADBMS_getVoltage	1
+../Core/Src/adbms_update_values.c:250:6:ADBMS_Print_Vals	5
+../Core/Src/adbms_update_values.c:294:6:ADBMS_USB_Serial_Print_Vals	5

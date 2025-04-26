@@ -1,0 +1,9 @@
+../Core/Src/adbms_driver.c:47:10:Pec15_Calc	2
+../Core/Src/adbms_driver.c:77:10:Pec10_Calc	7
+../Core/Src/adbms_driver.c:143:10:Set_UnderOver_Voltage_Threshold	1
+../Core/Src/adbms_driver.c:154:6:ADBMS_Set_Config_A	2
+../Core/Src/adbms_driver.c:167:6:ADBMS_Set_Config_B	2
+../Core/Src/adbms_driver.c:180:6:ADBMS_WakeUP_ICs	2
+../Core/Src/adbms_driver.c:193:6:ADBMS_Write_CMD	1
+../Core/Src/adbms_driver.c:212:6:ADBMS_Write_Data	3
+../Core/Src/adbms_driver.c:243:6:ADBMS_Read_Data	4
