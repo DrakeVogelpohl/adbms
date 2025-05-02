@@ -52,6 +52,7 @@ void UpdateADInternalFault(adbms_ *adbms);
 
 void ADBMS_UpdateVoltages(adbms_ *adbms);
 void ADBMS_UpdateTemps(adbms_ *adbms);
+void UpdateOWCFault(adbms_ *adbms);
 
 void ADBMS_CalculateValues_Voltages(adbms_ *adbms);
 void ADBMS_CalculateValues_Temps(adbms_ *adbms);
@@ -59,9 +60,7 @@ void ADBMS_CalculateValues_Temps(adbms_ *adbms);
 bool ADBMS_PEC_Check(adbms_ *adbms);
 
 void cellBalanceOn(adbms_ *adbms);
-void cellBalanceOff();
-
-float ADBMS_getVoltage();
+void cellBalanceOff(adbms_ *adbms);
 
 void ADBMS_Print_Vals(adbms_ *adbms);
 void ADBMS_USB_Serial_Print_Vals(adbms_ *adbms);

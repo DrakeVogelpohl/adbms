@@ -126,6 +126,8 @@ int main(void)
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
   printf("Board Starting...\n");
   ADBMS_Initialize(&adbms, &hspi1);
+
+  bool bms_fault;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -136,8 +138,20 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     ADBMS_UpdateVoltages(&adbms);
-	  ADBMS_UpdateTemps(&adbms);
+    ADBMS_UpdateTemps(&adbms);
+    UpdateOWCFault(&adbms);
 	  UpdateADInternalFault(&adbms);
+
+	  bms_fault = bms_fault
+                    || adbms.overvoltage_fault_
+                    || adbms.undervoltage_fault_
+                    || adbms.overtemperature_fault_
+                    || adbms.undertemperature_fault_
+                    || adbms.openwire_fault_
+                    || adbms.openwire_temp_fault_
+                    || adbms.pec_fault_;
+    // write BMS_Status - healthy is high
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, !bms_fault);
 
     if(ENABLE_PRINTF_DEBUG_COMMS) ADBMS_Print_Vals(&adbms);
     if(ENABLE_USB_COMMS) ADBMS_USB_Serial_Print_Vals(&adbms);

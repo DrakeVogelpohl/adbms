@@ -240,9 +240,9 @@ void UpdateOWCFault(adbms_ *adbms)
     /// OWC EVEN Check
     adbms->adsv.cont = 1;
     adbms->adsv.ow = 1; // Enable OW on even-channel 
-    ADBMS_Set_ADSV(adbms->adsv, adbms->ICs.adsv);
+    ADBMS_Set_ADSV(adbms->adsv, &adbms->ICs.adsv);
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
-    Delay_ms(8);    // S-Channels are updated at 8ms
+    HAL_Delay(8);    // S-Channels are updated at 8ms
 
     // Get new s-channel voltages
     bool pec = 0;
@@ -282,9 +282,9 @@ void UpdateOWCFault(adbms_ *adbms)
     /// OWC ODD Check
     adbms->adsv.cont = 1;
     adbms->adsv.ow = 2; // Enable OW on odd-channel 
-    ADBMS_Set_ADSV(adbms->adsv, adbms->ICs.adsv);
+    ADBMS_Set_ADSV(adbms->adsv, &adbms->ICs.adsv);
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
-    Delay_ms(8);    // S-Channels are updated at 8ms
+    HAL_Delay(8);    // S-Channels are updated at 8ms
 
     // Get new s-channel voltages
     ADBMS_WakeUP_ICs();
@@ -323,9 +323,9 @@ void UpdateOWCFault(adbms_ *adbms)
     /// Turn off owc
     adbms->adsv.cont = 0;
     adbms->adsv.ow = 0; // Enable OW on odd-channel 
-    ADBMS_Set_ADSV(adbms->adsv, adbms->ICs.adsv);
+    ADBMS_Set_ADSV(adbms->adsv, &adbms->ICs.adsv);
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
-    Delay_ms(1);    // S-Channels are updated at 8ms
+    HAL_Delay(1);    // S-Channels are updated at 8ms
 }
 
 void ADBMS_Print_Vals(adbms_ *adbms)
