@@ -33,6 +33,7 @@
 #define CELLS 	16														  /* Bms ic number of Cells                */
 #define CELL_REG_GRP 6
 #define AUX		12														  /* Bms ic number of Aux             	   */
+#define AUX_GPIO 10
 #define AUX_REG_GRP 4
 #define VOLTAGES_REG_GRP 3
 #define CMD_LEN  2                                                        /* Number of CMD Bytes                   */

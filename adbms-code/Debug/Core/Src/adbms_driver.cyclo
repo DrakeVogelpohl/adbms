@@ -7,4 +7,4 @@
 ../Core/Src/adbms_driver.c:191:6:ADBMS_Write_CMD	1
 ../Core/Src/adbms_driver.c:210:6:ADBMS_Write_Data	3
 ../Core/Src/adbms_driver.c:241:7:getVoltage	1
-../Core/Src/adbms_driver.c:248:6:ADBMS_Read_Data	4
+../Core/Src/adbms_driver.c:248:6:ADBMS_Read_Data	3

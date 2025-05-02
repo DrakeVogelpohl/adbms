@@ -145,15 +145,14 @@ void ADBMS_CalculateValues_Temps(adbms_ *adbms)
     bool openwire_temp_fault = false;
     for (int cic = 0; cic < NUM_CHIPS; cic++)
     {
-        uint8_t num_reg_grps = NUM_VOLTAGES_CHIP / VOLTAGES_REG_GRP + (NUM_VOLTAGES_CHIP % VOLTAGES_REG_GRP != 0);
-        for (uint8_t creg_grp = 0; creg_grp < num_reg_grps; creg_grp++)
+        for (uint8_t creg_grp = 0; creg_grp < AUX_REG_GRP; creg_grp++)
         {
             for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
             {
                 // skip because only want temps 2-10
-                if(creg_grp==0 && cbyte <= 2) continue;
+                if((creg_grp==0 && cbyte <= 2) || creg_grp*DATA_LEN/2 + cbyte/2 >= AUX_GPIO) continue;
 
-                int16_t raw_val = (((uint16_t)adbms->ICs.aux[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte]) << 8) | adbms->ICs.aux[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1];
+                int16_t raw_val = (((uint16_t)adbms->ICs.aux[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1]) << 8) | adbms->ICs.aux[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte];
                 float raw_temp_voltage = ADBMS_getVoltage(raw_val);
 
                 // get ref voltage from status reg - not getting status regs because takes too long
@@ -163,7 +162,7 @@ void ADBMS_CalculateValues_Temps(adbms_ *adbms)
                     openwire_temp_fault = true;
 
                 float curr_temp = getTemp(raw_temp_voltage, vref);
-                adbms->temperatures[cic*NUM_VOLTAGES_CHIP + creg_grp*DATA_LEN/2 + cbyte/2 - 2] = curr_temp;  // -2 because offset for skipped temps
+                adbms->temperatures[cic*NUM_TEMPS_CHIP + creg_grp*DATA_LEN/2 + cbyte/2 - 2] = curr_temp;  // -2 because offset for skipped temps
                 total_temp += curr_temp;
                 if (curr_temp > adbms->max_temp){
                     adbms->max_temp = curr_temp;

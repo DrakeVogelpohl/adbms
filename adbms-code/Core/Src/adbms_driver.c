@@ -238,13 +238,6 @@ void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, u
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
 
-float getVoltage(int data)
-{
-    float voltage_float; // voltage in Volts
-    voltage_float = ((data + 10000) * 0.000150);
-    return voltage_float;
-}
-
 bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf)
 {
     uint8_t spi_tx_dataBuf[4] = {0};

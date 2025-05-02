@@ -3,7 +3,7 @@
 ../Core/Src/adbms_update_values.c:56:6:ADBMS_UpdateTemps	24	static
 ../Core/Src/adbms_update_values.c:74:6:ADBMS_CalculateValues_Voltages	32	static
 ../Core/Src/adbms_update_values.c:123:6:ADBMS_CalculateValues_Temps	48	static
-../Core/Src/adbms_update_values.c:183:6:UpdateADInternalFault	16	static
-../Core/Src/adbms_update_values.c:249:7:ADBMS_getVoltage	24	static
-../Core/Src/adbms_update_values.c:256:6:ADBMS_Print_Vals	40	static
-../Core/Src/adbms_update_values.c:300:6:ADBMS_USB_Serial_Print_Vals	3560	static
+../Core/Src/adbms_update_values.c:182:6:UpdateADInternalFault	16	static
+../Core/Src/adbms_update_values.c:248:7:ADBMS_getVoltage	24	static
+../Core/Src/adbms_update_values.c:255:6:ADBMS_Print_Vals	40	static
+../Core/Src/adbms_update_values.c:299:6:ADBMS_USB_Serial_Print_Vals	3560	static
