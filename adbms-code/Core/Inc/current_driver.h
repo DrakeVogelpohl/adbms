@@ -1,5 +1,5 @@
 #include "stm32f4xx_hal.h"
-#include "ad_system_prams.h"
+#include "bms_system_prams.h"
 
 // Driver file for the current measuring. 
 // The board takes a refrence voltage generated accross a shunt resistor

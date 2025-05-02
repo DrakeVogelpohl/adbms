@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
-#include "ad_system_prams.h"
+#include "bms_system_prams.h"
 
 typedef void (*Callback)();
 

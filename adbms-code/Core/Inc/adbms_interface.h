@@ -2,7 +2,7 @@
 
 #include "adbms_driver.h"
 #include "thermistor_driver.h"
-#include "ad_system_prams.h"
+#include "bms_system_prams.h"
 #include <float.h>
 
 // Container that holds all the adbms values. 

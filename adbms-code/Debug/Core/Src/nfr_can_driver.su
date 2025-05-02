@@ -1,0 +1,4 @@
+../Core/Src/nfr_can_driver.c:4:6:populateRawMessage	40	static
+../Core/Src/nfr_can_driver.c:16:6:printBytes	24	static
+../Core/Src/nfr_can_driver.c:27:10:generateMask	32	static
+../Core/Src/nfr_can_driver.c:33:6:encodeSignals	108	static

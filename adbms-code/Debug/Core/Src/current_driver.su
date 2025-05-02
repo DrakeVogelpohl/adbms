@@ -1,0 +1,2 @@
+../Core/Src/current_driver.c:3:7:getCurrent	40	static
+../Core/Src/current_driver.c:34:7:getCurrentOffset	24	static

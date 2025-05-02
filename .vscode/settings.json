@@ -9,6 +9,7 @@
         "ad_system_prams.h": "c",
         "adbms_interface.h": "c",
         "virtual_timer.h": "c",
-        "current_driver.h": "c"
+        "current_driver.h": "c",
+        "bms_system_prams.h": "c"
     }
 }

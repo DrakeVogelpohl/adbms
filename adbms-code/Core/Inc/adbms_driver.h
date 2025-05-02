@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
 #include "adbms_cmd.h"
-#include "ad_system_prams.h"
+#include "bms_system_prams.h"
 
 // TODO: Change this value
 #define SPI_TIME_OUT HAL_MAX_DELAY  /* SPI Time out delay */
