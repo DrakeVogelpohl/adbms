@@ -41,6 +41,8 @@
 #define PEC_LEN  2                                                        /* Number of PEC Bytes                   */
 #define DATABUF_LEN (CMD_LEN + PEC_LEN) + (DATA_LEN + PEC_LEN)*NUM_CHIPS  /* CMD Msg + PEC and (DATA + PEC) per IC */
 
+#define NUM_TIMERS 4    // will break if this is changed. This will be replaced by RTOS
+#define NUM_CURRENT_OFFSET_CYCLES 10
 
 // ENUMERATES
 enum fsm_states
