@@ -58,10 +58,10 @@ void ADBMS_UpdateTemps(adbms_ *adbms)
     // get temps from ADBMS
     bool pec = 0;
     ADBMS_WakeUP_ICs(adbms->ICs.hspi);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXA, adbms->ICs.aux[0], adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXB, adbms->ICs.aux[1], adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXC, adbms->ICs.aux[2], adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXD, adbms->ICs.aux[3], adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXA, (adbms->ICs.aux + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXB, (adbms->ICs.aux + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXC, (adbms->ICs.aux + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXD, (adbms->ICs.aux + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
     adbms->temp_pec_failure = pec;
 
     // need to start new poll for conversion before next read (no continous mode)
@@ -100,10 +100,9 @@ void ADBMS_CalculateValues_Voltages(adbms_ *adbms)
         {
             for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
             {
-                printf("%d\n", NUM_CHIPS * DATA_LEN/2 * num_reg_grps);
+                if(creg_grp*DATA_LEN/2 + cbyte/2 >= NUM_VOLTAGES_CHIP) break;   // only read 14 when getting 15 -- TODO CHANGE COMMENT
                 int16_t raw_val = (((uint16_t)adbms->ICs.cell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1]) << 8) | adbms->ICs.cell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte];
                 float curr_voltage = ADBMS_getVoltage(raw_val);
-                printf("currV: %f", curr_voltage);
                 adbms->voltages[cic*NUM_VOLTAGES_CHIP + creg_grp*DATA_LEN/2 + cbyte/2] = curr_voltage;
 
                 adbms->total_v += curr_voltage;

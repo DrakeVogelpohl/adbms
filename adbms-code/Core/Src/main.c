@@ -136,8 +136,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     ADBMS_UpdateVoltages(&adbms);
-	  // ADBMS_UpdateTemps(&adbms);
-	  // UpdateADInternalFault(&adbms);
+	  ADBMS_UpdateTemps(&adbms);
+	  UpdateADInternalFault(&adbms);
 
     if(ENABLE_PRINTF_DEBUG_COMMS) ADBMS_Print_Vals(&adbms);
     if(ENABLE_USB_COMMS) ADBMS_USB_Serial_Print_Vals(&adbms);

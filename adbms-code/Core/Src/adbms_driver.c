@@ -199,11 +199,6 @@ void ADBMS_Write_CMD(SPI_HandleTypeDef *hspi, uint16_t tx_cmd)
     spi_dataBuf[3] = (uint8_t)(cmd_pec);
 
     // Blocking Transmit the cmd
-//    for(uint8_t i = 0; i < CMD_LEN + PEC_LEN; i++)
-//    {
-//    	printf("byte%d: 0x%02x\n", i, spi_dataBuf[i]);
-//    }
-
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
     if (HAL_SPI_Transmit(hspi, spi_dataBuf, CMD_LEN + PEC_LEN, SPI_TIME_OUT) != HAL_OK)
     {
@@ -235,12 +230,6 @@ void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, u
     }
 
     // Blocking Transmit the cmd and data
-
-//    for(uint8_t i = 0; i < DATABUF_LEN; i++)
-//    {
-//    	printf("byte%d: 0x%02x\n", i, spi_dataBuf[i]);
-//    }
-
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
     if (HAL_SPI_Transmit(hspi, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
     {
@@ -258,8 +247,6 @@ float getVoltage(int data)
 
 bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf)
 {
-//    uint8_t spi_tx_dataBuf[4] = {0x00, 0x04, 0x07, 0xc2};
-
     uint8_t spi_tx_dataBuf[4] = {0};
     spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
     spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
@@ -267,11 +254,6 @@ bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf,
     uint16_t cmd_pec = Pec15_Calc(2, spi_tx_dataBuf);
     spi_tx_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
     spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
-
-    //    for(uint8_t i = 0; i < 4; i++)
-    //    {
-    //    	printf("byte%d: 0x%02x\n", i, spi_tx_dataBuf[i]);
-    //    }
 
     // Blocking Transmit Receive the cmd and data
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
@@ -284,11 +266,6 @@ bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf,
     // Discard data received during transmit phase
     uint8_t *rx_dataBuf = spi_dataBuf + CMD_LEN + PEC_LEN;
 
-    for(uint8_t i = 0; i < DATABUF_LEN-4; i++)
-    {
-    	printf("byte%d: 0x%02x\n", i, rx_dataBuf[i]);
-    }
-
     // Move the incoming data from the spi data buffer to the correspoding data buffer array in memory
     bool pec_error = 0;
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
@@ -296,10 +273,6 @@ bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf,
         for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++)
         {
             dataBuf[cic * DATA_LEN + cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
-            if(cbyte % 2 == 1){
-                float v = getVoltage(((uint16_t)dataBuf[cic * DATA_LEN + cbyte]) << 8 | dataBuf[cic * DATA_LEN + cbyte - 1]);
-                printf("v%d: %f\n", cbyte/2, v);
-            }
         }
         uint16_t rx_pec = (uint16_t)(((rx_dataBuf[DATA_LEN + (DATA_LEN+PEC_LEN)*cic] & 0x03) << 8) | rx_dataBuf[DATA_LEN + 1 + (DATA_LEN+PEC_LEN)*cic]);
         uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * DATA_LEN));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
