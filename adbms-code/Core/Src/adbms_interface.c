@@ -189,12 +189,47 @@ void UpdateADInternalFault(adbms_ *adbms)
     // check overtemperature fault
     adbms->overtemperature_fault_ = adbms->overtemperature_fault_ || (adbms->max_temp > OVERTEMP);
 
-    // check under
+    // check undertemperature fault
     adbms->undertemperature_fault_ = adbms->undertemperature_fault_ || (adbms->min_temp < UNDERTEMP);
 
     // TODO: check status regs for faults - need calcuate status reg values fn that handles status reg pec fualts
 }
 
+void cellBalanceOn(adbms_ *adbms)
+{
+    // Turn on CB indication LED
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
+
+    for (int cic = 0; cic < NUM_CHIPS; cic++)
+    {
+        uint16_t dcc = 0;
+        for (int cvoltage = 0; cvoltage < NUM_VOLTAGES_CHIP; cvoltage++)
+        {
+            float curr_v = adbms->voltages[cic * NUM_VOLTAGES_CHIP + cvoltage];
+            if ((curr_v - adbms->min_v) > CB_THRESHOLD && curr_v > CB_MIN_V_THRESHOLD)
+            {
+                dcc |= 1 << cvoltage;
+            }
+        }
+        adbms->cfb[cic].dcc = dcc;
+        // adbms->cfb[cic].dcc = 0xF;   // for testing
+    }
+    ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
+    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
+}
+
+void cellBalanceOff(adbms_ *adbms)
+{
+    // Turn off CB indication LED
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+
+    for (int cic = 0; cic < NUM_CHIPS; cic++)
+    {
+        adbms->cfb[cic].dcc = 0;
+    }
+    ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
+    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
+}
 
 void UpdateOWCFault(adbms_ *adbms)
 {
@@ -202,6 +237,7 @@ void UpdateOWCFault(adbms_ *adbms)
     ADBMS_WakeUP_ICs();
     cellBalanceOff(adbms);   // need to turn off cell balancing to check for OWC
 
+    /// OWC EVEN Check
     adbms->adsv.cont = 1;
     adbms->adsv.ow = 1; // Enable OW on even-channel 
     ADBMS_Set_ADSV(adbms->adsv, adbms->ICs.adsv);
@@ -223,55 +259,73 @@ void UpdateOWCFault(adbms_ *adbms)
             adbms->pec_fault_ = 1;
         }
         return;
+    }else adbms->current_owc_failures = 0;
+
+    for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
+    {
+        uint8_t num_reg_grps = NUM_VOLTAGES_CHIP / VOLTAGES_REG_GRP + (NUM_VOLTAGES_CHIP % VOLTAGES_REG_GRP != 0);
+        for (uint8_t creg_grp = 0; creg_grp < num_reg_grps; creg_grp++)
+        {
+            for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
+            {
+                if(creg_grp*DATA_LEN/2 + cbyte/2 >= NUM_VOLTAGES_CHIP) break;   // only read 14 when getting 15 -- TODO CHANGE COMMENT
+                int16_t raw_val = (((uint16_t)adbms->ICs.scell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1]) << 8) | adbms->ICs.scell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte];
+                if (ADBMS_getVoltage(raw_val) < 0.5)
+                {
+                    adbms->openwire_fault_ = 1;
+                    return;
+                }
+            }
+        }
     }
 
-    enum owc_output owc = Owc(&ICs[0]);
-    if(owc == OWC_PEC_Failure) {
+    /// OWC ODD Check
+    adbms->adsv.cont = 1;
+    adbms->adsv.ow = 2; // Enable OW on odd-channel 
+    ADBMS_Set_ADSV(adbms->adsv, adbms->ICs.adsv);
+    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
+    Delay_ms(8);    // S-Channels are updated at 8ms
+
+    // Get new s-channel voltages
+    ADBMS_WakeUP_ICs();
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVA, (adbms->ICs.scell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVB, (adbms->ICs.scell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVC, (adbms->ICs.scell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVD, (adbms->ICs.scell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVE, (adbms->ICs.scell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+
+    if(pec){
         adbms->current_owc_failures += 1;
         if(adbms->current_owc_failures > PEC_FAILURE_THRESHOLD){
             adbms->pec_fault_ = 1;
         }
-    }
-    else {
-        adbms->current_owc_failures = 0;
-        adbms->openwire_fault_ = adbms->openwire_fault_ || owc;
-    }
+        return;
+    }else adbms->current_owc_failures = 0;
 
-}
-
-void cellBalanceOn(adbms_ *adbms)
-{
-    // Turn on CB indication LED
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
-
-    for (int cic = 0; cic < NUM_CHIPS; cic++)
+    for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
     {
-        uint16_t dcc = 0;
-        for (int cvoltage = 0; cvoltage < NUM_VOLTAGES_CHIP; cvoltage++)
+        uint8_t num_reg_grps = NUM_VOLTAGES_CHIP / VOLTAGES_REG_GRP + (NUM_VOLTAGES_CHIP % VOLTAGES_REG_GRP != 0);
+        for (uint8_t creg_grp = 0; creg_grp < num_reg_grps; creg_grp++)
         {
-            float curr_v = adbms->voltages[cic * NUM_VOLTAGES_CHIP + cvoltage];
-            if ((curr_v - adbms->min_v) > CB_THRESHOLD && curr_v > CB_MIN_V_THRESHOLD)
+            for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
             {
-                dcc |= 1 << cvoltage;
+                if(creg_grp*DATA_LEN/2 + cbyte/2 >= NUM_VOLTAGES_CHIP) break;   // only read 14 when getting 15 -- TODO CHANGE COMMENT
+                int16_t raw_val = (((uint16_t)adbms->ICs.scell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1]) << 8) | adbms->ICs.scell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte];
+                if (ADBMS_getVoltage(raw_val) < 0.5)
+                {
+                    adbms->openwire_fault_ = 1;
+                    return;
+                }
             }
         }
-        adbms->cfb[cic].dcc = dcc;
     }
-    ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
-    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
-}
 
-void cellBalanceOff(adbms_ *adbms)
-{
-    // Turn off CB indication LED
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-
-    for (int cic = 0; cic < NUM_CHIPS; cic++)
-    {
-        adbms->cfb[cic].dcc = 0;
-    }
-    ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
-    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
+    /// Turn off owc
+    adbms->adsv.cont = 0;
+    adbms->adsv.ow = 0; // Enable OW on odd-channel 
+    ADBMS_Set_ADSV(adbms->adsv, adbms->ICs.adsv);
+    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
+    Delay_ms(1);    // S-Channels are updated at 8ms
 }
 
 void ADBMS_Print_Vals(adbms_ *adbms)

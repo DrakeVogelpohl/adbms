@@ -23,31 +23,31 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   9 .ccmram       00000000  10000000  10000000  000102ec  2**0
                   CONTENTS
- 10 .bss          00002044  200002ec  200002ec  000102ec  2**2
+ 10 .bss          0000208c  200002ec  200002ec  000102ec  2**2
                   ALLOC
- 11 ._user_heap_stack 00000600  20002330  20002330  000102ec  2**0
+ 11 ._user_heap_stack 00000600  20002378  20002378  000102ec  2**0
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  000102ec  2**0
                   CONTENTS, READONLY
- 13 .debug_info   0001aa4f  00000000  00000000  0001031c  2**0
+ 13 .debug_info   0001ad74  00000000  00000000  0001031c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 000041b0  00000000  00000000  0002ad6b  2**0
+ 14 .debug_abbrev 000041d0  00000000  00000000  0002b090  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 000016c0  00000000  00000000  0002ef20  2**3
+ 15 .debug_aranges 000016d8  00000000  00000000  0002f260  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00001168  00000000  00000000  000305e0  2**0
+ 16 .debug_rnglists 0000119a  00000000  00000000  00030938  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  000258eb  00000000  00000000  00031748  2**0
+ 17 .debug_macro  000258eb  00000000  00000000  00031ad2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0001ce89  00000000  00000000  00057033  2**0
+ 18 .debug_line   0001d1b9  00000000  00000000  000573bd  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000d6757  00000000  00000000  00073ebc  2**0
+ 19 .debug_str    000d679d  00000000  00000000  00074576  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  0014a613  2**0
+ 20 .comment      00000043  00000000  00000000  0014ad13  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00007330  00000000  00000000  0014a658  2**2
+ 21 .debug_frame  000073a0  00000000  00000000  0014ad58  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 00000067  00000000  00000000  00151988  2**0
+ 22 .debug_line_str 00000067  00000000  00000000  001520f8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1564,340 +1564,342 @@ uint16_t Set_UnderOver_Voltage_Threshold(float voltage)
  8001130:	30553261 	.word	0x30553261
  8001134:	3f63a92a 	.word	0x3f63a92a
 
-08001138 <ADBMS_Set_Config_A>:
+08001138 <ADBMS_getVoltage>:
+
+float ADBMS_getVoltage(int data)
+{
+ 8001138:	b580      	push	{r7, lr}
+ 800113a:	b084      	sub	sp, #16
+ 800113c:	af00      	add	r7, sp, #0
+ 800113e:	6078      	str	r0, [r7, #4]
+    // voltage in Volts
+    float voltage_float = ((data + 10000) * 0.000150);
+ 8001140:	687b      	ldr	r3, [r7, #4]
+ 8001142:	f503 531c 	add.w	r3, r3, #9984	@ 0x2700
+ 8001146:	3310      	adds	r3, #16
+ 8001148:	4618      	mov	r0, r3
+ 800114a:	f7ff f9eb 	bl	8000524 <__aeabi_i2d>
+ 800114e:	a30a      	add	r3, pc, #40	@ (adr r3, 8001178 <ADBMS_getVoltage+0x40>)
+ 8001150:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 8001154:	f7ff fa50 	bl	80005f8 <__aeabi_dmul>
+ 8001158:	4602      	mov	r2, r0
+ 800115a:	460b      	mov	r3, r1
+ 800115c:	4610      	mov	r0, r2
+ 800115e:	4619      	mov	r1, r3
+ 8001160:	f7ff fd22 	bl	8000ba8 <__aeabi_d2f>
+ 8001164:	4603      	mov	r3, r0
+ 8001166:	60fb      	str	r3, [r7, #12]
+    return voltage_float;
+ 8001168:	68fb      	ldr	r3, [r7, #12]
+ 800116a:	ee07 3a90 	vmov	s15, r3
+}
+ 800116e:	eeb0 0a67 	vmov.f32	s0, s15
+ 8001172:	3710      	adds	r7, #16
+ 8001174:	46bd      	mov	sp, r7
+ 8001176:	bd80      	pop	{r7, pc}
+ 8001178:	30553261 	.word	0x30553261
+ 800117c:	3f23a92a 	.word	0x3f23a92a
+
+08001180 <ADBMS_Set_Config_A>:
 
 void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer)
 {
- 8001138:	b480      	push	{r7}
- 800113a:	b085      	sub	sp, #20
- 800113c:	af00      	add	r7, sp, #0
- 800113e:	6078      	str	r0, [r7, #4]
- 8001140:	6039      	str	r1, [r7, #0]
+ 8001180:	b480      	push	{r7}
+ 8001182:	b085      	sub	sp, #20
+ 8001184:	af00      	add	r7, sp, #0
+ 8001186:	6078      	str	r0, [r7, #4]
+ 8001188:	6039      	str	r1, [r7, #0]
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 8001142:	2300      	movs	r3, #0
- 8001144:	73fb      	strb	r3, [r7, #15]
- 8001146:	e0f7      	b.n	8001338 <ADBMS_Set_Config_A+0x200>
+ 800118a:	2300      	movs	r3, #0
+ 800118c:	73fb      	strb	r3, [r7, #15]
+ 800118e:	e0f7      	b.n	8001380 <ADBMS_Set_Config_A+0x200>
     {
         cfg_a_tx_buffer[cic * DATA_LEN + 0] = (uint8_t)(((cfg_a[cic].refon & 0x01) << 7) | (cfg_a[cic].cth & 0x07));
- 8001148:	7bfa      	ldrb	r2, [r7, #15]
- 800114a:	4613      	mov	r3, r2
- 800114c:	005b      	lsls	r3, r3, #1
- 800114e:	4413      	add	r3, r2
- 8001150:	005b      	lsls	r3, r3, #1
- 8001152:	461a      	mov	r2, r3
- 8001154:	687b      	ldr	r3, [r7, #4]
- 8001156:	4413      	add	r3, r2
- 8001158:	781b      	ldrb	r3, [r3, #0]
- 800115a:	f3c3 0300 	ubfx	r3, r3, #0, #1
- 800115e:	b2db      	uxtb	r3, r3
- 8001160:	b25b      	sxtb	r3, r3
- 8001162:	01db      	lsls	r3, r3, #7
- 8001164:	b259      	sxtb	r1, r3
- 8001166:	7bfa      	ldrb	r2, [r7, #15]
- 8001168:	4613      	mov	r3, r2
- 800116a:	005b      	lsls	r3, r3, #1
- 800116c:	4413      	add	r3, r2
- 800116e:	005b      	lsls	r3, r3, #1
- 8001170:	461a      	mov	r2, r3
- 8001172:	687b      	ldr	r3, [r7, #4]
- 8001174:	4413      	add	r3, r2
- 8001176:	781b      	ldrb	r3, [r3, #0]
- 8001178:	f3c3 0342 	ubfx	r3, r3, #1, #3
- 800117c:	b2db      	uxtb	r3, r3
- 800117e:	b25b      	sxtb	r3, r3
- 8001180:	f003 0307 	and.w	r3, r3, #7
- 8001184:	b25b      	sxtb	r3, r3
- 8001186:	430b      	orrs	r3, r1
- 8001188:	b259      	sxtb	r1, r3
- 800118a:	7bfa      	ldrb	r2, [r7, #15]
- 800118c:	4613      	mov	r3, r2
- 800118e:	005b      	lsls	r3, r3, #1
- 8001190:	4413      	add	r3, r2
- 8001192:	005b      	lsls	r3, r3, #1
- 8001194:	461a      	mov	r2, r3
- 8001196:	683b      	ldr	r3, [r7, #0]
- 8001198:	4413      	add	r3, r2
- 800119a:	b2ca      	uxtb	r2, r1
- 800119c:	701a      	strb	r2, [r3, #0]
-        cfg_a_tx_buffer[cic * DATA_LEN + 1] = (uint8_t)(cfg_a[cic].flag_d & 0xFF);
- 800119e:	7bfa      	ldrb	r2, [r7, #15]
- 80011a0:	4613      	mov	r3, r2
- 80011a2:	005b      	lsls	r3, r3, #1
- 80011a4:	4413      	add	r3, r2
- 80011a6:	005b      	lsls	r3, r3, #1
- 80011a8:	461a      	mov	r2, r3
- 80011aa:	687b      	ldr	r3, [r7, #4]
- 80011ac:	1899      	adds	r1, r3, r2
+ 8001190:	7bfa      	ldrb	r2, [r7, #15]
+ 8001192:	4613      	mov	r3, r2
+ 8001194:	005b      	lsls	r3, r3, #1
+ 8001196:	4413      	add	r3, r2
+ 8001198:	005b      	lsls	r3, r3, #1
+ 800119a:	461a      	mov	r2, r3
+ 800119c:	687b      	ldr	r3, [r7, #4]
+ 800119e:	4413      	add	r3, r2
+ 80011a0:	781b      	ldrb	r3, [r3, #0]
+ 80011a2:	f3c3 0300 	ubfx	r3, r3, #0, #1
+ 80011a6:	b2db      	uxtb	r3, r3
+ 80011a8:	b25b      	sxtb	r3, r3
+ 80011aa:	01db      	lsls	r3, r3, #7
+ 80011ac:	b259      	sxtb	r1, r3
  80011ae:	7bfa      	ldrb	r2, [r7, #15]
  80011b0:	4613      	mov	r3, r2
  80011b2:	005b      	lsls	r3, r3, #1
  80011b4:	4413      	add	r3, r2
  80011b6:	005b      	lsls	r3, r3, #1
- 80011b8:	3301      	adds	r3, #1
- 80011ba:	683a      	ldr	r2, [r7, #0]
+ 80011b8:	461a      	mov	r2, r3
+ 80011ba:	687b      	ldr	r3, [r7, #4]
  80011bc:	4413      	add	r3, r2
- 80011be:	784a      	ldrb	r2, [r1, #1]
- 80011c0:	701a      	strb	r2, [r3, #0]
+ 80011be:	781b      	ldrb	r3, [r3, #0]
+ 80011c0:	f3c3 0342 	ubfx	r3, r3, #1, #3
+ 80011c4:	b2db      	uxtb	r3, r3
+ 80011c6:	b25b      	sxtb	r3, r3
+ 80011c8:	f003 0307 	and.w	r3, r3, #7
+ 80011cc:	b25b      	sxtb	r3, r3
+ 80011ce:	430b      	orrs	r3, r1
+ 80011d0:	b259      	sxtb	r1, r3
+ 80011d2:	7bfa      	ldrb	r2, [r7, #15]
+ 80011d4:	4613      	mov	r3, r2
+ 80011d6:	005b      	lsls	r3, r3, #1
+ 80011d8:	4413      	add	r3, r2
+ 80011da:	005b      	lsls	r3, r3, #1
+ 80011dc:	461a      	mov	r2, r3
+ 80011de:	683b      	ldr	r3, [r7, #0]
+ 80011e0:	4413      	add	r3, r2
+ 80011e2:	b2ca      	uxtb	r2, r1
+ 80011e4:	701a      	strb	r2, [r3, #0]
+        cfg_a_tx_buffer[cic * DATA_LEN + 1] = (uint8_t)(cfg_a[cic].flag_d & 0xFF);
+ 80011e6:	7bfa      	ldrb	r2, [r7, #15]
+ 80011e8:	4613      	mov	r3, r2
+ 80011ea:	005b      	lsls	r3, r3, #1
+ 80011ec:	4413      	add	r3, r2
+ 80011ee:	005b      	lsls	r3, r3, #1
+ 80011f0:	461a      	mov	r2, r3
+ 80011f2:	687b      	ldr	r3, [r7, #4]
+ 80011f4:	1899      	adds	r1, r3, r2
+ 80011f6:	7bfa      	ldrb	r2, [r7, #15]
+ 80011f8:	4613      	mov	r3, r2
+ 80011fa:	005b      	lsls	r3, r3, #1
+ 80011fc:	4413      	add	r3, r2
+ 80011fe:	005b      	lsls	r3, r3, #1
+ 8001200:	3301      	adds	r3, #1
+ 8001202:	683a      	ldr	r2, [r7, #0]
+ 8001204:	4413      	add	r3, r2
+ 8001206:	784a      	ldrb	r2, [r1, #1]
+ 8001208:	701a      	strb	r2, [r3, #0]
         cfg_a_tx_buffer[cic * DATA_LEN + 2] = (uint8_t)(((cfg_a[cic].soakon & 0x01) << 7) | ((cfg_a[cic].owrng & 0x01) << 6) | ((cfg_a[cic].owa & 0x07) << 3));
- 80011c2:	7bfa      	ldrb	r2, [r7, #15]
- 80011c4:	4613      	mov	r3, r2
- 80011c6:	005b      	lsls	r3, r3, #1
- 80011c8:	4413      	add	r3, r2
- 80011ca:	005b      	lsls	r3, r3, #1
- 80011cc:	461a      	mov	r2, r3
- 80011ce:	687b      	ldr	r3, [r7, #4]
- 80011d0:	4413      	add	r3, r2
- 80011d2:	789b      	ldrb	r3, [r3, #2]
- 80011d4:	f3c3 0300 	ubfx	r3, r3, #0, #1
- 80011d8:	b2db      	uxtb	r3, r3
- 80011da:	b25b      	sxtb	r3, r3
- 80011dc:	01db      	lsls	r3, r3, #7
- 80011de:	b259      	sxtb	r1, r3
- 80011e0:	7bfa      	ldrb	r2, [r7, #15]
- 80011e2:	4613      	mov	r3, r2
- 80011e4:	005b      	lsls	r3, r3, #1
- 80011e6:	4413      	add	r3, r2
- 80011e8:	005b      	lsls	r3, r3, #1
- 80011ea:	461a      	mov	r2, r3
- 80011ec:	687b      	ldr	r3, [r7, #4]
- 80011ee:	4413      	add	r3, r2
- 80011f0:	789b      	ldrb	r3, [r3, #2]
- 80011f2:	f3c3 0340 	ubfx	r3, r3, #1, #1
- 80011f6:	b2db      	uxtb	r3, r3
- 80011f8:	b25b      	sxtb	r3, r3
- 80011fa:	019b      	lsls	r3, r3, #6
- 80011fc:	b25b      	sxtb	r3, r3
- 80011fe:	430b      	orrs	r3, r1
- 8001200:	b259      	sxtb	r1, r3
- 8001202:	7bfa      	ldrb	r2, [r7, #15]
- 8001204:	4613      	mov	r3, r2
- 8001206:	005b      	lsls	r3, r3, #1
- 8001208:	4413      	add	r3, r2
- 800120a:	005b      	lsls	r3, r3, #1
- 800120c:	461a      	mov	r2, r3
- 800120e:	687b      	ldr	r3, [r7, #4]
+ 800120a:	7bfa      	ldrb	r2, [r7, #15]
+ 800120c:	4613      	mov	r3, r2
+ 800120e:	005b      	lsls	r3, r3, #1
  8001210:	4413      	add	r3, r2
- 8001212:	789b      	ldrb	r3, [r3, #2]
- 8001214:	f3c3 0382 	ubfx	r3, r3, #2, #3
- 8001218:	b2db      	uxtb	r3, r3
- 800121a:	b25b      	sxtb	r3, r3
- 800121c:	00db      	lsls	r3, r3, #3
- 800121e:	b25b      	sxtb	r3, r3
- 8001220:	430b      	orrs	r3, r1
- 8001222:	b259      	sxtb	r1, r3
- 8001224:	7bfa      	ldrb	r2, [r7, #15]
- 8001226:	4613      	mov	r3, r2
- 8001228:	005b      	lsls	r3, r3, #1
- 800122a:	4413      	add	r3, r2
+ 8001212:	005b      	lsls	r3, r3, #1
+ 8001214:	461a      	mov	r2, r3
+ 8001216:	687b      	ldr	r3, [r7, #4]
+ 8001218:	4413      	add	r3, r2
+ 800121a:	789b      	ldrb	r3, [r3, #2]
+ 800121c:	f3c3 0300 	ubfx	r3, r3, #0, #1
+ 8001220:	b2db      	uxtb	r3, r3
+ 8001222:	b25b      	sxtb	r3, r3
+ 8001224:	01db      	lsls	r3, r3, #7
+ 8001226:	b259      	sxtb	r1, r3
+ 8001228:	7bfa      	ldrb	r2, [r7, #15]
+ 800122a:	4613      	mov	r3, r2
  800122c:	005b      	lsls	r3, r3, #1
- 800122e:	3302      	adds	r3, #2
- 8001230:	683a      	ldr	r2, [r7, #0]
- 8001232:	4413      	add	r3, r2
- 8001234:	b2ca      	uxtb	r2, r1
- 8001236:	701a      	strb	r2, [r3, #0]
-        cfg_a_tx_buffer[cic * DATA_LEN + 3] = (uint8_t)(cfg_a[cic].gpo & 0x00FF);
- 8001238:	7bfa      	ldrb	r2, [r7, #15]
- 800123a:	4613      	mov	r3, r2
- 800123c:	005b      	lsls	r3, r3, #1
- 800123e:	4413      	add	r3, r2
- 8001240:	005b      	lsls	r3, r3, #1
- 8001242:	461a      	mov	r2, r3
- 8001244:	687b      	ldr	r3, [r7, #4]
- 8001246:	4413      	add	r3, r2
- 8001248:	885b      	ldrh	r3, [r3, #2]
- 800124a:	f3c3 1349 	ubfx	r3, r3, #5, #10
- 800124e:	b299      	uxth	r1, r3
- 8001250:	7bfa      	ldrb	r2, [r7, #15]
- 8001252:	4613      	mov	r3, r2
- 8001254:	005b      	lsls	r3, r3, #1
- 8001256:	4413      	add	r3, r2
- 8001258:	005b      	lsls	r3, r3, #1
- 800125a:	3303      	adds	r3, #3
- 800125c:	683a      	ldr	r2, [r7, #0]
- 800125e:	4413      	add	r3, r2
- 8001260:	b2ca      	uxtb	r2, r1
- 8001262:	701a      	strb	r2, [r3, #0]
-        cfg_a_tx_buffer[cic * DATA_LEN + 4] = (uint8_t)((cfg_a[cic].gpo & 0x0300) >> 8);
- 8001264:	7bfa      	ldrb	r2, [r7, #15]
- 8001266:	4613      	mov	r3, r2
- 8001268:	005b      	lsls	r3, r3, #1
- 800126a:	4413      	add	r3, r2
- 800126c:	005b      	lsls	r3, r3, #1
- 800126e:	461a      	mov	r2, r3
- 8001270:	687b      	ldr	r3, [r7, #4]
+ 800122e:	4413      	add	r3, r2
+ 8001230:	005b      	lsls	r3, r3, #1
+ 8001232:	461a      	mov	r2, r3
+ 8001234:	687b      	ldr	r3, [r7, #4]
+ 8001236:	4413      	add	r3, r2
+ 8001238:	789b      	ldrb	r3, [r3, #2]
+ 800123a:	f3c3 0340 	ubfx	r3, r3, #1, #1
+ 800123e:	b2db      	uxtb	r3, r3
+ 8001240:	b25b      	sxtb	r3, r3
+ 8001242:	019b      	lsls	r3, r3, #6
+ 8001244:	b25b      	sxtb	r3, r3
+ 8001246:	430b      	orrs	r3, r1
+ 8001248:	b259      	sxtb	r1, r3
+ 800124a:	7bfa      	ldrb	r2, [r7, #15]
+ 800124c:	4613      	mov	r3, r2
+ 800124e:	005b      	lsls	r3, r3, #1
+ 8001250:	4413      	add	r3, r2
+ 8001252:	005b      	lsls	r3, r3, #1
+ 8001254:	461a      	mov	r2, r3
+ 8001256:	687b      	ldr	r3, [r7, #4]
+ 8001258:	4413      	add	r3, r2
+ 800125a:	789b      	ldrb	r3, [r3, #2]
+ 800125c:	f3c3 0382 	ubfx	r3, r3, #2, #3
+ 8001260:	b2db      	uxtb	r3, r3
+ 8001262:	b25b      	sxtb	r3, r3
+ 8001264:	00db      	lsls	r3, r3, #3
+ 8001266:	b25b      	sxtb	r3, r3
+ 8001268:	430b      	orrs	r3, r1
+ 800126a:	b259      	sxtb	r1, r3
+ 800126c:	7bfa      	ldrb	r2, [r7, #15]
+ 800126e:	4613      	mov	r3, r2
+ 8001270:	005b      	lsls	r3, r3, #1
  8001272:	4413      	add	r3, r2
- 8001274:	885b      	ldrh	r3, [r3, #2]
- 8001276:	f3c3 1349 	ubfx	r3, r3, #5, #10
- 800127a:	b29b      	uxth	r3, r3
- 800127c:	121b      	asrs	r3, r3, #8
- 800127e:	b2d9      	uxtb	r1, r3
+ 8001274:	005b      	lsls	r3, r3, #1
+ 8001276:	3302      	adds	r3, #2
+ 8001278:	683a      	ldr	r2, [r7, #0]
+ 800127a:	4413      	add	r3, r2
+ 800127c:	b2ca      	uxtb	r2, r1
+ 800127e:	701a      	strb	r2, [r3, #0]
+        cfg_a_tx_buffer[cic * DATA_LEN + 3] = (uint8_t)(cfg_a[cic].gpo & 0x00FF);
  8001280:	7bfa      	ldrb	r2, [r7, #15]
  8001282:	4613      	mov	r3, r2
  8001284:	005b      	lsls	r3, r3, #1
  8001286:	4413      	add	r3, r2
  8001288:	005b      	lsls	r3, r3, #1
- 800128a:	3304      	adds	r3, #4
- 800128c:	683a      	ldr	r2, [r7, #0]
+ 800128a:	461a      	mov	r2, r3
+ 800128c:	687b      	ldr	r3, [r7, #4]
  800128e:	4413      	add	r3, r2
- 8001290:	f001 0203 	and.w	r2, r1, #3
- 8001294:	b2d2      	uxtb	r2, r2
- 8001296:	701a      	strb	r2, [r3, #0]
-        cfg_a_tx_buffer[cic * DATA_LEN + 5] = (uint8_t)(((cfg_a[cic].snap & 0x01) << 5) | ((cfg_a[cic].mute_st & 0x01) << 4) | ((cfg_a[cic].comm_bk & 0x01) << 3) | (cfg_a[cic].fc & 0x07));
+ 8001290:	885b      	ldrh	r3, [r3, #2]
+ 8001292:	f3c3 1349 	ubfx	r3, r3, #5, #10
+ 8001296:	b299      	uxth	r1, r3
  8001298:	7bfa      	ldrb	r2, [r7, #15]
  800129a:	4613      	mov	r3, r2
  800129c:	005b      	lsls	r3, r3, #1
  800129e:	4413      	add	r3, r2
  80012a0:	005b      	lsls	r3, r3, #1
- 80012a2:	461a      	mov	r2, r3
- 80012a4:	687b      	ldr	r3, [r7, #4]
+ 80012a2:	3303      	adds	r3, #3
+ 80012a4:	683a      	ldr	r2, [r7, #0]
  80012a6:	4413      	add	r3, r2
- 80012a8:	78db      	ldrb	r3, [r3, #3]
- 80012aa:	f3c3 13c0 	ubfx	r3, r3, #7, #1
- 80012ae:	b2db      	uxtb	r3, r3
- 80012b0:	b25b      	sxtb	r3, r3
- 80012b2:	015b      	lsls	r3, r3, #5
- 80012b4:	b259      	sxtb	r1, r3
- 80012b6:	7bfa      	ldrb	r2, [r7, #15]
- 80012b8:	4613      	mov	r3, r2
- 80012ba:	005b      	lsls	r3, r3, #1
- 80012bc:	4413      	add	r3, r2
- 80012be:	005b      	lsls	r3, r3, #1
- 80012c0:	461a      	mov	r2, r3
- 80012c2:	687b      	ldr	r3, [r7, #4]
- 80012c4:	4413      	add	r3, r2
- 80012c6:	791b      	ldrb	r3, [r3, #4]
- 80012c8:	f3c3 0300 	ubfx	r3, r3, #0, #1
- 80012cc:	b2db      	uxtb	r3, r3
- 80012ce:	b25b      	sxtb	r3, r3
- 80012d0:	011b      	lsls	r3, r3, #4
- 80012d2:	b25b      	sxtb	r3, r3
- 80012d4:	430b      	orrs	r3, r1
- 80012d6:	b259      	sxtb	r1, r3
- 80012d8:	7bfa      	ldrb	r2, [r7, #15]
- 80012da:	4613      	mov	r3, r2
- 80012dc:	005b      	lsls	r3, r3, #1
- 80012de:	4413      	add	r3, r2
- 80012e0:	005b      	lsls	r3, r3, #1
- 80012e2:	461a      	mov	r2, r3
- 80012e4:	687b      	ldr	r3, [r7, #4]
+ 80012a8:	b2ca      	uxtb	r2, r1
+ 80012aa:	701a      	strb	r2, [r3, #0]
+        cfg_a_tx_buffer[cic * DATA_LEN + 4] = (uint8_t)((cfg_a[cic].gpo & 0x0300) >> 8);
+ 80012ac:	7bfa      	ldrb	r2, [r7, #15]
+ 80012ae:	4613      	mov	r3, r2
+ 80012b0:	005b      	lsls	r3, r3, #1
+ 80012b2:	4413      	add	r3, r2
+ 80012b4:	005b      	lsls	r3, r3, #1
+ 80012b6:	461a      	mov	r2, r3
+ 80012b8:	687b      	ldr	r3, [r7, #4]
+ 80012ba:	4413      	add	r3, r2
+ 80012bc:	885b      	ldrh	r3, [r3, #2]
+ 80012be:	f3c3 1349 	ubfx	r3, r3, #5, #10
+ 80012c2:	b29b      	uxth	r3, r3
+ 80012c4:	121b      	asrs	r3, r3, #8
+ 80012c6:	b2d9      	uxtb	r1, r3
+ 80012c8:	7bfa      	ldrb	r2, [r7, #15]
+ 80012ca:	4613      	mov	r3, r2
+ 80012cc:	005b      	lsls	r3, r3, #1
+ 80012ce:	4413      	add	r3, r2
+ 80012d0:	005b      	lsls	r3, r3, #1
+ 80012d2:	3304      	adds	r3, #4
+ 80012d4:	683a      	ldr	r2, [r7, #0]
+ 80012d6:	4413      	add	r3, r2
+ 80012d8:	f001 0203 	and.w	r2, r1, #3
+ 80012dc:	b2d2      	uxtb	r2, r2
+ 80012de:	701a      	strb	r2, [r3, #0]
+        cfg_a_tx_buffer[cic * DATA_LEN + 5] = (uint8_t)(((cfg_a[cic].snap & 0x01) << 5) | ((cfg_a[cic].mute_st & 0x01) << 4) | ((cfg_a[cic].comm_bk & 0x01) << 3) | (cfg_a[cic].fc & 0x07));
+ 80012e0:	7bfa      	ldrb	r2, [r7, #15]
+ 80012e2:	4613      	mov	r3, r2
+ 80012e4:	005b      	lsls	r3, r3, #1
  80012e6:	4413      	add	r3, r2
- 80012e8:	791b      	ldrb	r3, [r3, #4]
- 80012ea:	f3c3 0340 	ubfx	r3, r3, #1, #1
- 80012ee:	b2db      	uxtb	r3, r3
- 80012f0:	b25b      	sxtb	r3, r3
- 80012f2:	00db      	lsls	r3, r3, #3
- 80012f4:	b25b      	sxtb	r3, r3
- 80012f6:	430b      	orrs	r3, r1
- 80012f8:	b259      	sxtb	r1, r3
- 80012fa:	7bfa      	ldrb	r2, [r7, #15]
- 80012fc:	4613      	mov	r3, r2
- 80012fe:	005b      	lsls	r3, r3, #1
- 8001300:	4413      	add	r3, r2
+ 80012e8:	005b      	lsls	r3, r3, #1
+ 80012ea:	461a      	mov	r2, r3
+ 80012ec:	687b      	ldr	r3, [r7, #4]
+ 80012ee:	4413      	add	r3, r2
+ 80012f0:	78db      	ldrb	r3, [r3, #3]
+ 80012f2:	f3c3 13c0 	ubfx	r3, r3, #7, #1
+ 80012f6:	b2db      	uxtb	r3, r3
+ 80012f8:	b25b      	sxtb	r3, r3
+ 80012fa:	015b      	lsls	r3, r3, #5
+ 80012fc:	b259      	sxtb	r1, r3
+ 80012fe:	7bfa      	ldrb	r2, [r7, #15]
+ 8001300:	4613      	mov	r3, r2
  8001302:	005b      	lsls	r3, r3, #1
- 8001304:	461a      	mov	r2, r3
- 8001306:	687b      	ldr	r3, [r7, #4]
- 8001308:	4413      	add	r3, r2
- 800130a:	791b      	ldrb	r3, [r3, #4]
- 800130c:	f3c3 0382 	ubfx	r3, r3, #2, #3
- 8001310:	b2db      	uxtb	r3, r3
- 8001312:	b25b      	sxtb	r3, r3
- 8001314:	f003 0307 	and.w	r3, r3, #7
- 8001318:	b25b      	sxtb	r3, r3
- 800131a:	430b      	orrs	r3, r1
- 800131c:	b259      	sxtb	r1, r3
- 800131e:	7bfa      	ldrb	r2, [r7, #15]
- 8001320:	4613      	mov	r3, r2
- 8001322:	005b      	lsls	r3, r3, #1
- 8001324:	4413      	add	r3, r2
- 8001326:	005b      	lsls	r3, r3, #1
- 8001328:	3305      	adds	r3, #5
- 800132a:	683a      	ldr	r2, [r7, #0]
- 800132c:	4413      	add	r3, r2
- 800132e:	b2ca      	uxtb	r2, r1
- 8001330:	701a      	strb	r2, [r3, #0]
+ 8001304:	4413      	add	r3, r2
+ 8001306:	005b      	lsls	r3, r3, #1
+ 8001308:	461a      	mov	r2, r3
+ 800130a:	687b      	ldr	r3, [r7, #4]
+ 800130c:	4413      	add	r3, r2
+ 800130e:	791b      	ldrb	r3, [r3, #4]
+ 8001310:	f3c3 0300 	ubfx	r3, r3, #0, #1
+ 8001314:	b2db      	uxtb	r3, r3
+ 8001316:	b25b      	sxtb	r3, r3
+ 8001318:	011b      	lsls	r3, r3, #4
+ 800131a:	b25b      	sxtb	r3, r3
+ 800131c:	430b      	orrs	r3, r1
+ 800131e:	b259      	sxtb	r1, r3
+ 8001320:	7bfa      	ldrb	r2, [r7, #15]
+ 8001322:	4613      	mov	r3, r2
+ 8001324:	005b      	lsls	r3, r3, #1
+ 8001326:	4413      	add	r3, r2
+ 8001328:	005b      	lsls	r3, r3, #1
+ 800132a:	461a      	mov	r2, r3
+ 800132c:	687b      	ldr	r3, [r7, #4]
+ 800132e:	4413      	add	r3, r2
+ 8001330:	791b      	ldrb	r3, [r3, #4]
+ 8001332:	f3c3 0340 	ubfx	r3, r3, #1, #1
+ 8001336:	b2db      	uxtb	r3, r3
+ 8001338:	b25b      	sxtb	r3, r3
+ 800133a:	00db      	lsls	r3, r3, #3
+ 800133c:	b25b      	sxtb	r3, r3
+ 800133e:	430b      	orrs	r3, r1
+ 8001340:	b259      	sxtb	r1, r3
+ 8001342:	7bfa      	ldrb	r2, [r7, #15]
+ 8001344:	4613      	mov	r3, r2
+ 8001346:	005b      	lsls	r3, r3, #1
+ 8001348:	4413      	add	r3, r2
+ 800134a:	005b      	lsls	r3, r3, #1
+ 800134c:	461a      	mov	r2, r3
+ 800134e:	687b      	ldr	r3, [r7, #4]
+ 8001350:	4413      	add	r3, r2
+ 8001352:	791b      	ldrb	r3, [r3, #4]
+ 8001354:	f3c3 0382 	ubfx	r3, r3, #2, #3
+ 8001358:	b2db      	uxtb	r3, r3
+ 800135a:	b25b      	sxtb	r3, r3
+ 800135c:	f003 0307 	and.w	r3, r3, #7
+ 8001360:	b25b      	sxtb	r3, r3
+ 8001362:	430b      	orrs	r3, r1
+ 8001364:	b259      	sxtb	r1, r3
+ 8001366:	7bfa      	ldrb	r2, [r7, #15]
+ 8001368:	4613      	mov	r3, r2
+ 800136a:	005b      	lsls	r3, r3, #1
+ 800136c:	4413      	add	r3, r2
+ 800136e:	005b      	lsls	r3, r3, #1
+ 8001370:	3305      	adds	r3, #5
+ 8001372:	683a      	ldr	r2, [r7, #0]
+ 8001374:	4413      	add	r3, r2
+ 8001376:	b2ca      	uxtb	r2, r1
+ 8001378:	701a      	strb	r2, [r3, #0]
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 8001332:	7bfb      	ldrb	r3, [r7, #15]
- 8001334:	3301      	adds	r3, #1
- 8001336:	73fb      	strb	r3, [r7, #15]
- 8001338:	7bfb      	ldrb	r3, [r7, #15]
- 800133a:	2b01      	cmp	r3, #1
- 800133c:	f67f af04 	bls.w	8001148 <ADBMS_Set_Config_A+0x10>
+ 800137a:	7bfb      	ldrb	r3, [r7, #15]
+ 800137c:	3301      	adds	r3, #1
+ 800137e:	73fb      	strb	r3, [r7, #15]
+ 8001380:	7bfb      	ldrb	r3, [r7, #15]
+ 8001382:	2b01      	cmp	r3, #1
+ 8001384:	f67f af04 	bls.w	8001190 <ADBMS_Set_Config_A+0x10>
     }
 }
- 8001340:	bf00      	nop
- 8001342:	bf00      	nop
- 8001344:	3714      	adds	r7, #20
- 8001346:	46bd      	mov	sp, r7
- 8001348:	f85d 7b04 	ldr.w	r7, [sp], #4
- 800134c:	4770      	bx	lr
+ 8001388:	bf00      	nop
+ 800138a:	bf00      	nop
+ 800138c:	3714      	adds	r7, #20
+ 800138e:	46bd      	mov	sp, r7
+ 8001390:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8001394:	4770      	bx	lr
 
-0800134e <ADBMS_Set_Config_B>:
+08001396 <ADBMS_Set_Config_B>:
 
 void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t *cfg_b_tx_buffer)
 {
- 800134e:	b480      	push	{r7}
- 8001350:	b085      	sub	sp, #20
- 8001352:	af00      	add	r7, sp, #0
- 8001354:	6078      	str	r0, [r7, #4]
- 8001356:	6039      	str	r1, [r7, #0]
+ 8001396:	b480      	push	{r7}
+ 8001398:	b085      	sub	sp, #20
+ 800139a:	af00      	add	r7, sp, #0
+ 800139c:	6078      	str	r0, [r7, #4]
+ 800139e:	6039      	str	r1, [r7, #0]
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 8001358:	2300      	movs	r3, #0
- 800135a:	73fb      	strb	r3, [r7, #15]
- 800135c:	e09b      	b.n	8001496 <ADBMS_Set_Config_B+0x148>
+ 80013a0:	2300      	movs	r3, #0
+ 80013a2:	73fb      	strb	r3, [r7, #15]
+ 80013a4:	e09b      	b.n	80014de <ADBMS_Set_Config_B+0x148>
     {
         cfg_b_tx_buffer[cic * DATA_LEN + 0] = (uint8_t)(cfg_b[cic].vuv & 0x0FF);
- 800135e:	7bfb      	ldrb	r3, [r7, #15]
- 8001360:	00db      	lsls	r3, r3, #3
- 8001362:	687a      	ldr	r2, [r7, #4]
- 8001364:	4413      	add	r3, r2
- 8001366:	881b      	ldrh	r3, [r3, #0]
- 8001368:	f3c3 030b 	ubfx	r3, r3, #0, #12
- 800136c:	b299      	uxth	r1, r3
- 800136e:	7bfa      	ldrb	r2, [r7, #15]
- 8001370:	4613      	mov	r3, r2
- 8001372:	005b      	lsls	r3, r3, #1
- 8001374:	4413      	add	r3, r2
- 8001376:	005b      	lsls	r3, r3, #1
- 8001378:	461a      	mov	r2, r3
- 800137a:	683b      	ldr	r3, [r7, #0]
- 800137c:	4413      	add	r3, r2
- 800137e:	b2ca      	uxtb	r2, r1
- 8001380:	701a      	strb	r2, [r3, #0]
-        cfg_b_tx_buffer[cic * DATA_LEN + 1] = (uint8_t)(((cfg_b[cic].vov & 0x00F) << 4) | ((cfg_b[cic].vuv & 0xF00) >> 8));
- 8001382:	7bfb      	ldrb	r3, [r7, #15]
- 8001384:	00db      	lsls	r3, r3, #3
- 8001386:	687a      	ldr	r2, [r7, #4]
- 8001388:	4413      	add	r3, r2
- 800138a:	885b      	ldrh	r3, [r3, #2]
- 800138c:	f3c3 030b 	ubfx	r3, r3, #0, #12
- 8001390:	b29b      	uxth	r3, r3
- 8001392:	b25b      	sxtb	r3, r3
- 8001394:	011b      	lsls	r3, r3, #4
- 8001396:	b25a      	sxtb	r2, r3
- 8001398:	7bfb      	ldrb	r3, [r7, #15]
- 800139a:	00db      	lsls	r3, r3, #3
- 800139c:	6879      	ldr	r1, [r7, #4]
- 800139e:	440b      	add	r3, r1
- 80013a0:	881b      	ldrh	r3, [r3, #0]
- 80013a2:	f3c3 030b 	ubfx	r3, r3, #0, #12
- 80013a6:	b29b      	uxth	r3, r3
- 80013a8:	121b      	asrs	r3, r3, #8
- 80013aa:	b25b      	sxtb	r3, r3
- 80013ac:	f003 030f 	and.w	r3, r3, #15
- 80013b0:	b25b      	sxtb	r3, r3
- 80013b2:	4313      	orrs	r3, r2
- 80013b4:	b259      	sxtb	r1, r3
+ 80013a6:	7bfb      	ldrb	r3, [r7, #15]
+ 80013a8:	00db      	lsls	r3, r3, #3
+ 80013aa:	687a      	ldr	r2, [r7, #4]
+ 80013ac:	4413      	add	r3, r2
+ 80013ae:	881b      	ldrh	r3, [r3, #0]
+ 80013b0:	f3c3 030b 	ubfx	r3, r3, #0, #12
+ 80013b4:	b299      	uxth	r1, r3
  80013b6:	7bfa      	ldrb	r2, [r7, #15]
  80013b8:	4613      	mov	r3, r2
  80013ba:	005b      	lsls	r3, r3, #1
  80013bc:	4413      	add	r3, r2
  80013be:	005b      	lsls	r3, r3, #1
- 80013c0:	3301      	adds	r3, #1
- 80013c2:	683a      	ldr	r2, [r7, #0]
+ 80013c0:	461a      	mov	r2, r3
+ 80013c2:	683b      	ldr	r3, [r7, #0]
  80013c4:	4413      	add	r3, r2
  80013c6:	b2ca      	uxtb	r2, r1
  80013c8:	701a      	strb	r2, [r3, #0]
-        cfg_b_tx_buffer[cic * DATA_LEN + 2] = (uint8_t)((cfg_b[cic].vov & 0xFF0) >> 4);
+        cfg_b_tx_buffer[cic * DATA_LEN + 1] = (uint8_t)(((cfg_b[cic].vov & 0x00F) << 4) | ((cfg_b[cic].vuv & 0xF00) >> 8));
  80013ca:	7bfb      	ldrb	r3, [r7, #15]
  80013cc:	00db      	lsls	r3, r3, #3
  80013ce:	687a      	ldr	r2, [r7, #4]
@@ -1905,1877 +1907,1875 @@ void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t *cfg_b_tx_buffer)
  80013d2:	885b      	ldrh	r3, [r3, #2]
  80013d4:	f3c3 030b 	ubfx	r3, r3, #0, #12
  80013d8:	b29b      	uxth	r3, r3
- 80013da:	1119      	asrs	r1, r3, #4
- 80013dc:	7bfa      	ldrb	r2, [r7, #15]
- 80013de:	4613      	mov	r3, r2
- 80013e0:	005b      	lsls	r3, r3, #1
- 80013e2:	4413      	add	r3, r2
- 80013e4:	005b      	lsls	r3, r3, #1
- 80013e6:	3302      	adds	r3, #2
- 80013e8:	683a      	ldr	r2, [r7, #0]
- 80013ea:	4413      	add	r3, r2
- 80013ec:	b2ca      	uxtb	r2, r1
- 80013ee:	701a      	strb	r2, [r3, #0]
+ 80013da:	b25b      	sxtb	r3, r3
+ 80013dc:	011b      	lsls	r3, r3, #4
+ 80013de:	b25a      	sxtb	r2, r3
+ 80013e0:	7bfb      	ldrb	r3, [r7, #15]
+ 80013e2:	00db      	lsls	r3, r3, #3
+ 80013e4:	6879      	ldr	r1, [r7, #4]
+ 80013e6:	440b      	add	r3, r1
+ 80013e8:	881b      	ldrh	r3, [r3, #0]
+ 80013ea:	f3c3 030b 	ubfx	r3, r3, #0, #12
+ 80013ee:	b29b      	uxth	r3, r3
+ 80013f0:	121b      	asrs	r3, r3, #8
+ 80013f2:	b25b      	sxtb	r3, r3
+ 80013f4:	f003 030f 	and.w	r3, r3, #15
+ 80013f8:	b25b      	sxtb	r3, r3
+ 80013fa:	4313      	orrs	r3, r2
+ 80013fc:	b259      	sxtb	r1, r3
+ 80013fe:	7bfa      	ldrb	r2, [r7, #15]
+ 8001400:	4613      	mov	r3, r2
+ 8001402:	005b      	lsls	r3, r3, #1
+ 8001404:	4413      	add	r3, r2
+ 8001406:	005b      	lsls	r3, r3, #1
+ 8001408:	3301      	adds	r3, #1
+ 800140a:	683a      	ldr	r2, [r7, #0]
+ 800140c:	4413      	add	r3, r2
+ 800140e:	b2ca      	uxtb	r2, r1
+ 8001410:	701a      	strb	r2, [r3, #0]
+        cfg_b_tx_buffer[cic * DATA_LEN + 2] = (uint8_t)((cfg_b[cic].vov & 0xFF0) >> 4);
+ 8001412:	7bfb      	ldrb	r3, [r7, #15]
+ 8001414:	00db      	lsls	r3, r3, #3
+ 8001416:	687a      	ldr	r2, [r7, #4]
+ 8001418:	4413      	add	r3, r2
+ 800141a:	885b      	ldrh	r3, [r3, #2]
+ 800141c:	f3c3 030b 	ubfx	r3, r3, #0, #12
+ 8001420:	b29b      	uxth	r3, r3
+ 8001422:	1119      	asrs	r1, r3, #4
+ 8001424:	7bfa      	ldrb	r2, [r7, #15]
+ 8001426:	4613      	mov	r3, r2
+ 8001428:	005b      	lsls	r3, r3, #1
+ 800142a:	4413      	add	r3, r2
+ 800142c:	005b      	lsls	r3, r3, #1
+ 800142e:	3302      	adds	r3, #2
+ 8001430:	683a      	ldr	r2, [r7, #0]
+ 8001432:	4413      	add	r3, r2
+ 8001434:	b2ca      	uxtb	r2, r1
+ 8001436:	701a      	strb	r2, [r3, #0]
         cfg_b_tx_buffer[cic * DATA_LEN + 3] = (uint8_t)(((cfg_b[cic].dtmen & 0x01) << 7) | ((cfg_b[cic].dtrng & 0x01) << 6) | (cfg_b[cic].dcto & 0x3F));
- 80013f0:	7bfb      	ldrb	r3, [r7, #15]
- 80013f2:	00db      	lsls	r3, r3, #3
- 80013f4:	687a      	ldr	r2, [r7, #4]
- 80013f6:	4413      	add	r3, r2
- 80013f8:	78db      	ldrb	r3, [r3, #3]
- 80013fa:	f3c3 1300 	ubfx	r3, r3, #4, #1
- 80013fe:	b2db      	uxtb	r3, r3
- 8001400:	b25b      	sxtb	r3, r3
- 8001402:	01db      	lsls	r3, r3, #7
- 8001404:	b25a      	sxtb	r2, r3
- 8001406:	7bfb      	ldrb	r3, [r7, #15]
- 8001408:	00db      	lsls	r3, r3, #3
- 800140a:	6879      	ldr	r1, [r7, #4]
- 800140c:	440b      	add	r3, r1
- 800140e:	78db      	ldrb	r3, [r3, #3]
- 8001410:	f3c3 1340 	ubfx	r3, r3, #5, #1
- 8001414:	b2db      	uxtb	r3, r3
- 8001416:	b25b      	sxtb	r3, r3
- 8001418:	019b      	lsls	r3, r3, #6
- 800141a:	b25b      	sxtb	r3, r3
- 800141c:	4313      	orrs	r3, r2
- 800141e:	b25a      	sxtb	r2, r3
- 8001420:	7bfb      	ldrb	r3, [r7, #15]
- 8001422:	00db      	lsls	r3, r3, #3
- 8001424:	6879      	ldr	r1, [r7, #4]
- 8001426:	440b      	add	r3, r1
- 8001428:	791b      	ldrb	r3, [r3, #4]
- 800142a:	f3c3 0305 	ubfx	r3, r3, #0, #6
- 800142e:	b2db      	uxtb	r3, r3
- 8001430:	b25b      	sxtb	r3, r3
- 8001432:	f003 033f 	and.w	r3, r3, #63	@ 0x3f
- 8001436:	b25b      	sxtb	r3, r3
- 8001438:	4313      	orrs	r3, r2
- 800143a:	b259      	sxtb	r1, r3
- 800143c:	7bfa      	ldrb	r2, [r7, #15]
- 800143e:	4613      	mov	r3, r2
- 8001440:	005b      	lsls	r3, r3, #1
- 8001442:	4413      	add	r3, r2
- 8001444:	005b      	lsls	r3, r3, #1
- 8001446:	3303      	adds	r3, #3
- 8001448:	683a      	ldr	r2, [r7, #0]
- 800144a:	4413      	add	r3, r2
- 800144c:	b2ca      	uxtb	r2, r1
- 800144e:	701a      	strb	r2, [r3, #0]
-        cfg_b_tx_buffer[cic * DATA_LEN + 4] = (uint8_t)(cfg_b[cic].dcc & 0x00FF);
- 8001450:	7bfb      	ldrb	r3, [r7, #15]
- 8001452:	00db      	lsls	r3, r3, #3
- 8001454:	687a      	ldr	r2, [r7, #4]
- 8001456:	4413      	add	r3, r2
- 8001458:	88d9      	ldrh	r1, [r3, #6]
- 800145a:	7bfa      	ldrb	r2, [r7, #15]
- 800145c:	4613      	mov	r3, r2
- 800145e:	005b      	lsls	r3, r3, #1
- 8001460:	4413      	add	r3, r2
- 8001462:	005b      	lsls	r3, r3, #1
- 8001464:	3304      	adds	r3, #4
- 8001466:	683a      	ldr	r2, [r7, #0]
- 8001468:	4413      	add	r3, r2
- 800146a:	b2ca      	uxtb	r2, r1
- 800146c:	701a      	strb	r2, [r3, #0]
-        cfg_b_tx_buffer[cic * DATA_LEN + 5] = (uint8_t)((cfg_b[cic].dcc & 0xFF00) >> 8);
- 800146e:	7bfb      	ldrb	r3, [r7, #15]
- 8001470:	00db      	lsls	r3, r3, #3
- 8001472:	687a      	ldr	r2, [r7, #4]
- 8001474:	4413      	add	r3, r2
- 8001476:	88db      	ldrh	r3, [r3, #6]
- 8001478:	0a1b      	lsrs	r3, r3, #8
- 800147a:	b299      	uxth	r1, r3
- 800147c:	7bfa      	ldrb	r2, [r7, #15]
- 800147e:	4613      	mov	r3, r2
- 8001480:	005b      	lsls	r3, r3, #1
- 8001482:	4413      	add	r3, r2
- 8001484:	005b      	lsls	r3, r3, #1
- 8001486:	3305      	adds	r3, #5
- 8001488:	683a      	ldr	r2, [r7, #0]
+ 8001438:	7bfb      	ldrb	r3, [r7, #15]
+ 800143a:	00db      	lsls	r3, r3, #3
+ 800143c:	687a      	ldr	r2, [r7, #4]
+ 800143e:	4413      	add	r3, r2
+ 8001440:	78db      	ldrb	r3, [r3, #3]
+ 8001442:	f3c3 1300 	ubfx	r3, r3, #4, #1
+ 8001446:	b2db      	uxtb	r3, r3
+ 8001448:	b25b      	sxtb	r3, r3
+ 800144a:	01db      	lsls	r3, r3, #7
+ 800144c:	b25a      	sxtb	r2, r3
+ 800144e:	7bfb      	ldrb	r3, [r7, #15]
+ 8001450:	00db      	lsls	r3, r3, #3
+ 8001452:	6879      	ldr	r1, [r7, #4]
+ 8001454:	440b      	add	r3, r1
+ 8001456:	78db      	ldrb	r3, [r3, #3]
+ 8001458:	f3c3 1340 	ubfx	r3, r3, #5, #1
+ 800145c:	b2db      	uxtb	r3, r3
+ 800145e:	b25b      	sxtb	r3, r3
+ 8001460:	019b      	lsls	r3, r3, #6
+ 8001462:	b25b      	sxtb	r3, r3
+ 8001464:	4313      	orrs	r3, r2
+ 8001466:	b25a      	sxtb	r2, r3
+ 8001468:	7bfb      	ldrb	r3, [r7, #15]
+ 800146a:	00db      	lsls	r3, r3, #3
+ 800146c:	6879      	ldr	r1, [r7, #4]
+ 800146e:	440b      	add	r3, r1
+ 8001470:	791b      	ldrb	r3, [r3, #4]
+ 8001472:	f3c3 0305 	ubfx	r3, r3, #0, #6
+ 8001476:	b2db      	uxtb	r3, r3
+ 8001478:	b25b      	sxtb	r3, r3
+ 800147a:	f003 033f 	and.w	r3, r3, #63	@ 0x3f
+ 800147e:	b25b      	sxtb	r3, r3
+ 8001480:	4313      	orrs	r3, r2
+ 8001482:	b259      	sxtb	r1, r3
+ 8001484:	7bfa      	ldrb	r2, [r7, #15]
+ 8001486:	4613      	mov	r3, r2
+ 8001488:	005b      	lsls	r3, r3, #1
  800148a:	4413      	add	r3, r2
- 800148c:	b2ca      	uxtb	r2, r1
- 800148e:	701a      	strb	r2, [r3, #0]
+ 800148c:	005b      	lsls	r3, r3, #1
+ 800148e:	3303      	adds	r3, #3
+ 8001490:	683a      	ldr	r2, [r7, #0]
+ 8001492:	4413      	add	r3, r2
+ 8001494:	b2ca      	uxtb	r2, r1
+ 8001496:	701a      	strb	r2, [r3, #0]
+        cfg_b_tx_buffer[cic * DATA_LEN + 4] = (uint8_t)(cfg_b[cic].dcc & 0x00FF);
+ 8001498:	7bfb      	ldrb	r3, [r7, #15]
+ 800149a:	00db      	lsls	r3, r3, #3
+ 800149c:	687a      	ldr	r2, [r7, #4]
+ 800149e:	4413      	add	r3, r2
+ 80014a0:	88d9      	ldrh	r1, [r3, #6]
+ 80014a2:	7bfa      	ldrb	r2, [r7, #15]
+ 80014a4:	4613      	mov	r3, r2
+ 80014a6:	005b      	lsls	r3, r3, #1
+ 80014a8:	4413      	add	r3, r2
+ 80014aa:	005b      	lsls	r3, r3, #1
+ 80014ac:	3304      	adds	r3, #4
+ 80014ae:	683a      	ldr	r2, [r7, #0]
+ 80014b0:	4413      	add	r3, r2
+ 80014b2:	b2ca      	uxtb	r2, r1
+ 80014b4:	701a      	strb	r2, [r3, #0]
+        cfg_b_tx_buffer[cic * DATA_LEN + 5] = (uint8_t)((cfg_b[cic].dcc & 0xFF00) >> 8);
+ 80014b6:	7bfb      	ldrb	r3, [r7, #15]
+ 80014b8:	00db      	lsls	r3, r3, #3
+ 80014ba:	687a      	ldr	r2, [r7, #4]
+ 80014bc:	4413      	add	r3, r2
+ 80014be:	88db      	ldrh	r3, [r3, #6]
+ 80014c0:	0a1b      	lsrs	r3, r3, #8
+ 80014c2:	b299      	uxth	r1, r3
+ 80014c4:	7bfa      	ldrb	r2, [r7, #15]
+ 80014c6:	4613      	mov	r3, r2
+ 80014c8:	005b      	lsls	r3, r3, #1
+ 80014ca:	4413      	add	r3, r2
+ 80014cc:	005b      	lsls	r3, r3, #1
+ 80014ce:	3305      	adds	r3, #5
+ 80014d0:	683a      	ldr	r2, [r7, #0]
+ 80014d2:	4413      	add	r3, r2
+ 80014d4:	b2ca      	uxtb	r2, r1
+ 80014d6:	701a      	strb	r2, [r3, #0]
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 8001490:	7bfb      	ldrb	r3, [r7, #15]
- 8001492:	3301      	adds	r3, #1
- 8001494:	73fb      	strb	r3, [r7, #15]
- 8001496:	7bfb      	ldrb	r3, [r7, #15]
- 8001498:	2b01      	cmp	r3, #1
- 800149a:	f67f af60 	bls.w	800135e <ADBMS_Set_Config_B+0x10>
+ 80014d8:	7bfb      	ldrb	r3, [r7, #15]
+ 80014da:	3301      	adds	r3, #1
+ 80014dc:	73fb      	strb	r3, [r7, #15]
+ 80014de:	7bfb      	ldrb	r3, [r7, #15]
+ 80014e0:	2b01      	cmp	r3, #1
+ 80014e2:	f67f af60 	bls.w	80013a6 <ADBMS_Set_Config_B+0x10>
     }
 }
- 800149e:	bf00      	nop
- 80014a0:	bf00      	nop
- 80014a2:	3714      	adds	r7, #20
- 80014a4:	46bd      	mov	sp, r7
- 80014a6:	f85d 7b04 	ldr.w	r7, [sp], #4
- 80014aa:	4770      	bx	lr
+ 80014e6:	bf00      	nop
+ 80014e8:	bf00      	nop
+ 80014ea:	3714      	adds	r7, #20
+ 80014ec:	46bd      	mov	sp, r7
+ 80014ee:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80014f2:	4770      	bx	lr
 
-080014ac <ADBMS_Set_ADCV>:
+080014f4 <ADBMS_Set_ADCV>:
 
 void ADBMS_Set_ADCV(adcv_ adcv, uint16_t *adcv_cmd_buffer)
 {
- 80014ac:	b480      	push	{r7}
- 80014ae:	b083      	sub	sp, #12
- 80014b0:	af00      	add	r7, sp, #0
- 80014b2:	7138      	strb	r0, [r7, #4]
- 80014b4:	6039      	str	r1, [r7, #0]
+ 80014f4:	b480      	push	{r7}
+ 80014f6:	b083      	sub	sp, #12
+ 80014f8:	af00      	add	r7, sp, #0
+ 80014fa:	7138      	strb	r0, [r7, #4]
+ 80014fc:	6039      	str	r1, [r7, #0]
     *adcv_cmd_buffer = (0x1 << 9) 
                         | ((adcv.rd && 0x1) << 8) 
- 80014b6:	793b      	ldrb	r3, [r7, #4]
- 80014b8:	b21b      	sxth	r3, r3
- 80014ba:	021b      	lsls	r3, r3, #8
- 80014bc:	b21b      	sxth	r3, r3
- 80014be:	f403 7380 	and.w	r3, r3, #256	@ 0x100
- 80014c2:	b21b      	sxth	r3, r3
- 80014c4:	f443 7300 	orr.w	r3, r3, #512	@ 0x200
- 80014c8:	b21a      	sxth	r2, r3
-                        | ((adcv.cont && 0x1) << 7) 
- 80014ca:	793b      	ldrb	r3, [r7, #4]
- 80014cc:	b21b      	sxth	r3, r3
- 80014ce:	019b      	lsls	r3, r3, #6
- 80014d0:	b21b      	sxth	r3, r3
- 80014d2:	f003 0380 	and.w	r3, r3, #128	@ 0x80
- 80014d6:	b21b      	sxth	r3, r3
- 80014d8:	4313      	orrs	r3, r2
- 80014da:	b21b      	sxth	r3, r3
-                        | (0x3 << 5) 
- 80014dc:	f043 0360 	orr.w	r3, r3, #96	@ 0x60
- 80014e0:	b21a      	sxth	r2, r3
-                        | ((adcv.dcp && 0x1) << 4) 
- 80014e2:	793b      	ldrb	r3, [r7, #4]
- 80014e4:	b21b      	sxth	r3, r3
- 80014e6:	009b      	lsls	r3, r3, #2
- 80014e8:	b21b      	sxth	r3, r3
- 80014ea:	f003 0310 	and.w	r3, r3, #16
- 80014ee:	b21b      	sxth	r3, r3
- 80014f0:	4313      	orrs	r3, r2
- 80014f2:	b21a      	sxth	r2, r3
-                        | ((adcv.rstf && 0x1) << 2) 
- 80014f4:	793b      	ldrb	r3, [r7, #4]
- 80014f6:	085b      	lsrs	r3, r3, #1
- 80014f8:	b2db      	uxtb	r3, r3
- 80014fa:	b21b      	sxth	r3, r3
- 80014fc:	f003 0304 	and.w	r3, r3, #4
+ 80014fe:	793b      	ldrb	r3, [r7, #4]
  8001500:	b21b      	sxth	r3, r3
- 8001502:	4313      	orrs	r3, r2
- 8001504:	b21a      	sxth	r2, r3
-                        | (adcv.ow && 0x3);
- 8001506:	793b      	ldrb	r3, [r7, #4]
- 8001508:	f003 0330 	and.w	r3, r3, #48	@ 0x30
- 800150c:	b2db      	uxtb	r3, r3
- 800150e:	2b00      	cmp	r3, #0
- 8001510:	bf14      	ite	ne
- 8001512:	2301      	movne	r3, #1
- 8001514:	2300      	moveq	r3, #0
- 8001516:	b2db      	uxtb	r3, r3
+ 8001502:	021b      	lsls	r3, r3, #8
+ 8001504:	b21b      	sxth	r3, r3
+ 8001506:	f403 7380 	and.w	r3, r3, #256	@ 0x100
+ 800150a:	b21b      	sxth	r3, r3
+ 800150c:	f443 7300 	orr.w	r3, r3, #512	@ 0x200
+ 8001510:	b21a      	sxth	r2, r3
+                        | ((adcv.cont && 0x1) << 7) 
+ 8001512:	793b      	ldrb	r3, [r7, #4]
+ 8001514:	b21b      	sxth	r3, r3
+ 8001516:	019b      	lsls	r3, r3, #6
  8001518:	b21b      	sxth	r3, r3
- 800151a:	4313      	orrs	r3, r2
- 800151c:	b21b      	sxth	r3, r3
- 800151e:	b29a      	uxth	r2, r3
+ 800151a:	f003 0380 	and.w	r3, r3, #128	@ 0x80
+ 800151e:	b21b      	sxth	r3, r3
+ 8001520:	4313      	orrs	r3, r2
+ 8001522:	b21b      	sxth	r3, r3
+                        | (0x3 << 5) 
+ 8001524:	f043 0360 	orr.w	r3, r3, #96	@ 0x60
+ 8001528:	b21a      	sxth	r2, r3
+                        | ((adcv.dcp && 0x1) << 4) 
+ 800152a:	793b      	ldrb	r3, [r7, #4]
+ 800152c:	b21b      	sxth	r3, r3
+ 800152e:	009b      	lsls	r3, r3, #2
+ 8001530:	b21b      	sxth	r3, r3
+ 8001532:	f003 0310 	and.w	r3, r3, #16
+ 8001536:	b21b      	sxth	r3, r3
+ 8001538:	4313      	orrs	r3, r2
+ 800153a:	b21a      	sxth	r2, r3
+                        | ((adcv.rstf && 0x1) << 2) 
+ 800153c:	793b      	ldrb	r3, [r7, #4]
+ 800153e:	085b      	lsrs	r3, r3, #1
+ 8001540:	b2db      	uxtb	r3, r3
+ 8001542:	b21b      	sxth	r3, r3
+ 8001544:	f003 0304 	and.w	r3, r3, #4
+ 8001548:	b21b      	sxth	r3, r3
+ 800154a:	4313      	orrs	r3, r2
+ 800154c:	b21a      	sxth	r2, r3
+                        | (adcv.ow && 0x3);
+ 800154e:	793b      	ldrb	r3, [r7, #4]
+ 8001550:	f003 0330 	and.w	r3, r3, #48	@ 0x30
+ 8001554:	b2db      	uxtb	r3, r3
+ 8001556:	2b00      	cmp	r3, #0
+ 8001558:	bf14      	ite	ne
+ 800155a:	2301      	movne	r3, #1
+ 800155c:	2300      	moveq	r3, #0
+ 800155e:	b2db      	uxtb	r3, r3
+ 8001560:	b21b      	sxth	r3, r3
+ 8001562:	4313      	orrs	r3, r2
+ 8001564:	b21b      	sxth	r3, r3
+ 8001566:	b29a      	uxth	r2, r3
     *adcv_cmd_buffer = (0x1 << 9) 
- 8001520:	683b      	ldr	r3, [r7, #0]
- 8001522:	801a      	strh	r2, [r3, #0]
+ 8001568:	683b      	ldr	r3, [r7, #0]
+ 800156a:	801a      	strh	r2, [r3, #0]
 }
- 8001524:	bf00      	nop
- 8001526:	370c      	adds	r7, #12
- 8001528:	46bd      	mov	sp, r7
- 800152a:	f85d 7b04 	ldr.w	r7, [sp], #4
- 800152e:	4770      	bx	lr
+ 800156c:	bf00      	nop
+ 800156e:	370c      	adds	r7, #12
+ 8001570:	46bd      	mov	sp, r7
+ 8001572:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8001576:	4770      	bx	lr
 
-08001530 <ADBMS_Set_ADAX>:
+08001578 <ADBMS_Set_ADAX>:
                         | (0x1 << 3)
                         | (adsv.ow && 0x3);
 }
 
 void ADBMS_Set_ADAX(adax_ adax, uint16_t *adax_cmd_buffer)
 {
- 8001530:	b480      	push	{r7}
- 8001532:	b083      	sub	sp, #12
- 8001534:	af00      	add	r7, sp, #0
- 8001536:	7138      	strb	r0, [r7, #4]
- 8001538:	6039      	str	r1, [r7, #0]
+ 8001578:	b480      	push	{r7}
+ 800157a:	b083      	sub	sp, #12
+ 800157c:	af00      	add	r7, sp, #0
+ 800157e:	7138      	strb	r0, [r7, #4]
+ 8001580:	6039      	str	r1, [r7, #0]
     *adax_cmd_buffer = (0x1 << 10) 
                         | ((adax.ow && 0x1) << 8)
- 800153a:	793b      	ldrb	r3, [r7, #4]
- 800153c:	b21b      	sxth	r3, r3
- 800153e:	021b      	lsls	r3, r3, #8
- 8001540:	b21b      	sxth	r3, r3
- 8001542:	f403 7380 	and.w	r3, r3, #256	@ 0x100
- 8001546:	b21b      	sxth	r3, r3
- 8001548:	f443 6380 	orr.w	r3, r3, #1024	@ 0x400
- 800154c:	b21a      	sxth	r2, r3
-                        | ((adax.pup && 0x1) << 7)
- 800154e:	793b      	ldrb	r3, [r7, #4]
- 8001550:	b21b      	sxth	r3, r3
- 8001552:	019b      	lsls	r3, r3, #6
- 8001554:	b21b      	sxth	r3, r3
- 8001556:	f003 0380 	and.w	r3, r3, #128	@ 0x80
- 800155a:	b21b      	sxth	r3, r3
- 800155c:	4313      	orrs	r3, r2
- 800155e:	b21b      	sxth	r3, r3
-                        | ((adax.ch && 0x10) << 6)
- 8001560:	793a      	ldrb	r2, [r7, #4]
- 8001562:	f002 027c 	and.w	r2, r2, #124	@ 0x7c
- 8001566:	b2d2      	uxtb	r2, r2
- 8001568:	2a00      	cmp	r2, #0
- 800156a:	d001      	beq.n	8001570 <ADBMS_Set_ADAX+0x40>
- 800156c:	2240      	movs	r2, #64	@ 0x40
- 800156e:	e000      	b.n	8001572 <ADBMS_Set_ADAX+0x42>
- 8001570:	2200      	movs	r2, #0
- 8001572:	4313      	orrs	r3, r2
- 8001574:	b21b      	sxth	r3, r3
-                        | (0x1 << 4)
- 8001576:	f043 0310 	orr.w	r3, r3, #16
- 800157a:	b21a      	sxth	r2, r3
-                        | (adax.ch && 0xF);
- 800157c:	793b      	ldrb	r3, [r7, #4]
- 800157e:	f003 037c 	and.w	r3, r3, #124	@ 0x7c
- 8001582:	b2db      	uxtb	r3, r3
- 8001584:	2b00      	cmp	r3, #0
- 8001586:	bf14      	ite	ne
- 8001588:	2301      	movne	r3, #1
- 800158a:	2300      	moveq	r3, #0
- 800158c:	b2db      	uxtb	r3, r3
+ 8001582:	793b      	ldrb	r3, [r7, #4]
+ 8001584:	b21b      	sxth	r3, r3
+ 8001586:	021b      	lsls	r3, r3, #8
+ 8001588:	b21b      	sxth	r3, r3
+ 800158a:	f403 7380 	and.w	r3, r3, #256	@ 0x100
  800158e:	b21b      	sxth	r3, r3
- 8001590:	4313      	orrs	r3, r2
- 8001592:	b21b      	sxth	r3, r3
- 8001594:	b29a      	uxth	r2, r3
+ 8001590:	f443 6380 	orr.w	r3, r3, #1024	@ 0x400
+ 8001594:	b21a      	sxth	r2, r3
+                        | ((adax.pup && 0x1) << 7)
+ 8001596:	793b      	ldrb	r3, [r7, #4]
+ 8001598:	b21b      	sxth	r3, r3
+ 800159a:	019b      	lsls	r3, r3, #6
+ 800159c:	b21b      	sxth	r3, r3
+ 800159e:	f003 0380 	and.w	r3, r3, #128	@ 0x80
+ 80015a2:	b21b      	sxth	r3, r3
+ 80015a4:	4313      	orrs	r3, r2
+ 80015a6:	b21b      	sxth	r3, r3
+                        | ((adax.ch && 0x10) << 6)
+ 80015a8:	793a      	ldrb	r2, [r7, #4]
+ 80015aa:	f002 027c 	and.w	r2, r2, #124	@ 0x7c
+ 80015ae:	b2d2      	uxtb	r2, r2
+ 80015b0:	2a00      	cmp	r2, #0
+ 80015b2:	d001      	beq.n	80015b8 <ADBMS_Set_ADAX+0x40>
+ 80015b4:	2240      	movs	r2, #64	@ 0x40
+ 80015b6:	e000      	b.n	80015ba <ADBMS_Set_ADAX+0x42>
+ 80015b8:	2200      	movs	r2, #0
+ 80015ba:	4313      	orrs	r3, r2
+ 80015bc:	b21b      	sxth	r3, r3
+                        | (0x1 << 4)
+ 80015be:	f043 0310 	orr.w	r3, r3, #16
+ 80015c2:	b21a      	sxth	r2, r3
+                        | (adax.ch && 0xF);
+ 80015c4:	793b      	ldrb	r3, [r7, #4]
+ 80015c6:	f003 037c 	and.w	r3, r3, #124	@ 0x7c
+ 80015ca:	b2db      	uxtb	r3, r3
+ 80015cc:	2b00      	cmp	r3, #0
+ 80015ce:	bf14      	ite	ne
+ 80015d0:	2301      	movne	r3, #1
+ 80015d2:	2300      	moveq	r3, #0
+ 80015d4:	b2db      	uxtb	r3, r3
+ 80015d6:	b21b      	sxth	r3, r3
+ 80015d8:	4313      	orrs	r3, r2
+ 80015da:	b21b      	sxth	r3, r3
+ 80015dc:	b29a      	uxth	r2, r3
     *adax_cmd_buffer = (0x1 << 10) 
- 8001596:	683b      	ldr	r3, [r7, #0]
- 8001598:	801a      	strh	r2, [r3, #0]
+ 80015de:	683b      	ldr	r3, [r7, #0]
+ 80015e0:	801a      	strh	r2, [r3, #0]
 }
- 800159a:	bf00      	nop
- 800159c:	370c      	adds	r7, #12
- 800159e:	46bd      	mov	sp, r7
- 80015a0:	f85d 7b04 	ldr.w	r7, [sp], #4
- 80015a4:	4770      	bx	lr
+ 80015e2:	bf00      	nop
+ 80015e4:	370c      	adds	r7, #12
+ 80015e6:	46bd      	mov	sp, r7
+ 80015e8:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80015ec:	4770      	bx	lr
 	...
 
-080015a8 <ADBMS_WakeUP_ICs>:
+080015f0 <ADBMS_WakeUP_ICs>:
     *adax2_cmd_buffer = (0x1 << 10) 
                         | (adax2.ch && 0xF);
 }
 
 void ADBMS_WakeUP_ICs()
 {
- 80015a8:	b580      	push	{r7, lr}
- 80015aa:	b082      	sub	sp, #8
- 80015ac:	af00      	add	r7, sp, #0
+ 80015f0:	b580      	push	{r7, lr}
+ 80015f2:	b082      	sub	sp, #8
+ 80015f4:	af00      	add	r7, sp, #0
     for(uint8_t i = 0; i < NUM_CHIPS; i++){
- 80015ae:	2300      	movs	r3, #0
- 80015b0:	71fb      	strb	r3, [r7, #7]
- 80015b2:	e012      	b.n	80015da <ADBMS_WakeUP_ICs+0x32>
+ 80015f6:	2300      	movs	r3, #0
+ 80015f8:	71fb      	strb	r3, [r7, #7]
+ 80015fa:	e012      	b.n	8001622 <ADBMS_WakeUP_ICs+0x32>
         // Blocking Transmit the msg
     	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
- 80015b4:	2200      	movs	r2, #0
- 80015b6:	2110      	movs	r1, #16
- 80015b8:	480c      	ldr	r0, [pc, #48]	@ (80015ec <ADBMS_WakeUP_ICs+0x44>)
- 80015ba:	f002 ff17 	bl	80043ec <HAL_GPIO_WritePin>
+ 80015fc:	2200      	movs	r2, #0
+ 80015fe:	2110      	movs	r1, #16
+ 8001600:	480c      	ldr	r0, [pc, #48]	@ (8001634 <ADBMS_WakeUP_ICs+0x44>)
+ 8001602:	f002 fef3 	bl	80043ec <HAL_GPIO_WritePin>
     	HAL_Delay(1);
- 80015be:	2001      	movs	r0, #1
- 80015c0:	f001 fdca 	bl	8003158 <HAL_Delay>
+ 8001606:	2001      	movs	r0, #1
+ 8001608:	f001 fda6 	bl	8003158 <HAL_Delay>
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
- 80015c4:	2201      	movs	r2, #1
- 80015c6:	2110      	movs	r1, #16
- 80015c8:	4808      	ldr	r0, [pc, #32]	@ (80015ec <ADBMS_WakeUP_ICs+0x44>)
- 80015ca:	f002 ff0f 	bl	80043ec <HAL_GPIO_WritePin>
+ 800160c:	2201      	movs	r2, #1
+ 800160e:	2110      	movs	r1, #16
+ 8001610:	4808      	ldr	r0, [pc, #32]	@ (8001634 <ADBMS_WakeUP_ICs+0x44>)
+ 8001612:	f002 feeb 	bl	80043ec <HAL_GPIO_WritePin>
         HAL_Delay(1);
- 80015ce:	2001      	movs	r0, #1
- 80015d0:	f001 fdc2 	bl	8003158 <HAL_Delay>
+ 8001616:	2001      	movs	r0, #1
+ 8001618:	f001 fd9e 	bl	8003158 <HAL_Delay>
     for(uint8_t i = 0; i < NUM_CHIPS; i++){
- 80015d4:	79fb      	ldrb	r3, [r7, #7]
- 80015d6:	3301      	adds	r3, #1
- 80015d8:	71fb      	strb	r3, [r7, #7]
- 80015da:	79fb      	ldrb	r3, [r7, #7]
- 80015dc:	2b01      	cmp	r3, #1
- 80015de:	d9e9      	bls.n	80015b4 <ADBMS_WakeUP_ICs+0xc>
+ 800161c:	79fb      	ldrb	r3, [r7, #7]
+ 800161e:	3301      	adds	r3, #1
+ 8001620:	71fb      	strb	r3, [r7, #7]
+ 8001622:	79fb      	ldrb	r3, [r7, #7]
+ 8001624:	2b01      	cmp	r3, #1
+ 8001626:	d9e9      	bls.n	80015fc <ADBMS_WakeUP_ICs+0xc>
     }
 }
- 80015e0:	bf00      	nop
- 80015e2:	bf00      	nop
- 80015e4:	3708      	adds	r7, #8
- 80015e6:	46bd      	mov	sp, r7
- 80015e8:	bd80      	pop	{r7, pc}
- 80015ea:	bf00      	nop
- 80015ec:	40020000 	.word	0x40020000
+ 8001628:	bf00      	nop
+ 800162a:	bf00      	nop
+ 800162c:	3708      	adds	r7, #8
+ 800162e:	46bd      	mov	sp, r7
+ 8001630:	bd80      	pop	{r7, pc}
+ 8001632:	bf00      	nop
+ 8001634:	40020000 	.word	0x40020000
 
-080015f0 <ADBMS_Write_CMD>:
+08001638 <ADBMS_Write_CMD>:
 
 void ADBMS_Write_CMD(SPI_HandleTypeDef *hspi, uint16_t tx_cmd)
 {
- 80015f0:	b580      	push	{r7, lr}
- 80015f2:	b084      	sub	sp, #16
- 80015f4:	af00      	add	r7, sp, #0
- 80015f6:	6078      	str	r0, [r7, #4]
- 80015f8:	460b      	mov	r3, r1
- 80015fa:	807b      	strh	r3, [r7, #2]
+ 8001638:	b580      	push	{r7, lr}
+ 800163a:	b084      	sub	sp, #16
+ 800163c:	af00      	add	r7, sp, #0
+ 800163e:	6078      	str	r0, [r7, #4]
+ 8001640:	460b      	mov	r3, r1
+ 8001642:	807b      	strh	r3, [r7, #2]
     uint8_t spi_dataBuf[4];
     spi_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
- 80015fc:	887b      	ldrh	r3, [r7, #2]
- 80015fe:	0a1b      	lsrs	r3, r3, #8
- 8001600:	b29b      	uxth	r3, r3
- 8001602:	b2db      	uxtb	r3, r3
- 8001604:	723b      	strb	r3, [r7, #8]
+ 8001644:	887b      	ldrh	r3, [r7, #2]
+ 8001646:	0a1b      	lsrs	r3, r3, #8
+ 8001648:	b29b      	uxth	r3, r3
+ 800164a:	b2db      	uxtb	r3, r3
+ 800164c:	723b      	strb	r3, [r7, #8]
     spi_dataBuf[1] = (uint8_t)(tx_cmd);
- 8001606:	887b      	ldrh	r3, [r7, #2]
- 8001608:	b2db      	uxtb	r3, r3
- 800160a:	727b      	strb	r3, [r7, #9]
+ 800164e:	887b      	ldrh	r3, [r7, #2]
+ 8001650:	b2db      	uxtb	r3, r3
+ 8001652:	727b      	strb	r3, [r7, #9]
 
     uint16_t cmd_pec = Pec15_Calc(2, spi_dataBuf);
- 800160c:	f107 0308 	add.w	r3, r7, #8
- 8001610:	4619      	mov	r1, r3
- 8001612:	2002      	movs	r0, #2
- 8001614:	f7ff fcae 	bl	8000f74 <Pec15_Calc>
- 8001618:	4603      	mov	r3, r0
- 800161a:	81fb      	strh	r3, [r7, #14]
+ 8001654:	f107 0308 	add.w	r3, r7, #8
+ 8001658:	4619      	mov	r1, r3
+ 800165a:	2002      	movs	r0, #2
+ 800165c:	f7ff fc8a 	bl	8000f74 <Pec15_Calc>
+ 8001660:	4603      	mov	r3, r0
+ 8001662:	81fb      	strh	r3, [r7, #14]
     spi_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
- 800161c:	89fb      	ldrh	r3, [r7, #14]
- 800161e:	0a1b      	lsrs	r3, r3, #8
- 8001620:	b29b      	uxth	r3, r3
- 8001622:	b2db      	uxtb	r3, r3
- 8001624:	72bb      	strb	r3, [r7, #10]
+ 8001664:	89fb      	ldrh	r3, [r7, #14]
+ 8001666:	0a1b      	lsrs	r3, r3, #8
+ 8001668:	b29b      	uxth	r3, r3
+ 800166a:	b2db      	uxtb	r3, r3
+ 800166c:	72bb      	strb	r3, [r7, #10]
     spi_dataBuf[3] = (uint8_t)(cmd_pec);
- 8001626:	89fb      	ldrh	r3, [r7, #14]
- 8001628:	b2db      	uxtb	r3, r3
- 800162a:	72fb      	strb	r3, [r7, #11]
+ 800166e:	89fb      	ldrh	r3, [r7, #14]
+ 8001670:	b2db      	uxtb	r3, r3
+ 8001672:	72fb      	strb	r3, [r7, #11]
 
     // Blocking Transmit the cmd
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
- 800162c:	2200      	movs	r2, #0
- 800162e:	2110      	movs	r1, #16
- 8001630:	4809      	ldr	r0, [pc, #36]	@ (8001658 <ADBMS_Write_CMD+0x68>)
- 8001632:	f002 fedb 	bl	80043ec <HAL_GPIO_WritePin>
+ 8001674:	2200      	movs	r2, #0
+ 8001676:	2110      	movs	r1, #16
+ 8001678:	4809      	ldr	r0, [pc, #36]	@ (80016a0 <ADBMS_Write_CMD+0x68>)
+ 800167a:	f002 feb7 	bl	80043ec <HAL_GPIO_WritePin>
     if (HAL_SPI_Transmit(hspi, spi_dataBuf, CMD_LEN + PEC_LEN, SPI_TIME_OUT) != HAL_OK)
- 8001636:	f107 0108 	add.w	r1, r7, #8
- 800163a:	f04f 33ff 	mov.w	r3, #4294967295
- 800163e:	2204      	movs	r2, #4
- 8001640:	6878      	ldr	r0, [r7, #4]
- 8001642:	f004 fe38 	bl	80062b6 <HAL_SPI_Transmit>
+ 800167e:	f107 0108 	add.w	r1, r7, #8
+ 8001682:	f04f 33ff 	mov.w	r3, #4294967295
+ 8001686:	2204      	movs	r2, #4
+ 8001688:	6878      	ldr	r0, [r7, #4]
+ 800168a:	f004 fe14 	bl	80062b6 <HAL_SPI_Transmit>
     {
         // TODO: do something if fails
     }
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
- 8001646:	2201      	movs	r2, #1
- 8001648:	2110      	movs	r1, #16
- 800164a:	4803      	ldr	r0, [pc, #12]	@ (8001658 <ADBMS_Write_CMD+0x68>)
- 800164c:	f002 fece 	bl	80043ec <HAL_GPIO_WritePin>
+ 800168e:	2201      	movs	r2, #1
+ 8001690:	2110      	movs	r1, #16
+ 8001692:	4803      	ldr	r0, [pc, #12]	@ (80016a0 <ADBMS_Write_CMD+0x68>)
+ 8001694:	f002 feaa 	bl	80043ec <HAL_GPIO_WritePin>
 }
- 8001650:	bf00      	nop
- 8001652:	3710      	adds	r7, #16
- 8001654:	46bd      	mov	sp, r7
- 8001656:	bd80      	pop	{r7, pc}
- 8001658:	40020000 	.word	0x40020000
+ 8001698:	bf00      	nop
+ 800169a:	3710      	adds	r7, #16
+ 800169c:	46bd      	mov	sp, r7
+ 800169e:	bd80      	pop	{r7, pc}
+ 80016a0:	40020000 	.word	0x40020000
 
-0800165c <ADBMS_Write_Data>:
+080016a4 <ADBMS_Write_Data>:
 
 void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf)
 {
- 800165c:	b580      	push	{r7, lr}
- 800165e:	b086      	sub	sp, #24
- 8001660:	af00      	add	r7, sp, #0
- 8001662:	60f8      	str	r0, [r7, #12]
- 8001664:	607a      	str	r2, [r7, #4]
- 8001666:	603b      	str	r3, [r7, #0]
- 8001668:	460b      	mov	r3, r1
- 800166a:	817b      	strh	r3, [r7, #10]
+ 80016a4:	b580      	push	{r7, lr}
+ 80016a6:	b086      	sub	sp, #24
+ 80016a8:	af00      	add	r7, sp, #0
+ 80016aa:	60f8      	str	r0, [r7, #12]
+ 80016ac:	607a      	str	r2, [r7, #4]
+ 80016ae:	603b      	str	r3, [r7, #0]
+ 80016b0:	460b      	mov	r3, r1
+ 80016b2:	817b      	strh	r3, [r7, #10]
     spi_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
- 800166c:	897b      	ldrh	r3, [r7, #10]
- 800166e:	0a1b      	lsrs	r3, r3, #8
- 8001670:	b29b      	uxth	r3, r3
- 8001672:	b2da      	uxtb	r2, r3
- 8001674:	683b      	ldr	r3, [r7, #0]
- 8001676:	701a      	strb	r2, [r3, #0]
+ 80016b4:	897b      	ldrh	r3, [r7, #10]
+ 80016b6:	0a1b      	lsrs	r3, r3, #8
+ 80016b8:	b29b      	uxth	r3, r3
+ 80016ba:	b2da      	uxtb	r2, r3
+ 80016bc:	683b      	ldr	r3, [r7, #0]
+ 80016be:	701a      	strb	r2, [r3, #0]
     spi_dataBuf[1] = (uint8_t)(tx_cmd);
- 8001678:	683b      	ldr	r3, [r7, #0]
- 800167a:	3301      	adds	r3, #1
- 800167c:	897a      	ldrh	r2, [r7, #10]
- 800167e:	b2d2      	uxtb	r2, r2
- 8001680:	701a      	strb	r2, [r3, #0]
+ 80016c0:	683b      	ldr	r3, [r7, #0]
+ 80016c2:	3301      	adds	r3, #1
+ 80016c4:	897a      	ldrh	r2, [r7, #10]
+ 80016c6:	b2d2      	uxtb	r2, r2
+ 80016c8:	701a      	strb	r2, [r3, #0]
 
     uint16_t cmd_pec = Pec15_Calc(2, spi_dataBuf);
- 8001682:	6839      	ldr	r1, [r7, #0]
- 8001684:	2002      	movs	r0, #2
- 8001686:	f7ff fc75 	bl	8000f74 <Pec15_Calc>
- 800168a:	4603      	mov	r3, r0
- 800168c:	82bb      	strh	r3, [r7, #20]
+ 80016ca:	6839      	ldr	r1, [r7, #0]
+ 80016cc:	2002      	movs	r0, #2
+ 80016ce:	f7ff fc51 	bl	8000f74 <Pec15_Calc>
+ 80016d2:	4603      	mov	r3, r0
+ 80016d4:	82bb      	strh	r3, [r7, #20]
     spi_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
- 800168e:	8abb      	ldrh	r3, [r7, #20]
- 8001690:	0a1b      	lsrs	r3, r3, #8
- 8001692:	b29a      	uxth	r2, r3
- 8001694:	683b      	ldr	r3, [r7, #0]
- 8001696:	3302      	adds	r3, #2
- 8001698:	b2d2      	uxtb	r2, r2
- 800169a:	701a      	strb	r2, [r3, #0]
+ 80016d6:	8abb      	ldrh	r3, [r7, #20]
+ 80016d8:	0a1b      	lsrs	r3, r3, #8
+ 80016da:	b29a      	uxth	r2, r3
+ 80016dc:	683b      	ldr	r3, [r7, #0]
+ 80016de:	3302      	adds	r3, #2
+ 80016e0:	b2d2      	uxtb	r2, r2
+ 80016e2:	701a      	strb	r2, [r3, #0]
     spi_dataBuf[3] = (uint8_t)(cmd_pec);
- 800169c:	683b      	ldr	r3, [r7, #0]
- 800169e:	3303      	adds	r3, #3
- 80016a0:	8aba      	ldrh	r2, [r7, #20]
- 80016a2:	b2d2      	uxtb	r2, r2
- 80016a4:	701a      	strb	r2, [r3, #0]
+ 80016e4:	683b      	ldr	r3, [r7, #0]
+ 80016e6:	3303      	adds	r3, #3
+ 80016e8:	8aba      	ldrh	r2, [r7, #20]
+ 80016ea:	b2d2      	uxtb	r2, r2
+ 80016ec:	701a      	strb	r2, [r3, #0]
 
     // Decrementing because sends to last chip on the stack first
     for(uint8_t cic = NUM_CHIPS; cic > 0; cic--){
- 80016a6:	2302      	movs	r3, #2
- 80016a8:	75fb      	strb	r3, [r7, #23]
- 80016aa:	e04d      	b.n	8001748 <ADBMS_Write_Data+0xec>
+ 80016ee:	2302      	movs	r3, #2
+ 80016f0:	75fb      	strb	r3, [r7, #23]
+ 80016f2:	e04d      	b.n	8001790 <ADBMS_Write_Data+0xec>
         // Copy over data from data ptr
         for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++){
- 80016ac:	2300      	movs	r3, #0
- 80016ae:	75bb      	strb	r3, [r7, #22]
- 80016b0:	e01b      	b.n	80016ea <ADBMS_Write_Data+0x8e>
+ 80016f4:	2300      	movs	r3, #0
+ 80016f6:	75bb      	strb	r3, [r7, #22]
+ 80016f8:	e01b      	b.n	8001732 <ADBMS_Write_Data+0x8e>
             spi_dataBuf[4 + cbyte + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = data[(NUM_CHIPS-cic) * DATA_LEN + cbyte];
- 80016b2:	7dfb      	ldrb	r3, [r7, #23]
- 80016b4:	f1c3 0202 	rsb	r2, r3, #2
- 80016b8:	4613      	mov	r3, r2
- 80016ba:	005b      	lsls	r3, r3, #1
- 80016bc:	4413      	add	r3, r2
- 80016be:	005b      	lsls	r3, r3, #1
- 80016c0:	461a      	mov	r2, r3
- 80016c2:	7dbb      	ldrb	r3, [r7, #22]
- 80016c4:	4413      	add	r3, r2
- 80016c6:	461a      	mov	r2, r3
- 80016c8:	687b      	ldr	r3, [r7, #4]
- 80016ca:	441a      	add	r2, r3
- 80016cc:	7dbb      	ldrb	r3, [r7, #22]
- 80016ce:	1d19      	adds	r1, r3, #4
- 80016d0:	7dfb      	ldrb	r3, [r7, #23]
- 80016d2:	f1c3 0302 	rsb	r3, r3, #2
- 80016d6:	00db      	lsls	r3, r3, #3
- 80016d8:	440b      	add	r3, r1
- 80016da:	4619      	mov	r1, r3
- 80016dc:	683b      	ldr	r3, [r7, #0]
- 80016de:	440b      	add	r3, r1
- 80016e0:	7812      	ldrb	r2, [r2, #0]
- 80016e2:	701a      	strb	r2, [r3, #0]
+ 80016fa:	7dfb      	ldrb	r3, [r7, #23]
+ 80016fc:	f1c3 0202 	rsb	r2, r3, #2
+ 8001700:	4613      	mov	r3, r2
+ 8001702:	005b      	lsls	r3, r3, #1
+ 8001704:	4413      	add	r3, r2
+ 8001706:	005b      	lsls	r3, r3, #1
+ 8001708:	461a      	mov	r2, r3
+ 800170a:	7dbb      	ldrb	r3, [r7, #22]
+ 800170c:	4413      	add	r3, r2
+ 800170e:	461a      	mov	r2, r3
+ 8001710:	687b      	ldr	r3, [r7, #4]
+ 8001712:	441a      	add	r2, r3
+ 8001714:	7dbb      	ldrb	r3, [r7, #22]
+ 8001716:	1d19      	adds	r1, r3, #4
+ 8001718:	7dfb      	ldrb	r3, [r7, #23]
+ 800171a:	f1c3 0302 	rsb	r3, r3, #2
+ 800171e:	00db      	lsls	r3, r3, #3
+ 8001720:	440b      	add	r3, r1
+ 8001722:	4619      	mov	r1, r3
+ 8001724:	683b      	ldr	r3, [r7, #0]
+ 8001726:	440b      	add	r3, r1
+ 8001728:	7812      	ldrb	r2, [r2, #0]
+ 800172a:	701a      	strb	r2, [r3, #0]
         for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++){
- 80016e4:	7dbb      	ldrb	r3, [r7, #22]
- 80016e6:	3301      	adds	r3, #1
- 80016e8:	75bb      	strb	r3, [r7, #22]
- 80016ea:	7dbb      	ldrb	r3, [r7, #22]
- 80016ec:	2b05      	cmp	r3, #5
- 80016ee:	d9e0      	bls.n	80016b2 <ADBMS_Write_Data+0x56>
+ 800172c:	7dbb      	ldrb	r3, [r7, #22]
+ 800172e:	3301      	adds	r3, #1
+ 8001730:	75bb      	strb	r3, [r7, #22]
+ 8001732:	7dbb      	ldrb	r3, [r7, #22]
+ 8001734:	2b05      	cmp	r3, #5
+ 8001736:	d9e0      	bls.n	80016fa <ADBMS_Write_Data+0x56>
         }
 
         // Caclulate PEC10
         uint16_t data_pec = Pec10_Calc(false, DATA_LEN, (data + (NUM_CHIPS-cic) * DATA_LEN));  
- 80016f0:	7dfb      	ldrb	r3, [r7, #23]
- 80016f2:	f1c3 0202 	rsb	r2, r3, #2
- 80016f6:	4613      	mov	r3, r2
- 80016f8:	005b      	lsls	r3, r3, #1
- 80016fa:	4413      	add	r3, r2
- 80016fc:	005b      	lsls	r3, r3, #1
- 80016fe:	461a      	mov	r2, r3
- 8001700:	687b      	ldr	r3, [r7, #4]
- 8001702:	4413      	add	r3, r2
- 8001704:	461a      	mov	r2, r3
- 8001706:	2106      	movs	r1, #6
- 8001708:	2000      	movs	r0, #0
- 800170a:	f7ff fc67 	bl	8000fdc <Pec10_Calc>
- 800170e:	4603      	mov	r3, r0
- 8001710:	827b      	strh	r3, [r7, #18]
+ 8001738:	7dfb      	ldrb	r3, [r7, #23]
+ 800173a:	f1c3 0202 	rsb	r2, r3, #2
+ 800173e:	4613      	mov	r3, r2
+ 8001740:	005b      	lsls	r3, r3, #1
+ 8001742:	4413      	add	r3, r2
+ 8001744:	005b      	lsls	r3, r3, #1
+ 8001746:	461a      	mov	r2, r3
+ 8001748:	687b      	ldr	r3, [r7, #4]
+ 800174a:	4413      	add	r3, r2
+ 800174c:	461a      	mov	r2, r3
+ 800174e:	2106      	movs	r1, #6
+ 8001750:	2000      	movs	r0, #0
+ 8001752:	f7ff fc43 	bl	8000fdc <Pec10_Calc>
+ 8001756:	4603      	mov	r3, r0
+ 8001758:	827b      	strh	r3, [r7, #18]
         spi_dataBuf[4 + DATA_LEN + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec >> 8);
- 8001712:	8a7b      	ldrh	r3, [r7, #18]
- 8001714:	0a1b      	lsrs	r3, r3, #8
- 8001716:	b29a      	uxth	r2, r3
- 8001718:	7dfb      	ldrb	r3, [r7, #23]
- 800171a:	f1c3 0302 	rsb	r3, r3, #2
- 800171e:	00db      	lsls	r3, r3, #3
- 8001720:	330a      	adds	r3, #10
- 8001722:	4619      	mov	r1, r3
- 8001724:	683b      	ldr	r3, [r7, #0]
- 8001726:	440b      	add	r3, r1
- 8001728:	b2d2      	uxtb	r2, r2
- 800172a:	701a      	strb	r2, [r3, #0]
+ 800175a:	8a7b      	ldrh	r3, [r7, #18]
+ 800175c:	0a1b      	lsrs	r3, r3, #8
+ 800175e:	b29a      	uxth	r2, r3
+ 8001760:	7dfb      	ldrb	r3, [r7, #23]
+ 8001762:	f1c3 0302 	rsb	r3, r3, #2
+ 8001766:	00db      	lsls	r3, r3, #3
+ 8001768:	330a      	adds	r3, #10
+ 800176a:	4619      	mov	r1, r3
+ 800176c:	683b      	ldr	r3, [r7, #0]
+ 800176e:	440b      	add	r3, r1
+ 8001770:	b2d2      	uxtb	r2, r2
+ 8001772:	701a      	strb	r2, [r3, #0]
         spi_dataBuf[4 + DATA_LEN + 1 + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec);
- 800172c:	7dfb      	ldrb	r3, [r7, #23]
- 800172e:	f1c3 0302 	rsb	r3, r3, #2
- 8001732:	00db      	lsls	r3, r3, #3
- 8001734:	330b      	adds	r3, #11
- 8001736:	461a      	mov	r2, r3
- 8001738:	683b      	ldr	r3, [r7, #0]
- 800173a:	4413      	add	r3, r2
- 800173c:	8a7a      	ldrh	r2, [r7, #18]
- 800173e:	b2d2      	uxtb	r2, r2
- 8001740:	701a      	strb	r2, [r3, #0]
+ 8001774:	7dfb      	ldrb	r3, [r7, #23]
+ 8001776:	f1c3 0302 	rsb	r3, r3, #2
+ 800177a:	00db      	lsls	r3, r3, #3
+ 800177c:	330b      	adds	r3, #11
+ 800177e:	461a      	mov	r2, r3
+ 8001780:	683b      	ldr	r3, [r7, #0]
+ 8001782:	4413      	add	r3, r2
+ 8001784:	8a7a      	ldrh	r2, [r7, #18]
+ 8001786:	b2d2      	uxtb	r2, r2
+ 8001788:	701a      	strb	r2, [r3, #0]
     for(uint8_t cic = NUM_CHIPS; cic > 0; cic--){
- 8001742:	7dfb      	ldrb	r3, [r7, #23]
- 8001744:	3b01      	subs	r3, #1
- 8001746:	75fb      	strb	r3, [r7, #23]
- 8001748:	7dfb      	ldrb	r3, [r7, #23]
- 800174a:	2b00      	cmp	r3, #0
- 800174c:	d1ae      	bne.n	80016ac <ADBMS_Write_Data+0x50>
+ 800178a:	7dfb      	ldrb	r3, [r7, #23]
+ 800178c:	3b01      	subs	r3, #1
+ 800178e:	75fb      	strb	r3, [r7, #23]
+ 8001790:	7dfb      	ldrb	r3, [r7, #23]
+ 8001792:	2b00      	cmp	r3, #0
+ 8001794:	d1ae      	bne.n	80016f4 <ADBMS_Write_Data+0x50>
     }
 
     // Blocking Transmit the cmd and data
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
- 800174e:	2200      	movs	r2, #0
- 8001750:	2110      	movs	r1, #16
- 8001752:	4809      	ldr	r0, [pc, #36]	@ (8001778 <ADBMS_Write_Data+0x11c>)
- 8001754:	f002 fe4a 	bl	80043ec <HAL_GPIO_WritePin>
+ 8001796:	2200      	movs	r2, #0
+ 8001798:	2110      	movs	r1, #16
+ 800179a:	4809      	ldr	r0, [pc, #36]	@ (80017c0 <ADBMS_Write_Data+0x11c>)
+ 800179c:	f002 fe26 	bl	80043ec <HAL_GPIO_WritePin>
     if (HAL_SPI_Transmit(hspi, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
- 8001758:	f04f 33ff 	mov.w	r3, #4294967295
- 800175c:	2214      	movs	r2, #20
- 800175e:	6839      	ldr	r1, [r7, #0]
- 8001760:	68f8      	ldr	r0, [r7, #12]
- 8001762:	f004 fda8 	bl	80062b6 <HAL_SPI_Transmit>
+ 80017a0:	f04f 33ff 	mov.w	r3, #4294967295
+ 80017a4:	2214      	movs	r2, #20
+ 80017a6:	6839      	ldr	r1, [r7, #0]
+ 80017a8:	68f8      	ldr	r0, [r7, #12]
+ 80017aa:	f004 fd84 	bl	80062b6 <HAL_SPI_Transmit>
     {
         // TODO: do something if fails
     }
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
- 8001766:	2201      	movs	r2, #1
- 8001768:	2110      	movs	r1, #16
- 800176a:	4803      	ldr	r0, [pc, #12]	@ (8001778 <ADBMS_Write_Data+0x11c>)
- 800176c:	f002 fe3e 	bl	80043ec <HAL_GPIO_WritePin>
+ 80017ae:	2201      	movs	r2, #1
+ 80017b0:	2110      	movs	r1, #16
+ 80017b2:	4803      	ldr	r0, [pc, #12]	@ (80017c0 <ADBMS_Write_Data+0x11c>)
+ 80017b4:	f002 fe1a 	bl	80043ec <HAL_GPIO_WritePin>
 }
- 8001770:	bf00      	nop
- 8001772:	3718      	adds	r7, #24
- 8001774:	46bd      	mov	sp, r7
- 8001776:	bd80      	pop	{r7, pc}
- 8001778:	40020000 	.word	0x40020000
+ 80017b8:	bf00      	nop
+ 80017ba:	3718      	adds	r7, #24
+ 80017bc:	46bd      	mov	sp, r7
+ 80017be:	bd80      	pop	{r7, pc}
+ 80017c0:	40020000 	.word	0x40020000
 
-0800177c <ADBMS_Read_Data>:
+080017c4 <ADBMS_Read_Data>:
 
 bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf)
 {
- 800177c:	b580      	push	{r7, lr}
- 800177e:	b08c      	sub	sp, #48	@ 0x30
- 8001780:	af02      	add	r7, sp, #8
- 8001782:	60f8      	str	r0, [r7, #12]
- 8001784:	607a      	str	r2, [r7, #4]
- 8001786:	603b      	str	r3, [r7, #0]
- 8001788:	460b      	mov	r3, r1
- 800178a:	817b      	strh	r3, [r7, #10]
+ 80017c4:	b580      	push	{r7, lr}
+ 80017c6:	b08c      	sub	sp, #48	@ 0x30
+ 80017c8:	af02      	add	r7, sp, #8
+ 80017ca:	60f8      	str	r0, [r7, #12]
+ 80017cc:	607a      	str	r2, [r7, #4]
+ 80017ce:	603b      	str	r3, [r7, #0]
+ 80017d0:	460b      	mov	r3, r1
+ 80017d2:	817b      	strh	r3, [r7, #10]
     uint8_t spi_tx_dataBuf[4] = {0};
- 800178c:	2300      	movs	r3, #0
- 800178e:	617b      	str	r3, [r7, #20]
+ 80017d4:	2300      	movs	r3, #0
+ 80017d6:	617b      	str	r3, [r7, #20]
     spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
- 8001790:	897b      	ldrh	r3, [r7, #10]
- 8001792:	0a1b      	lsrs	r3, r3, #8
- 8001794:	b29b      	uxth	r3, r3
- 8001796:	b2db      	uxtb	r3, r3
- 8001798:	753b      	strb	r3, [r7, #20]
+ 80017d8:	897b      	ldrh	r3, [r7, #10]
+ 80017da:	0a1b      	lsrs	r3, r3, #8
+ 80017dc:	b29b      	uxth	r3, r3
+ 80017de:	b2db      	uxtb	r3, r3
+ 80017e0:	753b      	strb	r3, [r7, #20]
     spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
- 800179a:	897b      	ldrh	r3, [r7, #10]
- 800179c:	b2db      	uxtb	r3, r3
- 800179e:	757b      	strb	r3, [r7, #21]
+ 80017e2:	897b      	ldrh	r3, [r7, #10]
+ 80017e4:	b2db      	uxtb	r3, r3
+ 80017e6:	757b      	strb	r3, [r7, #21]
 
     uint16_t cmd_pec = Pec15_Calc(2, spi_tx_dataBuf);
- 80017a0:	f107 0314 	add.w	r3, r7, #20
- 80017a4:	4619      	mov	r1, r3
- 80017a6:	2002      	movs	r0, #2
- 80017a8:	f7ff fbe4 	bl	8000f74 <Pec15_Calc>
- 80017ac:	4603      	mov	r3, r0
- 80017ae:	847b      	strh	r3, [r7, #34]	@ 0x22
+ 80017e8:	f107 0314 	add.w	r3, r7, #20
+ 80017ec:	4619      	mov	r1, r3
+ 80017ee:	2002      	movs	r0, #2
+ 80017f0:	f7ff fbc0 	bl	8000f74 <Pec15_Calc>
+ 80017f4:	4603      	mov	r3, r0
+ 80017f6:	847b      	strh	r3, [r7, #34]	@ 0x22
     spi_tx_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
- 80017b0:	8c7b      	ldrh	r3, [r7, #34]	@ 0x22
- 80017b2:	0a1b      	lsrs	r3, r3, #8
- 80017b4:	b29b      	uxth	r3, r3
- 80017b6:	b2db      	uxtb	r3, r3
- 80017b8:	75bb      	strb	r3, [r7, #22]
+ 80017f8:	8c7b      	ldrh	r3, [r7, #34]	@ 0x22
+ 80017fa:	0a1b      	lsrs	r3, r3, #8
+ 80017fc:	b29b      	uxth	r3, r3
+ 80017fe:	b2db      	uxtb	r3, r3
+ 8001800:	75bb      	strb	r3, [r7, #22]
     spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
- 80017ba:	8c7b      	ldrh	r3, [r7, #34]	@ 0x22
- 80017bc:	b2db      	uxtb	r3, r3
- 80017be:	75fb      	strb	r3, [r7, #23]
+ 8001802:	8c7b      	ldrh	r3, [r7, #34]	@ 0x22
+ 8001804:	b2db      	uxtb	r3, r3
+ 8001806:	75fb      	strb	r3, [r7, #23]
 
     // Blocking Transmit Receive the cmd and data
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
- 80017c0:	2200      	movs	r2, #0
- 80017c2:	2110      	movs	r1, #16
- 80017c4:	4843      	ldr	r0, [pc, #268]	@ (80018d4 <ADBMS_Read_Data+0x158>)
- 80017c6:	f002 fe11 	bl	80043ec <HAL_GPIO_WritePin>
+ 8001808:	2200      	movs	r2, #0
+ 800180a:	2110      	movs	r1, #16
+ 800180c:	4843      	ldr	r0, [pc, #268]	@ (800191c <ADBMS_Read_Data+0x158>)
+ 800180e:	f002 fded 	bl	80043ec <HAL_GPIO_WritePin>
     if (HAL_SPI_TransmitReceive(hspi, spi_tx_dataBuf, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
- 80017ca:	f107 0114 	add.w	r1, r7, #20
- 80017ce:	f04f 33ff 	mov.w	r3, #4294967295
- 80017d2:	9300      	str	r3, [sp, #0]
- 80017d4:	2314      	movs	r3, #20
- 80017d6:	683a      	ldr	r2, [r7, #0]
- 80017d8:	68f8      	ldr	r0, [r7, #12]
- 80017da:	f004 feb0 	bl	800653e <HAL_SPI_TransmitReceive>
+ 8001812:	f107 0114 	add.w	r1, r7, #20
+ 8001816:	f04f 33ff 	mov.w	r3, #4294967295
+ 800181a:	9300      	str	r3, [sp, #0]
+ 800181c:	2314      	movs	r3, #20
+ 800181e:	683a      	ldr	r2, [r7, #0]
+ 8001820:	68f8      	ldr	r0, [r7, #12]
+ 8001822:	f004 fe8c 	bl	800653e <HAL_SPI_TransmitReceive>
     {
         // TODO: do something if fails
     }
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
- 80017de:	2201      	movs	r2, #1
- 80017e0:	2110      	movs	r1, #16
- 80017e2:	483c      	ldr	r0, [pc, #240]	@ (80018d4 <ADBMS_Read_Data+0x158>)
- 80017e4:	f002 fe02 	bl	80043ec <HAL_GPIO_WritePin>
+ 8001826:	2201      	movs	r2, #1
+ 8001828:	2110      	movs	r1, #16
+ 800182a:	483c      	ldr	r0, [pc, #240]	@ (800191c <ADBMS_Read_Data+0x158>)
+ 800182c:	f002 fdde 	bl	80043ec <HAL_GPIO_WritePin>
 
     // Discard data received during transmit phase
     uint8_t *rx_dataBuf = spi_dataBuf + CMD_LEN + PEC_LEN;
- 80017e8:	683b      	ldr	r3, [r7, #0]
- 80017ea:	3304      	adds	r3, #4
- 80017ec:	61fb      	str	r3, [r7, #28]
+ 8001830:	683b      	ldr	r3, [r7, #0]
+ 8001832:	3304      	adds	r3, #4
+ 8001834:	61fb      	str	r3, [r7, #28]
 
     // Move the incoming data from the spi data buffer to the correspoding data buffer array in memory
     bool pec_error = 0;
- 80017ee:	2300      	movs	r3, #0
- 80017f0:	f887 3027 	strb.w	r3, [r7, #39]	@ 0x27
+ 8001836:	2300      	movs	r3, #0
+ 8001838:	f887 3027 	strb.w	r3, [r7, #39]	@ 0x27
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 80017f4:	2300      	movs	r3, #0
- 80017f6:	f887 3026 	strb.w	r3, [r7, #38]	@ 0x26
- 80017fa:	e060      	b.n	80018be <ADBMS_Read_Data+0x142>
+ 800183c:	2300      	movs	r3, #0
+ 800183e:	f887 3026 	strb.w	r3, [r7, #38]	@ 0x26
+ 8001842:	e060      	b.n	8001906 <ADBMS_Read_Data+0x142>
     {
         for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++)
- 80017fc:	2300      	movs	r3, #0
- 80017fe:	f887 3025 	strb.w	r3, [r7, #37]	@ 0x25
- 8001802:	e01c      	b.n	800183e <ADBMS_Read_Data+0xc2>
+ 8001844:	2300      	movs	r3, #0
+ 8001846:	f887 3025 	strb.w	r3, [r7, #37]	@ 0x25
+ 800184a:	e01c      	b.n	8001886 <ADBMS_Read_Data+0xc2>
         {
             dataBuf[cic * DATA_LEN + cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
- 8001804:	f897 2025 	ldrb.w	r2, [r7, #37]	@ 0x25
- 8001808:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
- 800180c:	00db      	lsls	r3, r3, #3
- 800180e:	4413      	add	r3, r2
- 8001810:	461a      	mov	r2, r3
- 8001812:	69fb      	ldr	r3, [r7, #28]
- 8001814:	1899      	adds	r1, r3, r2
- 8001816:	f897 2026 	ldrb.w	r2, [r7, #38]	@ 0x26
- 800181a:	4613      	mov	r3, r2
- 800181c:	005b      	lsls	r3, r3, #1
- 800181e:	4413      	add	r3, r2
- 8001820:	005b      	lsls	r3, r3, #1
- 8001822:	461a      	mov	r2, r3
- 8001824:	f897 3025 	ldrb.w	r3, [r7, #37]	@ 0x25
- 8001828:	4413      	add	r3, r2
- 800182a:	461a      	mov	r2, r3
- 800182c:	687b      	ldr	r3, [r7, #4]
- 800182e:	4413      	add	r3, r2
- 8001830:	780a      	ldrb	r2, [r1, #0]
- 8001832:	701a      	strb	r2, [r3, #0]
+ 800184c:	f897 2025 	ldrb.w	r2, [r7, #37]	@ 0x25
+ 8001850:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
+ 8001854:	00db      	lsls	r3, r3, #3
+ 8001856:	4413      	add	r3, r2
+ 8001858:	461a      	mov	r2, r3
+ 800185a:	69fb      	ldr	r3, [r7, #28]
+ 800185c:	1899      	adds	r1, r3, r2
+ 800185e:	f897 2026 	ldrb.w	r2, [r7, #38]	@ 0x26
+ 8001862:	4613      	mov	r3, r2
+ 8001864:	005b      	lsls	r3, r3, #1
+ 8001866:	4413      	add	r3, r2
+ 8001868:	005b      	lsls	r3, r3, #1
+ 800186a:	461a      	mov	r2, r3
+ 800186c:	f897 3025 	ldrb.w	r3, [r7, #37]	@ 0x25
+ 8001870:	4413      	add	r3, r2
+ 8001872:	461a      	mov	r2, r3
+ 8001874:	687b      	ldr	r3, [r7, #4]
+ 8001876:	4413      	add	r3, r2
+ 8001878:	780a      	ldrb	r2, [r1, #0]
+ 800187a:	701a      	strb	r2, [r3, #0]
         for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++)
- 8001834:	f897 3025 	ldrb.w	r3, [r7, #37]	@ 0x25
- 8001838:	3301      	adds	r3, #1
- 800183a:	f887 3025 	strb.w	r3, [r7, #37]	@ 0x25
- 800183e:	f897 3025 	ldrb.w	r3, [r7, #37]	@ 0x25
- 8001842:	2b05      	cmp	r3, #5
- 8001844:	d9de      	bls.n	8001804 <ADBMS_Read_Data+0x88>
+ 800187c:	f897 3025 	ldrb.w	r3, [r7, #37]	@ 0x25
+ 8001880:	3301      	adds	r3, #1
+ 8001882:	f887 3025 	strb.w	r3, [r7, #37]	@ 0x25
+ 8001886:	f897 3025 	ldrb.w	r3, [r7, #37]	@ 0x25
+ 800188a:	2b05      	cmp	r3, #5
+ 800188c:	d9de      	bls.n	800184c <ADBMS_Read_Data+0x88>
         }
         uint16_t rx_pec = (uint16_t)(((rx_dataBuf[DATA_LEN + (DATA_LEN+PEC_LEN)*cic] & 0x03) << 8) | rx_dataBuf[DATA_LEN + 1 + (DATA_LEN+PEC_LEN)*cic]);
- 8001846:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
- 800184a:	00db      	lsls	r3, r3, #3
- 800184c:	3306      	adds	r3, #6
- 800184e:	461a      	mov	r2, r3
- 8001850:	69fb      	ldr	r3, [r7, #28]
- 8001852:	4413      	add	r3, r2
- 8001854:	781b      	ldrb	r3, [r3, #0]
- 8001856:	b21b      	sxth	r3, r3
- 8001858:	021b      	lsls	r3, r3, #8
- 800185a:	b21b      	sxth	r3, r3
- 800185c:	f403 7340 	and.w	r3, r3, #768	@ 0x300
- 8001860:	b21a      	sxth	r2, r3
- 8001862:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
- 8001866:	00db      	lsls	r3, r3, #3
- 8001868:	3307      	adds	r3, #7
- 800186a:	4619      	mov	r1, r3
- 800186c:	69fb      	ldr	r3, [r7, #28]
- 800186e:	440b      	add	r3, r1
- 8001870:	781b      	ldrb	r3, [r3, #0]
- 8001872:	b21b      	sxth	r3, r3
- 8001874:	4313      	orrs	r3, r2
- 8001876:	b21b      	sxth	r3, r3
- 8001878:	837b      	strh	r3, [r7, #26]
+ 800188e:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
+ 8001892:	00db      	lsls	r3, r3, #3
+ 8001894:	3306      	adds	r3, #6
+ 8001896:	461a      	mov	r2, r3
+ 8001898:	69fb      	ldr	r3, [r7, #28]
+ 800189a:	4413      	add	r3, r2
+ 800189c:	781b      	ldrb	r3, [r3, #0]
+ 800189e:	b21b      	sxth	r3, r3
+ 80018a0:	021b      	lsls	r3, r3, #8
+ 80018a2:	b21b      	sxth	r3, r3
+ 80018a4:	f403 7340 	and.w	r3, r3, #768	@ 0x300
+ 80018a8:	b21a      	sxth	r2, r3
+ 80018aa:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
+ 80018ae:	00db      	lsls	r3, r3, #3
+ 80018b0:	3307      	adds	r3, #7
+ 80018b2:	4619      	mov	r1, r3
+ 80018b4:	69fb      	ldr	r3, [r7, #28]
+ 80018b6:	440b      	add	r3, r1
+ 80018b8:	781b      	ldrb	r3, [r3, #0]
+ 80018ba:	b21b      	sxth	r3, r3
+ 80018bc:	4313      	orrs	r3, r2
+ 80018be:	b21b      	sxth	r3, r3
+ 80018c0:	837b      	strh	r3, [r7, #26]
         uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * (DATA_LEN + PEC_LEN)));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
- 800187a:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
- 800187e:	00db      	lsls	r3, r3, #3
- 8001880:	461a      	mov	r2, r3
- 8001882:	69fb      	ldr	r3, [r7, #28]
- 8001884:	4413      	add	r3, r2
- 8001886:	461a      	mov	r2, r3
- 8001888:	2106      	movs	r1, #6
- 800188a:	2001      	movs	r0, #1
- 800188c:	f7ff fba6 	bl	8000fdc <Pec10_Calc>
- 8001890:	4603      	mov	r3, r0
- 8001892:	833b      	strh	r3, [r7, #24]
+ 80018c2:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
+ 80018c6:	00db      	lsls	r3, r3, #3
+ 80018c8:	461a      	mov	r2, r3
+ 80018ca:	69fb      	ldr	r3, [r7, #28]
+ 80018cc:	4413      	add	r3, r2
+ 80018ce:	461a      	mov	r2, r3
+ 80018d0:	2106      	movs	r1, #6
+ 80018d2:	2001      	movs	r0, #1
+ 80018d4:	f7ff fb82 	bl	8000fdc <Pec10_Calc>
+ 80018d8:	4603      	mov	r3, r0
+ 80018da:	833b      	strh	r3, [r7, #24]
         pec_error |= (rx_pec != calc_pec);
- 8001894:	f897 3027 	ldrb.w	r3, [r7, #39]	@ 0x27
- 8001898:	8b79      	ldrh	r1, [r7, #26]
- 800189a:	8b3a      	ldrh	r2, [r7, #24]
- 800189c:	4291      	cmp	r1, r2
- 800189e:	bf14      	ite	ne
- 80018a0:	2201      	movne	r2, #1
- 80018a2:	2200      	moveq	r2, #0
- 80018a4:	b2d2      	uxtb	r2, r2
- 80018a6:	4313      	orrs	r3, r2
- 80018a8:	2b00      	cmp	r3, #0
- 80018aa:	bf14      	ite	ne
- 80018ac:	2301      	movne	r3, #1
- 80018ae:	2300      	moveq	r3, #0
- 80018b0:	f887 3027 	strb.w	r3, [r7, #39]	@ 0x27
+ 80018dc:	f897 3027 	ldrb.w	r3, [r7, #39]	@ 0x27
+ 80018e0:	8b79      	ldrh	r1, [r7, #26]
+ 80018e2:	8b3a      	ldrh	r2, [r7, #24]
+ 80018e4:	4291      	cmp	r1, r2
+ 80018e6:	bf14      	ite	ne
+ 80018e8:	2201      	movne	r2, #1
+ 80018ea:	2200      	moveq	r2, #0
+ 80018ec:	b2d2      	uxtb	r2, r2
+ 80018ee:	4313      	orrs	r3, r2
+ 80018f0:	2b00      	cmp	r3, #0
+ 80018f2:	bf14      	ite	ne
+ 80018f4:	2301      	movne	r3, #1
+ 80018f6:	2300      	moveq	r3, #0
+ 80018f8:	f887 3027 	strb.w	r3, [r7, #39]	@ 0x27
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 80018b4:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
- 80018b8:	3301      	adds	r3, #1
- 80018ba:	f887 3026 	strb.w	r3, [r7, #38]	@ 0x26
- 80018be:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
- 80018c2:	2b01      	cmp	r3, #1
- 80018c4:	d99a      	bls.n	80017fc <ADBMS_Read_Data+0x80>
+ 80018fc:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
+ 8001900:	3301      	adds	r3, #1
+ 8001902:	f887 3026 	strb.w	r3, [r7, #38]	@ 0x26
+ 8001906:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
+ 800190a:	2b01      	cmp	r3, #1
+ 800190c:	d99a      	bls.n	8001844 <ADBMS_Read_Data+0x80>
     }
 
     return pec_error;
- 80018c6:	f897 3027 	ldrb.w	r3, [r7, #39]	@ 0x27
+ 800190e:	f897 3027 	ldrb.w	r3, [r7, #39]	@ 0x27
 }
- 80018ca:	4618      	mov	r0, r3
- 80018cc:	3728      	adds	r7, #40	@ 0x28
- 80018ce:	46bd      	mov	sp, r7
- 80018d0:	bd80      	pop	{r7, pc}
- 80018d2:	bf00      	nop
- 80018d4:	40020000 	.word	0x40020000
+ 8001912:	4618      	mov	r0, r3
+ 8001914:	3728      	adds	r7, #40	@ 0x28
+ 8001916:	46bd      	mov	sp, r7
+ 8001918:	bd80      	pop	{r7, pc}
+ 800191a:	bf00      	nop
+ 800191c:	40020000 	.word	0x40020000
 
-080018d8 <ADBMS_Initialize>:
+08001920 <ADBMS_Initialize>:
 #include "adbms_interface.h"
 
 void ADBMS_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi)
 {
- 80018d8:	b580      	push	{r7, lr}
- 80018da:	b084      	sub	sp, #16
- 80018dc:	af00      	add	r7, sp, #0
- 80018de:	6078      	str	r0, [r7, #4]
- 80018e0:	6039      	str	r1, [r7, #0]
+ 8001920:	b580      	push	{r7, lr}
+ 8001922:	b084      	sub	sp, #16
+ 8001924:	af00      	add	r7, sp, #0
+ 8001926:	6078      	str	r0, [r7, #4]
+ 8001928:	6039      	str	r1, [r7, #0]
     adbms->ICs.hspi = hspi;
- 80018e2:	687b      	ldr	r3, [r7, #4]
- 80018e4:	683a      	ldr	r2, [r7, #0]
- 80018e6:	601a      	str	r2, [r3, #0]
+ 800192a:	687b      	ldr	r3, [r7, #4]
+ 800192c:	683a      	ldr	r2, [r7, #0]
+ 800192e:	601a      	str	r2, [r3, #0]
     // Set initial configurations
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 80018e8:	2300      	movs	r3, #0
- 80018ea:	73fb      	strb	r3, [r7, #15]
- 80018ec:	e042      	b.n	8001974 <ADBMS_Initialize+0x9c>
+ 8001930:	2300      	movs	r3, #0
+ 8001932:	73fb      	strb	r3, [r7, #15]
+ 8001934:	e042      	b.n	80019bc <ADBMS_Initialize+0x9c>
     {
         // Init config A
         adbms->cfa[cic].refon = 1;
- 80018ee:	7bfa      	ldrb	r2, [r7, #15]
- 80018f0:	6879      	ldr	r1, [r7, #4]
- 80018f2:	4613      	mov	r3, r2
- 80018f4:	005b      	lsls	r3, r3, #1
- 80018f6:	4413      	add	r3, r2
- 80018f8:	005b      	lsls	r3, r3, #1
- 80018fa:	440b      	add	r3, r1
- 80018fc:	f103 02b0 	add.w	r2, r3, #176	@ 0xb0
- 8001900:	7813      	ldrb	r3, [r2, #0]
- 8001902:	f043 0301 	orr.w	r3, r3, #1
- 8001906:	7013      	strb	r3, [r2, #0]
+ 8001936:	7bfa      	ldrb	r2, [r7, #15]
+ 8001938:	6879      	ldr	r1, [r7, #4]
+ 800193a:	4613      	mov	r3, r2
+ 800193c:	005b      	lsls	r3, r3, #1
+ 800193e:	4413      	add	r3, r2
+ 8001940:	005b      	lsls	r3, r3, #1
+ 8001942:	440b      	add	r3, r1
+ 8001944:	f103 02f8 	add.w	r2, r3, #248	@ 0xf8
+ 8001948:	7813      	ldrb	r3, [r2, #0]
+ 800194a:	f043 0301 	orr.w	r3, r3, #1
+ 800194e:	7013      	strb	r3, [r2, #0]
         adbms->cfa[cic].gpo = 0x3FF;  // all gpo tunred on
- 8001908:	7bfa      	ldrb	r2, [r7, #15]
- 800190a:	6879      	ldr	r1, [r7, #4]
- 800190c:	4613      	mov	r3, r2
- 800190e:	005b      	lsls	r3, r3, #1
- 8001910:	4413      	add	r3, r2
- 8001912:	005b      	lsls	r3, r3, #1
- 8001914:	440b      	add	r3, r1
- 8001916:	f103 02b0 	add.w	r2, r3, #176	@ 0xb0
- 800191a:	8853      	ldrh	r3, [r2, #2]
- 800191c:	f240 31ff 	movw	r1, #1023	@ 0x3ff
- 8001920:	f361 134e 	bfi	r3, r1, #5, #10
- 8001924:	8053      	strh	r3, [r2, #2]
+ 8001950:	7bfa      	ldrb	r2, [r7, #15]
+ 8001952:	6879      	ldr	r1, [r7, #4]
+ 8001954:	4613      	mov	r3, r2
+ 8001956:	005b      	lsls	r3, r3, #1
+ 8001958:	4413      	add	r3, r2
+ 800195a:	005b      	lsls	r3, r3, #1
+ 800195c:	440b      	add	r3, r1
+ 800195e:	f103 02f8 	add.w	r2, r3, #248	@ 0xf8
+ 8001962:	8853      	ldrh	r3, [r2, #2]
+ 8001964:	f240 31ff 	movw	r1, #1023	@ 0x3ff
+ 8001968:	f361 134e 	bfi	r3, r1, #5, #10
+ 800196c:	8053      	strh	r3, [r2, #2]
 
         // Init config B
         adbms->cfb[cic].vuv = Set_UnderOver_Voltage_Threshold(UNDERVOLTAGE);
- 8001926:	eeb0 0a04 	vmov.f32	s0, #4	@ 0x40200000  2.5
- 800192a:	f7ff fbc5 	bl	80010b8 <Set_UnderOver_Voltage_Threshold>
- 800192e:	4603      	mov	r3, r0
- 8001930:	461a      	mov	r2, r3
- 8001932:	7bfb      	ldrb	r3, [r7, #15]
- 8001934:	f3c2 020b 	ubfx	r2, r2, #0, #12
- 8001938:	b291      	uxth	r1, r2
- 800193a:	687a      	ldr	r2, [r7, #4]
- 800193c:	3317      	adds	r3, #23
- 800193e:	00db      	lsls	r3, r3, #3
- 8001940:	4413      	add	r3, r2
- 8001942:	889a      	ldrh	r2, [r3, #4]
- 8001944:	f361 020b 	bfi	r2, r1, #0, #12
- 8001948:	809a      	strh	r2, [r3, #4]
+ 800196e:	eeb0 0a04 	vmov.f32	s0, #4	@ 0x40200000  2.5
+ 8001972:	f7ff fba1 	bl	80010b8 <Set_UnderOver_Voltage_Threshold>
+ 8001976:	4603      	mov	r3, r0
+ 8001978:	461a      	mov	r2, r3
+ 800197a:	7bfb      	ldrb	r3, [r7, #15]
+ 800197c:	f3c2 020b 	ubfx	r2, r2, #0, #12
+ 8001980:	b291      	uxth	r1, r2
+ 8001982:	687a      	ldr	r2, [r7, #4]
+ 8001984:	3320      	adds	r3, #32
+ 8001986:	00db      	lsls	r3, r3, #3
+ 8001988:	4413      	add	r3, r2
+ 800198a:	889a      	ldrh	r2, [r3, #4]
+ 800198c:	f361 020b 	bfi	r2, r1, #0, #12
+ 8001990:	809a      	strh	r2, [r3, #4]
         adbms->cfb[cic].vov = Set_UnderOver_Voltage_Threshold(OVERVOLTAGE);
- 800194a:	ed9f 0a3c 	vldr	s0, [pc, #240]	@ 8001a3c <ADBMS_Initialize+0x164>
- 800194e:	f7ff fbb3 	bl	80010b8 <Set_UnderOver_Voltage_Threshold>
- 8001952:	4603      	mov	r3, r0
- 8001954:	461a      	mov	r2, r3
- 8001956:	7bfb      	ldrb	r3, [r7, #15]
- 8001958:	f3c2 020b 	ubfx	r2, r2, #0, #12
- 800195c:	b291      	uxth	r1, r2
- 800195e:	687a      	ldr	r2, [r7, #4]
- 8001960:	3317      	adds	r3, #23
- 8001962:	00db      	lsls	r3, r3, #3
- 8001964:	4413      	add	r3, r2
- 8001966:	88da      	ldrh	r2, [r3, #6]
- 8001968:	f361 020b 	bfi	r2, r1, #0, #12
- 800196c:	80da      	strh	r2, [r3, #6]
+ 8001992:	ed9f 0a3c 	vldr	s0, [pc, #240]	@ 8001a84 <ADBMS_Initialize+0x164>
+ 8001996:	f7ff fb8f 	bl	80010b8 <Set_UnderOver_Voltage_Threshold>
+ 800199a:	4603      	mov	r3, r0
+ 800199c:	461a      	mov	r2, r3
+ 800199e:	7bfb      	ldrb	r3, [r7, #15]
+ 80019a0:	f3c2 020b 	ubfx	r2, r2, #0, #12
+ 80019a4:	b291      	uxth	r1, r2
+ 80019a6:	687a      	ldr	r2, [r7, #4]
+ 80019a8:	3320      	adds	r3, #32
+ 80019aa:	00db      	lsls	r3, r3, #3
+ 80019ac:	4413      	add	r3, r2
+ 80019ae:	88da      	ldrh	r2, [r3, #6]
+ 80019b0:	f361 020b 	bfi	r2, r1, #0, #12
+ 80019b4:	80da      	strh	r2, [r3, #6]
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 800196e:	7bfb      	ldrb	r3, [r7, #15]
- 8001970:	3301      	adds	r3, #1
- 8001972:	73fb      	strb	r3, [r7, #15]
- 8001974:	7bfb      	ldrb	r3, [r7, #15]
- 8001976:	2b01      	cmp	r3, #1
- 8001978:	d9b9      	bls.n	80018ee <ADBMS_Initialize+0x16>
+ 80019b6:	7bfb      	ldrb	r3, [r7, #15]
+ 80019b8:	3301      	adds	r3, #1
+ 80019ba:	73fb      	strb	r3, [r7, #15]
+ 80019bc:	7bfb      	ldrb	r3, [r7, #15]
+ 80019be:	2b01      	cmp	r3, #1
+ 80019c0:	d9b9      	bls.n	8001936 <ADBMS_Initialize+0x16>
     }
     // Init sensing cmd
     adbms->adcv.cont = 1;
- 800197a:	687a      	ldr	r2, [r7, #4]
- 800197c:	f892 30cc 	ldrb.w	r3, [r2, #204]	@ 0xcc
- 8001980:	f043 0302 	orr.w	r3, r3, #2
- 8001984:	f882 30cc 	strb.w	r3, [r2, #204]	@ 0xcc
+ 80019c2:	687a      	ldr	r2, [r7, #4]
+ 80019c4:	f892 3114 	ldrb.w	r3, [r2, #276]	@ 0x114
+ 80019c8:	f043 0302 	orr.w	r3, r3, #2
+ 80019cc:	f882 3114 	strb.w	r3, [r2, #276]	@ 0x114
 
     // Package config and sensing structs into transmitable data
     ADBMS_Set_Config_A(adbms->cfa, adbms->ICs.cfg_a);
- 8001988:	687b      	ldr	r3, [r7, #4]
- 800198a:	f103 02b0 	add.w	r2, r3, #176	@ 0xb0
- 800198e:	687b      	ldr	r3, [r7, #4]
- 8001990:	3318      	adds	r3, #24
- 8001992:	4619      	mov	r1, r3
- 8001994:	4610      	mov	r0, r2
- 8001996:	f7ff fbcf 	bl	8001138 <ADBMS_Set_Config_A>
+ 80019d0:	687b      	ldr	r3, [r7, #4]
+ 80019d2:	f103 02f8 	add.w	r2, r3, #248	@ 0xf8
+ 80019d6:	687b      	ldr	r3, [r7, #4]
+ 80019d8:	3318      	adds	r3, #24
+ 80019da:	4619      	mov	r1, r3
+ 80019dc:	4610      	mov	r0, r2
+ 80019de:	f7ff fbcf 	bl	8001180 <ADBMS_Set_Config_A>
     ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
- 800199a:	687b      	ldr	r3, [r7, #4]
- 800199c:	f103 02bc 	add.w	r2, r3, #188	@ 0xbc
- 80019a0:	687b      	ldr	r3, [r7, #4]
- 80019a2:	3324      	adds	r3, #36	@ 0x24
- 80019a4:	4619      	mov	r1, r3
- 80019a6:	4610      	mov	r0, r2
- 80019a8:	f7ff fcd1 	bl	800134e <ADBMS_Set_Config_B>
+ 80019e2:	687b      	ldr	r3, [r7, #4]
+ 80019e4:	f503 7282 	add.w	r2, r3, #260	@ 0x104
+ 80019e8:	687b      	ldr	r3, [r7, #4]
+ 80019ea:	3324      	adds	r3, #36	@ 0x24
+ 80019ec:	4619      	mov	r1, r3
+ 80019ee:	4610      	mov	r0, r2
+ 80019f0:	f7ff fcd1 	bl	8001396 <ADBMS_Set_Config_B>
     ADBMS_Set_ADCV(adbms->adcv, &adbms->ICs.adcv);
- 80019ac:	687b      	ldr	r3, [r7, #4]
- 80019ae:	f103 0230 	add.w	r2, r3, #48	@ 0x30
- 80019b2:	687b      	ldr	r3, [r7, #4]
- 80019b4:	4611      	mov	r1, r2
- 80019b6:	f893 00cc 	ldrb.w	r0, [r3, #204]	@ 0xcc
- 80019ba:	f7ff fd77 	bl	80014ac <ADBMS_Set_ADCV>
+ 80019f4:	687b      	ldr	r3, [r7, #4]
+ 80019f6:	f103 0230 	add.w	r2, r3, #48	@ 0x30
+ 80019fa:	687b      	ldr	r3, [r7, #4]
+ 80019fc:	4611      	mov	r1, r2
+ 80019fe:	f893 0114 	ldrb.w	r0, [r3, #276]	@ 0x114
+ 8001a02:	f7ff fd77 	bl	80014f4 <ADBMS_Set_ADCV>
     ADBMS_Set_ADAX(adbms->adax, &adbms->ICs.adax);
- 80019be:	687b      	ldr	r3, [r7, #4]
- 80019c0:	f103 0234 	add.w	r2, r3, #52	@ 0x34
- 80019c4:	687b      	ldr	r3, [r7, #4]
- 80019c6:	4611      	mov	r1, r2
- 80019c8:	f893 00ce 	ldrb.w	r0, [r3, #206]	@ 0xce
- 80019cc:	f7ff fdb0 	bl	8001530 <ADBMS_Set_ADAX>
+ 8001a06:	687b      	ldr	r3, [r7, #4]
+ 8001a08:	f103 0234 	add.w	r2, r3, #52	@ 0x34
+ 8001a0c:	687b      	ldr	r3, [r7, #4]
+ 8001a0e:	4611      	mov	r1, r2
+ 8001a10:	f893 0116 	ldrb.w	r0, [r3, #278]	@ 0x116
+ 8001a14:	f7ff fdb0 	bl	8001578 <ADBMS_Set_ADAX>
 
     // Write Config 
     ADBMS_WakeUP_ICs();
- 80019d0:	f7ff fdea 	bl	80015a8 <ADBMS_WakeUP_ICs>
+ 8001a18:	f7ff fdea 	bl	80015f0 <ADBMS_WakeUP_ICs>
     ADBMS_WakeUP_ICs();
- 80019d4:	f7ff fde8 	bl	80015a8 <ADBMS_WakeUP_ICs>
+ 8001a1c:	f7ff fde8 	bl	80015f0 <ADBMS_WakeUP_ICs>
     ADBMS_Write_Data(adbms->ICs.hspi, WRCFGA, adbms->ICs.cfg_a, adbms->ICs.spi_dataBuf);
- 80019d8:	687b      	ldr	r3, [r7, #4]
- 80019da:	6818      	ldr	r0, [r3, #0]
- 80019dc:	4b18      	ldr	r3, [pc, #96]	@ (8001a40 <ADBMS_Initialize+0x168>)
- 80019de:	8819      	ldrh	r1, [r3, #0]
- 80019e0:	687b      	ldr	r3, [r7, #4]
- 80019e2:	f103 0218 	add.w	r2, r3, #24
- 80019e6:	687b      	ldr	r3, [r7, #4]
- 80019e8:	3304      	adds	r3, #4
- 80019ea:	f7ff fe37 	bl	800165c <ADBMS_Write_Data>
+ 8001a20:	687b      	ldr	r3, [r7, #4]
+ 8001a22:	6818      	ldr	r0, [r3, #0]
+ 8001a24:	4b18      	ldr	r3, [pc, #96]	@ (8001a88 <ADBMS_Initialize+0x168>)
+ 8001a26:	8819      	ldrh	r1, [r3, #0]
+ 8001a28:	687b      	ldr	r3, [r7, #4]
+ 8001a2a:	f103 0218 	add.w	r2, r3, #24
+ 8001a2e:	687b      	ldr	r3, [r7, #4]
+ 8001a30:	3304      	adds	r3, #4
+ 8001a32:	f7ff fe37 	bl	80016a4 <ADBMS_Write_Data>
     ADBMS_WakeUP_ICs();
- 80019ee:	f7ff fddb 	bl	80015a8 <ADBMS_WakeUP_ICs>
+ 8001a36:	f7ff fddb 	bl	80015f0 <ADBMS_WakeUP_ICs>
     ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
- 80019f2:	687b      	ldr	r3, [r7, #4]
- 80019f4:	6818      	ldr	r0, [r3, #0]
- 80019f6:	4b13      	ldr	r3, [pc, #76]	@ (8001a44 <ADBMS_Initialize+0x16c>)
- 80019f8:	8819      	ldrh	r1, [r3, #0]
- 80019fa:	687b      	ldr	r3, [r7, #4]
- 80019fc:	f103 0224 	add.w	r2, r3, #36	@ 0x24
- 8001a00:	687b      	ldr	r3, [r7, #4]
- 8001a02:	3304      	adds	r3, #4
- 8001a04:	f7ff fe2a 	bl	800165c <ADBMS_Write_Data>
+ 8001a3a:	687b      	ldr	r3, [r7, #4]
+ 8001a3c:	6818      	ldr	r0, [r3, #0]
+ 8001a3e:	4b13      	ldr	r3, [pc, #76]	@ (8001a8c <ADBMS_Initialize+0x16c>)
+ 8001a40:	8819      	ldrh	r1, [r3, #0]
+ 8001a42:	687b      	ldr	r3, [r7, #4]
+ 8001a44:	f103 0224 	add.w	r2, r3, #36	@ 0x24
+ 8001a48:	687b      	ldr	r3, [r7, #4]
+ 8001a4a:	3304      	adds	r3, #4
+ 8001a4c:	f7ff fe2a 	bl	80016a4 <ADBMS_Write_Data>
 
     // Turn on sensing
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adcv);
- 8001a08:	687b      	ldr	r3, [r7, #4]
- 8001a0a:	681a      	ldr	r2, [r3, #0]
- 8001a0c:	687b      	ldr	r3, [r7, #4]
- 8001a0e:	8e1b      	ldrh	r3, [r3, #48]	@ 0x30
- 8001a10:	4619      	mov	r1, r3
- 8001a12:	4610      	mov	r0, r2
- 8001a14:	f7ff fdec 	bl	80015f0 <ADBMS_Write_CMD>
+ 8001a50:	687b      	ldr	r3, [r7, #4]
+ 8001a52:	681a      	ldr	r2, [r3, #0]
+ 8001a54:	687b      	ldr	r3, [r7, #4]
+ 8001a56:	8e1b      	ldrh	r3, [r3, #48]	@ 0x30
+ 8001a58:	4619      	mov	r1, r3
+ 8001a5a:	4610      	mov	r0, r2
+ 8001a5c:	f7ff fdec 	bl	8001638 <ADBMS_Write_CMD>
     HAL_Delay(1);
- 8001a18:	2001      	movs	r0, #1
- 8001a1a:	f001 fb9d 	bl	8003158 <HAL_Delay>
+ 8001a60:	2001      	movs	r0, #1
+ 8001a62:	f001 fb79 	bl	8003158 <HAL_Delay>
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adax);
- 8001a1e:	687b      	ldr	r3, [r7, #4]
- 8001a20:	681a      	ldr	r2, [r3, #0]
- 8001a22:	687b      	ldr	r3, [r7, #4]
- 8001a24:	8e9b      	ldrh	r3, [r3, #52]	@ 0x34
- 8001a26:	4619      	mov	r1, r3
- 8001a28:	4610      	mov	r0, r2
- 8001a2a:	f7ff fde1 	bl	80015f0 <ADBMS_Write_CMD>
+ 8001a66:	687b      	ldr	r3, [r7, #4]
+ 8001a68:	681a      	ldr	r2, [r3, #0]
+ 8001a6a:	687b      	ldr	r3, [r7, #4]
+ 8001a6c:	8e9b      	ldrh	r3, [r3, #52]	@ 0x34
+ 8001a6e:	4619      	mov	r1, r3
+ 8001a70:	4610      	mov	r0, r2
+ 8001a72:	f7ff fde1 	bl	8001638 <ADBMS_Write_CMD>
     HAL_Delay(8); // ADCs are updated at their conversion rate of 1ms
- 8001a2e:	2008      	movs	r0, #8
- 8001a30:	f001 fb92 	bl	8003158 <HAL_Delay>
+ 8001a76:	2008      	movs	r0, #8
+ 8001a78:	f001 fb6e 	bl	8003158 <HAL_Delay>
 }
- 8001a34:	bf00      	nop
- 8001a36:	3710      	adds	r7, #16
- 8001a38:	46bd      	mov	sp, r7
- 8001a3a:	bd80      	pop	{r7, pc}
- 8001a3c:	40866666 	.word	0x40866666
- 8001a40:	20000000 	.word	0x20000000
- 8001a44:	20000002 	.word	0x20000002
+ 8001a7c:	bf00      	nop
+ 8001a7e:	3710      	adds	r7, #16
+ 8001a80:	46bd      	mov	sp, r7
+ 8001a82:	bd80      	pop	{r7, pc}
+ 8001a84:	40866666 	.word	0x40866666
+ 8001a88:	20000000 	.word	0x20000000
+ 8001a8c:	20000002 	.word	0x20000002
 
-08001a48 <ADBMS_UpdateVoltages>:
+08001a90 <ADBMS_UpdateVoltages>:
 
 void ADBMS_UpdateVoltages(adbms_ *adbms)
 {
- 8001a48:	b580      	push	{r7, lr}
- 8001a4a:	b084      	sub	sp, #16
- 8001a4c:	af00      	add	r7, sp, #0
- 8001a4e:	6078      	str	r0, [r7, #4]
+ 8001a90:	b580      	push	{r7, lr}
+ 8001a92:	b084      	sub	sp, #16
+ 8001a94:	af00      	add	r7, sp, #0
+ 8001a96:	6078      	str	r0, [r7, #4]
     // get voltages from ADBMS
     bool pec = 0;
- 8001a50:	2300      	movs	r3, #0
- 8001a52:	73fb      	strb	r3, [r7, #15]
+ 8001a98:	2300      	movs	r3, #0
+ 8001a9a:	73fb      	strb	r3, [r7, #15]
     ADBMS_WakeUP_ICs();
- 8001a54:	f7ff fda8 	bl	80015a8 <ADBMS_WakeUP_ICs>
+ 8001a9c:	f7ff fda8 	bl	80015f0 <ADBMS_WakeUP_ICs>
 
     pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVA, (adbms->ICs.cell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
- 8001a58:	687b      	ldr	r3, [r7, #4]
- 8001a5a:	6818      	ldr	r0, [r3, #0]
- 8001a5c:	4b3a      	ldr	r3, [pc, #232]	@ (8001b48 <ADBMS_UpdateVoltages+0x100>)
- 8001a5e:	8819      	ldrh	r1, [r3, #0]
- 8001a60:	687b      	ldr	r3, [r7, #4]
- 8001a62:	f103 0238 	add.w	r2, r3, #56	@ 0x38
- 8001a66:	687b      	ldr	r3, [r7, #4]
- 8001a68:	3304      	adds	r3, #4
- 8001a6a:	f7ff fe87 	bl	800177c <ADBMS_Read_Data>
- 8001a6e:	4603      	mov	r3, r0
- 8001a70:	461a      	mov	r2, r3
- 8001a72:	7bfb      	ldrb	r3, [r7, #15]
- 8001a74:	4313      	orrs	r3, r2
- 8001a76:	b2db      	uxtb	r3, r3
- 8001a78:	2b00      	cmp	r3, #0
- 8001a7a:	bf14      	ite	ne
- 8001a7c:	2301      	movne	r3, #1
- 8001a7e:	2300      	moveq	r3, #0
- 8001a80:	73fb      	strb	r3, [r7, #15]
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
- 8001a82:	687b      	ldr	r3, [r7, #4]
- 8001a84:	6818      	ldr	r0, [r3, #0]
- 8001a86:	4b31      	ldr	r3, [pc, #196]	@ (8001b4c <ADBMS_UpdateVoltages+0x104>)
- 8001a88:	8819      	ldrh	r1, [r3, #0]
- 8001a8a:	687b      	ldr	r3, [r7, #4]
- 8001a8c:	3338      	adds	r3, #56	@ 0x38
- 8001a8e:	f103 020c 	add.w	r2, r3, #12
- 8001a92:	687b      	ldr	r3, [r7, #4]
- 8001a94:	3304      	adds	r3, #4
- 8001a96:	f7ff fe71 	bl	800177c <ADBMS_Read_Data>
- 8001a9a:	4603      	mov	r3, r0
- 8001a9c:	461a      	mov	r2, r3
- 8001a9e:	7bfb      	ldrb	r3, [r7, #15]
- 8001aa0:	4313      	orrs	r3, r2
- 8001aa2:	b2db      	uxtb	r3, r3
- 8001aa4:	2b00      	cmp	r3, #0
- 8001aa6:	bf14      	ite	ne
- 8001aa8:	2301      	movne	r3, #1
- 8001aaa:	2300      	moveq	r3, #0
- 8001aac:	73fb      	strb	r3, [r7, #15]
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001aa0:	687b      	ldr	r3, [r7, #4]
+ 8001aa2:	6818      	ldr	r0, [r3, #0]
+ 8001aa4:	4b3a      	ldr	r3, [pc, #232]	@ (8001b90 <ADBMS_UpdateVoltages+0x100>)
+ 8001aa6:	8819      	ldrh	r1, [r3, #0]
+ 8001aa8:	687b      	ldr	r3, [r7, #4]
+ 8001aaa:	f103 0238 	add.w	r2, r3, #56	@ 0x38
  8001aae:	687b      	ldr	r3, [r7, #4]
- 8001ab0:	6818      	ldr	r0, [r3, #0]
- 8001ab2:	4b27      	ldr	r3, [pc, #156]	@ (8001b50 <ADBMS_UpdateVoltages+0x108>)
- 8001ab4:	8819      	ldrh	r1, [r3, #0]
- 8001ab6:	687b      	ldr	r3, [r7, #4]
- 8001ab8:	3338      	adds	r3, #56	@ 0x38
- 8001aba:	f103 0218 	add.w	r2, r3, #24
- 8001abe:	687b      	ldr	r3, [r7, #4]
- 8001ac0:	3304      	adds	r3, #4
- 8001ac2:	f7ff fe5b 	bl	800177c <ADBMS_Read_Data>
- 8001ac6:	4603      	mov	r3, r0
- 8001ac8:	461a      	mov	r2, r3
- 8001aca:	7bfb      	ldrb	r3, [r7, #15]
- 8001acc:	4313      	orrs	r3, r2
- 8001ace:	b2db      	uxtb	r3, r3
- 8001ad0:	2b00      	cmp	r3, #0
- 8001ad2:	bf14      	ite	ne
- 8001ad4:	2301      	movne	r3, #1
- 8001ad6:	2300      	moveq	r3, #0
- 8001ad8:	73fb      	strb	r3, [r7, #15]
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001ab0:	3304      	adds	r3, #4
+ 8001ab2:	f7ff fe87 	bl	80017c4 <ADBMS_Read_Data>
+ 8001ab6:	4603      	mov	r3, r0
+ 8001ab8:	461a      	mov	r2, r3
+ 8001aba:	7bfb      	ldrb	r3, [r7, #15]
+ 8001abc:	4313      	orrs	r3, r2
+ 8001abe:	b2db      	uxtb	r3, r3
+ 8001ac0:	2b00      	cmp	r3, #0
+ 8001ac2:	bf14      	ite	ne
+ 8001ac4:	2301      	movne	r3, #1
+ 8001ac6:	2300      	moveq	r3, #0
+ 8001ac8:	73fb      	strb	r3, [r7, #15]
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001aca:	687b      	ldr	r3, [r7, #4]
+ 8001acc:	6818      	ldr	r0, [r3, #0]
+ 8001ace:	4b31      	ldr	r3, [pc, #196]	@ (8001b94 <ADBMS_UpdateVoltages+0x104>)
+ 8001ad0:	8819      	ldrh	r1, [r3, #0]
+ 8001ad2:	687b      	ldr	r3, [r7, #4]
+ 8001ad4:	3338      	adds	r3, #56	@ 0x38
+ 8001ad6:	f103 020c 	add.w	r2, r3, #12
  8001ada:	687b      	ldr	r3, [r7, #4]
- 8001adc:	6818      	ldr	r0, [r3, #0]
- 8001ade:	4b1d      	ldr	r3, [pc, #116]	@ (8001b54 <ADBMS_UpdateVoltages+0x10c>)
- 8001ae0:	8819      	ldrh	r1, [r3, #0]
- 8001ae2:	687b      	ldr	r3, [r7, #4]
- 8001ae4:	3338      	adds	r3, #56	@ 0x38
- 8001ae6:	f103 0224 	add.w	r2, r3, #36	@ 0x24
- 8001aea:	687b      	ldr	r3, [r7, #4]
- 8001aec:	3304      	adds	r3, #4
- 8001aee:	f7ff fe45 	bl	800177c <ADBMS_Read_Data>
- 8001af2:	4603      	mov	r3, r0
- 8001af4:	461a      	mov	r2, r3
- 8001af6:	7bfb      	ldrb	r3, [r7, #15]
- 8001af8:	4313      	orrs	r3, r2
- 8001afa:	b2db      	uxtb	r3, r3
- 8001afc:	2b00      	cmp	r3, #0
- 8001afe:	bf14      	ite	ne
- 8001b00:	2301      	movne	r3, #1
- 8001b02:	2300      	moveq	r3, #0
- 8001b04:	73fb      	strb	r3, [r7, #15]
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001adc:	3304      	adds	r3, #4
+ 8001ade:	f7ff fe71 	bl	80017c4 <ADBMS_Read_Data>
+ 8001ae2:	4603      	mov	r3, r0
+ 8001ae4:	461a      	mov	r2, r3
+ 8001ae6:	7bfb      	ldrb	r3, [r7, #15]
+ 8001ae8:	4313      	orrs	r3, r2
+ 8001aea:	b2db      	uxtb	r3, r3
+ 8001aec:	2b00      	cmp	r3, #0
+ 8001aee:	bf14      	ite	ne
+ 8001af0:	2301      	movne	r3, #1
+ 8001af2:	2300      	moveq	r3, #0
+ 8001af4:	73fb      	strb	r3, [r7, #15]
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001af6:	687b      	ldr	r3, [r7, #4]
+ 8001af8:	6818      	ldr	r0, [r3, #0]
+ 8001afa:	4b27      	ldr	r3, [pc, #156]	@ (8001b98 <ADBMS_UpdateVoltages+0x108>)
+ 8001afc:	8819      	ldrh	r1, [r3, #0]
+ 8001afe:	687b      	ldr	r3, [r7, #4]
+ 8001b00:	3338      	adds	r3, #56	@ 0x38
+ 8001b02:	f103 0218 	add.w	r2, r3, #24
  8001b06:	687b      	ldr	r3, [r7, #4]
- 8001b08:	6818      	ldr	r0, [r3, #0]
- 8001b0a:	4b13      	ldr	r3, [pc, #76]	@ (8001b58 <ADBMS_UpdateVoltages+0x110>)
- 8001b0c:	8819      	ldrh	r1, [r3, #0]
- 8001b0e:	687b      	ldr	r3, [r7, #4]
- 8001b10:	3338      	adds	r3, #56	@ 0x38
- 8001b12:	f103 0230 	add.w	r2, r3, #48	@ 0x30
- 8001b16:	687b      	ldr	r3, [r7, #4]
- 8001b18:	3304      	adds	r3, #4
- 8001b1a:	f7ff fe2f 	bl	800177c <ADBMS_Read_Data>
- 8001b1e:	4603      	mov	r3, r0
- 8001b20:	461a      	mov	r2, r3
- 8001b22:	7bfb      	ldrb	r3, [r7, #15]
- 8001b24:	4313      	orrs	r3, r2
- 8001b26:	b2db      	uxtb	r3, r3
- 8001b28:	2b00      	cmp	r3, #0
- 8001b2a:	bf14      	ite	ne
- 8001b2c:	2301      	movne	r3, #1
- 8001b2e:	2300      	moveq	r3, #0
- 8001b30:	73fb      	strb	r3, [r7, #15]
-    adbms->voltage_pec_failure = pec;
+ 8001b08:	3304      	adds	r3, #4
+ 8001b0a:	f7ff fe5b 	bl	80017c4 <ADBMS_Read_Data>
+ 8001b0e:	4603      	mov	r3, r0
+ 8001b10:	461a      	mov	r2, r3
+ 8001b12:	7bfb      	ldrb	r3, [r7, #15]
+ 8001b14:	4313      	orrs	r3, r2
+ 8001b16:	b2db      	uxtb	r3, r3
+ 8001b18:	2b00      	cmp	r3, #0
+ 8001b1a:	bf14      	ite	ne
+ 8001b1c:	2301      	movne	r3, #1
+ 8001b1e:	2300      	moveq	r3, #0
+ 8001b20:	73fb      	strb	r3, [r7, #15]
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001b22:	687b      	ldr	r3, [r7, #4]
+ 8001b24:	6818      	ldr	r0, [r3, #0]
+ 8001b26:	4b1d      	ldr	r3, [pc, #116]	@ (8001b9c <ADBMS_UpdateVoltages+0x10c>)
+ 8001b28:	8819      	ldrh	r1, [r3, #0]
+ 8001b2a:	687b      	ldr	r3, [r7, #4]
+ 8001b2c:	3338      	adds	r3, #56	@ 0x38
+ 8001b2e:	f103 0224 	add.w	r2, r3, #36	@ 0x24
  8001b32:	687b      	ldr	r3, [r7, #4]
- 8001b34:	7bfa      	ldrb	r2, [r7, #15]
- 8001b36:	f883 21a3 	strb.w	r2, [r3, #419]	@ 0x1a3
+ 8001b34:	3304      	adds	r3, #4
+ 8001b36:	f7ff fe45 	bl	80017c4 <ADBMS_Read_Data>
+ 8001b3a:	4603      	mov	r3, r0
+ 8001b3c:	461a      	mov	r2, r3
+ 8001b3e:	7bfb      	ldrb	r3, [r7, #15]
+ 8001b40:	4313      	orrs	r3, r2
+ 8001b42:	b2db      	uxtb	r3, r3
+ 8001b44:	2b00      	cmp	r3, #0
+ 8001b46:	bf14      	ite	ne
+ 8001b48:	2301      	movne	r3, #1
+ 8001b4a:	2300      	moveq	r3, #0
+ 8001b4c:	73fb      	strb	r3, [r7, #15]
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001b4e:	687b      	ldr	r3, [r7, #4]
+ 8001b50:	6818      	ldr	r0, [r3, #0]
+ 8001b52:	4b13      	ldr	r3, [pc, #76]	@ (8001ba0 <ADBMS_UpdateVoltages+0x110>)
+ 8001b54:	8819      	ldrh	r1, [r3, #0]
+ 8001b56:	687b      	ldr	r3, [r7, #4]
+ 8001b58:	3338      	adds	r3, #56	@ 0x38
+ 8001b5a:	f103 0230 	add.w	r2, r3, #48	@ 0x30
+ 8001b5e:	687b      	ldr	r3, [r7, #4]
+ 8001b60:	3304      	adds	r3, #4
+ 8001b62:	f7ff fe2f 	bl	80017c4 <ADBMS_Read_Data>
+ 8001b66:	4603      	mov	r3, r0
+ 8001b68:	461a      	mov	r2, r3
+ 8001b6a:	7bfb      	ldrb	r3, [r7, #15]
+ 8001b6c:	4313      	orrs	r3, r2
+ 8001b6e:	b2db      	uxtb	r3, r3
+ 8001b70:	2b00      	cmp	r3, #0
+ 8001b72:	bf14      	ite	ne
+ 8001b74:	2301      	movne	r3, #1
+ 8001b76:	2300      	moveq	r3, #0
+ 8001b78:	73fb      	strb	r3, [r7, #15]
+    adbms->voltage_pec_failure = pec;
+ 8001b7a:	687b      	ldr	r3, [r7, #4]
+ 8001b7c:	7bfa      	ldrb	r2, [r7, #15]
+ 8001b7e:	f883 21eb 	strb.w	r2, [r3, #491]	@ 0x1eb
 
     // calulate new values with the updated raw ones
      ADBMS_CalculateValues_Voltages(adbms);
- 8001b3a:	6878      	ldr	r0, [r7, #4]
- 8001b3c:	f000 f888 	bl	8001c50 <ADBMS_CalculateValues_Voltages>
+ 8001b82:	6878      	ldr	r0, [r7, #4]
+ 8001b84:	f000 f888 	bl	8001c98 <ADBMS_CalculateValues_Voltages>
 }
- 8001b40:	bf00      	nop
- 8001b42:	3710      	adds	r7, #16
- 8001b44:	46bd      	mov	sp, r7
- 8001b46:	bd80      	pop	{r7, pc}
- 8001b48:	20000004 	.word	0x20000004
- 8001b4c:	20000006 	.word	0x20000006
- 8001b50:	20000008 	.word	0x20000008
- 8001b54:	2000000a 	.word	0x2000000a
- 8001b58:	2000000c 	.word	0x2000000c
+ 8001b88:	bf00      	nop
+ 8001b8a:	3710      	adds	r7, #16
+ 8001b8c:	46bd      	mov	sp, r7
+ 8001b8e:	bd80      	pop	{r7, pc}
+ 8001b90:	20000004 	.word	0x20000004
+ 8001b94:	20000006 	.word	0x20000006
+ 8001b98:	20000008 	.word	0x20000008
+ 8001b9c:	2000000a 	.word	0x2000000a
+ 8001ba0:	2000000c 	.word	0x2000000c
 
-08001b5c <ADBMS_UpdateTemps>:
+08001ba4 <ADBMS_UpdateTemps>:
 
 void ADBMS_UpdateTemps(adbms_ *adbms)
 {
- 8001b5c:	b580      	push	{r7, lr}
- 8001b5e:	b084      	sub	sp, #16
- 8001b60:	af00      	add	r7, sp, #0
- 8001b62:	6078      	str	r0, [r7, #4]
+ 8001ba4:	b580      	push	{r7, lr}
+ 8001ba6:	b084      	sub	sp, #16
+ 8001ba8:	af00      	add	r7, sp, #0
+ 8001baa:	6078      	str	r0, [r7, #4]
     // get temps from ADBMS
     bool pec = 0;
- 8001b64:	2300      	movs	r3, #0
- 8001b66:	73fb      	strb	r3, [r7, #15]
+ 8001bac:	2300      	movs	r3, #0
+ 8001bae:	73fb      	strb	r3, [r7, #15]
     ADBMS_WakeUP_ICs();
- 8001b68:	f7ff fd1e 	bl	80015a8 <ADBMS_WakeUP_ICs>
+ 8001bb0:	f7ff fd1e 	bl	80015f0 <ADBMS_WakeUP_ICs>
     pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXA, (adbms->ICs.aux + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
- 8001b6c:	687b      	ldr	r3, [r7, #4]
- 8001b6e:	6818      	ldr	r0, [r3, #0]
- 8001b70:	4b33      	ldr	r3, [pc, #204]	@ (8001c40 <ADBMS_UpdateTemps+0xe4>)
- 8001b72:	8819      	ldrh	r1, [r3, #0]
- 8001b74:	687b      	ldr	r3, [r7, #4]
- 8001b76:	f103 0280 	add.w	r2, r3, #128	@ 0x80
- 8001b7a:	687b      	ldr	r3, [r7, #4]
- 8001b7c:	3304      	adds	r3, #4
- 8001b7e:	f7ff fdfd 	bl	800177c <ADBMS_Read_Data>
- 8001b82:	4603      	mov	r3, r0
- 8001b84:	461a      	mov	r2, r3
- 8001b86:	7bfb      	ldrb	r3, [r7, #15]
- 8001b88:	4313      	orrs	r3, r2
- 8001b8a:	b2db      	uxtb	r3, r3
- 8001b8c:	2b00      	cmp	r3, #0
- 8001b8e:	bf14      	ite	ne
- 8001b90:	2301      	movne	r3, #1
- 8001b92:	2300      	moveq	r3, #0
- 8001b94:	73fb      	strb	r3, [r7, #15]
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXB, (adbms->ICs.aux + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
- 8001b96:	687b      	ldr	r3, [r7, #4]
- 8001b98:	6818      	ldr	r0, [r3, #0]
- 8001b9a:	4b2a      	ldr	r3, [pc, #168]	@ (8001c44 <ADBMS_UpdateTemps+0xe8>)
- 8001b9c:	8819      	ldrh	r1, [r3, #0]
- 8001b9e:	687b      	ldr	r3, [r7, #4]
- 8001ba0:	3380      	adds	r3, #128	@ 0x80
- 8001ba2:	f103 020c 	add.w	r2, r3, #12
- 8001ba6:	687b      	ldr	r3, [r7, #4]
- 8001ba8:	3304      	adds	r3, #4
- 8001baa:	f7ff fde7 	bl	800177c <ADBMS_Read_Data>
- 8001bae:	4603      	mov	r3, r0
- 8001bb0:	461a      	mov	r2, r3
- 8001bb2:	7bfb      	ldrb	r3, [r7, #15]
- 8001bb4:	4313      	orrs	r3, r2
- 8001bb6:	b2db      	uxtb	r3, r3
- 8001bb8:	2b00      	cmp	r3, #0
- 8001bba:	bf14      	ite	ne
- 8001bbc:	2301      	movne	r3, #1
- 8001bbe:	2300      	moveq	r3, #0
- 8001bc0:	73fb      	strb	r3, [r7, #15]
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXC, (adbms->ICs.aux + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001bb4:	687b      	ldr	r3, [r7, #4]
+ 8001bb6:	6818      	ldr	r0, [r3, #0]
+ 8001bb8:	4b33      	ldr	r3, [pc, #204]	@ (8001c88 <ADBMS_UpdateTemps+0xe4>)
+ 8001bba:	8819      	ldrh	r1, [r3, #0]
+ 8001bbc:	687b      	ldr	r3, [r7, #4]
+ 8001bbe:	f103 02c8 	add.w	r2, r3, #200	@ 0xc8
  8001bc2:	687b      	ldr	r3, [r7, #4]
- 8001bc4:	6818      	ldr	r0, [r3, #0]
- 8001bc6:	4b20      	ldr	r3, [pc, #128]	@ (8001c48 <ADBMS_UpdateTemps+0xec>)
- 8001bc8:	8819      	ldrh	r1, [r3, #0]
- 8001bca:	687b      	ldr	r3, [r7, #4]
- 8001bcc:	3380      	adds	r3, #128	@ 0x80
- 8001bce:	f103 0218 	add.w	r2, r3, #24
- 8001bd2:	687b      	ldr	r3, [r7, #4]
- 8001bd4:	3304      	adds	r3, #4
- 8001bd6:	f7ff fdd1 	bl	800177c <ADBMS_Read_Data>
- 8001bda:	4603      	mov	r3, r0
- 8001bdc:	461a      	mov	r2, r3
- 8001bde:	7bfb      	ldrb	r3, [r7, #15]
- 8001be0:	4313      	orrs	r3, r2
- 8001be2:	b2db      	uxtb	r3, r3
- 8001be4:	2b00      	cmp	r3, #0
- 8001be6:	bf14      	ite	ne
- 8001be8:	2301      	movne	r3, #1
- 8001bea:	2300      	moveq	r3, #0
- 8001bec:	73fb      	strb	r3, [r7, #15]
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXD, (adbms->ICs.aux + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001bc4:	3304      	adds	r3, #4
+ 8001bc6:	f7ff fdfd 	bl	80017c4 <ADBMS_Read_Data>
+ 8001bca:	4603      	mov	r3, r0
+ 8001bcc:	461a      	mov	r2, r3
+ 8001bce:	7bfb      	ldrb	r3, [r7, #15]
+ 8001bd0:	4313      	orrs	r3, r2
+ 8001bd2:	b2db      	uxtb	r3, r3
+ 8001bd4:	2b00      	cmp	r3, #0
+ 8001bd6:	bf14      	ite	ne
+ 8001bd8:	2301      	movne	r3, #1
+ 8001bda:	2300      	moveq	r3, #0
+ 8001bdc:	73fb      	strb	r3, [r7, #15]
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXB, (adbms->ICs.aux + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001bde:	687b      	ldr	r3, [r7, #4]
+ 8001be0:	6818      	ldr	r0, [r3, #0]
+ 8001be2:	4b2a      	ldr	r3, [pc, #168]	@ (8001c8c <ADBMS_UpdateTemps+0xe8>)
+ 8001be4:	8819      	ldrh	r1, [r3, #0]
+ 8001be6:	687b      	ldr	r3, [r7, #4]
+ 8001be8:	33c8      	adds	r3, #200	@ 0xc8
+ 8001bea:	f103 020c 	add.w	r2, r3, #12
  8001bee:	687b      	ldr	r3, [r7, #4]
- 8001bf0:	6818      	ldr	r0, [r3, #0]
- 8001bf2:	4b16      	ldr	r3, [pc, #88]	@ (8001c4c <ADBMS_UpdateTemps+0xf0>)
- 8001bf4:	8819      	ldrh	r1, [r3, #0]
- 8001bf6:	687b      	ldr	r3, [r7, #4]
- 8001bf8:	3380      	adds	r3, #128	@ 0x80
- 8001bfa:	f103 0224 	add.w	r2, r3, #36	@ 0x24
- 8001bfe:	687b      	ldr	r3, [r7, #4]
- 8001c00:	3304      	adds	r3, #4
- 8001c02:	f7ff fdbb 	bl	800177c <ADBMS_Read_Data>
- 8001c06:	4603      	mov	r3, r0
- 8001c08:	461a      	mov	r2, r3
- 8001c0a:	7bfb      	ldrb	r3, [r7, #15]
- 8001c0c:	4313      	orrs	r3, r2
- 8001c0e:	b2db      	uxtb	r3, r3
- 8001c10:	2b00      	cmp	r3, #0
- 8001c12:	bf14      	ite	ne
- 8001c14:	2301      	movne	r3, #1
- 8001c16:	2300      	moveq	r3, #0
- 8001c18:	73fb      	strb	r3, [r7, #15]
-    adbms->temp_pec_failure = pec;
+ 8001bf0:	3304      	adds	r3, #4
+ 8001bf2:	f7ff fde7 	bl	80017c4 <ADBMS_Read_Data>
+ 8001bf6:	4603      	mov	r3, r0
+ 8001bf8:	461a      	mov	r2, r3
+ 8001bfa:	7bfb      	ldrb	r3, [r7, #15]
+ 8001bfc:	4313      	orrs	r3, r2
+ 8001bfe:	b2db      	uxtb	r3, r3
+ 8001c00:	2b00      	cmp	r3, #0
+ 8001c02:	bf14      	ite	ne
+ 8001c04:	2301      	movne	r3, #1
+ 8001c06:	2300      	moveq	r3, #0
+ 8001c08:	73fb      	strb	r3, [r7, #15]
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXC, (adbms->ICs.aux + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001c0a:	687b      	ldr	r3, [r7, #4]
+ 8001c0c:	6818      	ldr	r0, [r3, #0]
+ 8001c0e:	4b20      	ldr	r3, [pc, #128]	@ (8001c90 <ADBMS_UpdateTemps+0xec>)
+ 8001c10:	8819      	ldrh	r1, [r3, #0]
+ 8001c12:	687b      	ldr	r3, [r7, #4]
+ 8001c14:	33c8      	adds	r3, #200	@ 0xc8
+ 8001c16:	f103 0218 	add.w	r2, r3, #24
  8001c1a:	687b      	ldr	r3, [r7, #4]
- 8001c1c:	7bfa      	ldrb	r2, [r7, #15]
- 8001c1e:	f883 21a4 	strb.w	r2, [r3, #420]	@ 0x1a4
+ 8001c1c:	3304      	adds	r3, #4
+ 8001c1e:	f7ff fdd1 	bl	80017c4 <ADBMS_Read_Data>
+ 8001c22:	4603      	mov	r3, r0
+ 8001c24:	461a      	mov	r2, r3
+ 8001c26:	7bfb      	ldrb	r3, [r7, #15]
+ 8001c28:	4313      	orrs	r3, r2
+ 8001c2a:	b2db      	uxtb	r3, r3
+ 8001c2c:	2b00      	cmp	r3, #0
+ 8001c2e:	bf14      	ite	ne
+ 8001c30:	2301      	movne	r3, #1
+ 8001c32:	2300      	moveq	r3, #0
+ 8001c34:	73fb      	strb	r3, [r7, #15]
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXD, (adbms->ICs.aux + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+ 8001c36:	687b      	ldr	r3, [r7, #4]
+ 8001c38:	6818      	ldr	r0, [r3, #0]
+ 8001c3a:	4b16      	ldr	r3, [pc, #88]	@ (8001c94 <ADBMS_UpdateTemps+0xf0>)
+ 8001c3c:	8819      	ldrh	r1, [r3, #0]
+ 8001c3e:	687b      	ldr	r3, [r7, #4]
+ 8001c40:	33c8      	adds	r3, #200	@ 0xc8
+ 8001c42:	f103 0224 	add.w	r2, r3, #36	@ 0x24
+ 8001c46:	687b      	ldr	r3, [r7, #4]
+ 8001c48:	3304      	adds	r3, #4
+ 8001c4a:	f7ff fdbb 	bl	80017c4 <ADBMS_Read_Data>
+ 8001c4e:	4603      	mov	r3, r0
+ 8001c50:	461a      	mov	r2, r3
+ 8001c52:	7bfb      	ldrb	r3, [r7, #15]
+ 8001c54:	4313      	orrs	r3, r2
+ 8001c56:	b2db      	uxtb	r3, r3
+ 8001c58:	2b00      	cmp	r3, #0
+ 8001c5a:	bf14      	ite	ne
+ 8001c5c:	2301      	movne	r3, #1
+ 8001c5e:	2300      	moveq	r3, #0
+ 8001c60:	73fb      	strb	r3, [r7, #15]
+    adbms->temp_pec_failure = pec;
+ 8001c62:	687b      	ldr	r3, [r7, #4]
+ 8001c64:	7bfa      	ldrb	r2, [r7, #15]
+ 8001c66:	f883 21ec 	strb.w	r2, [r3, #492]	@ 0x1ec
 
     // need to start new poll for conversion before next read (no continous mode)
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adax);
- 8001c22:	687b      	ldr	r3, [r7, #4]
- 8001c24:	681a      	ldr	r2, [r3, #0]
- 8001c26:	687b      	ldr	r3, [r7, #4]
- 8001c28:	8e9b      	ldrh	r3, [r3, #52]	@ 0x34
- 8001c2a:	4619      	mov	r1, r3
- 8001c2c:	4610      	mov	r0, r2
- 8001c2e:	f7ff fcdf 	bl	80015f0 <ADBMS_Write_CMD>
+ 8001c6a:	687b      	ldr	r3, [r7, #4]
+ 8001c6c:	681a      	ldr	r2, [r3, #0]
+ 8001c6e:	687b      	ldr	r3, [r7, #4]
+ 8001c70:	8e9b      	ldrh	r3, [r3, #52]	@ 0x34
+ 8001c72:	4619      	mov	r1, r3
+ 8001c74:	4610      	mov	r0, r2
+ 8001c76:	f7ff fcdf 	bl	8001638 <ADBMS_Write_CMD>
 
     // calulate new values with the updated raw ones
     ADBMS_CalculateValues_Temps(adbms);
- 8001c32:	6878      	ldr	r0, [r7, #4]
- 8001c34:	f000 f90c 	bl	8001e50 <ADBMS_CalculateValues_Temps>
+ 8001c7a:	6878      	ldr	r0, [r7, #4]
+ 8001c7c:	f000 f90c 	bl	8001e98 <ADBMS_CalculateValues_Temps>
 }
- 8001c38:	bf00      	nop
- 8001c3a:	3710      	adds	r7, #16
- 8001c3c:	46bd      	mov	sp, r7
- 8001c3e:	bd80      	pop	{r7, pc}
- 8001c40:	2000000e 	.word	0x2000000e
- 8001c44:	20000010 	.word	0x20000010
- 8001c48:	20000012 	.word	0x20000012
- 8001c4c:	20000014 	.word	0x20000014
+ 8001c80:	bf00      	nop
+ 8001c82:	3710      	adds	r7, #16
+ 8001c84:	46bd      	mov	sp, r7
+ 8001c86:	bd80      	pop	{r7, pc}
+ 8001c88:	2000000e 	.word	0x2000000e
+ 8001c8c:	20000010 	.word	0x20000010
+ 8001c90:	20000012 	.word	0x20000012
+ 8001c94:	20000014 	.word	0x20000014
 
-08001c50 <ADBMS_CalculateValues_Voltages>:
+08001c98 <ADBMS_CalculateValues_Voltages>:
 
 void ADBMS_CalculateValues_Voltages(adbms_ *adbms)
 {
- 8001c50:	b580      	push	{r7, lr}
- 8001c52:	b086      	sub	sp, #24
- 8001c54:	af00      	add	r7, sp, #0
- 8001c56:	6078      	str	r0, [r7, #4]
+ 8001c98:	b580      	push	{r7, lr}
+ 8001c9a:	b086      	sub	sp, #24
+ 8001c9c:	af00      	add	r7, sp, #0
+ 8001c9e:	6078      	str	r0, [r7, #4]
     // reset current pec failures if there is no current failure
     if(!adbms->voltage_pec_failure && !adbms->temp_pec_failure && !adbms->status_reg_pec_failure) { 
- 8001c58:	687b      	ldr	r3, [r7, #4]
- 8001c5a:	f893 31a3 	ldrb.w	r3, [r3, #419]	@ 0x1a3
- 8001c5e:	f083 0301 	eor.w	r3, r3, #1
- 8001c62:	b2db      	uxtb	r3, r3
- 8001c64:	2b00      	cmp	r3, #0
- 8001c66:	d014      	beq.n	8001c92 <ADBMS_CalculateValues_Voltages+0x42>
- 8001c68:	687b      	ldr	r3, [r7, #4]
- 8001c6a:	f893 31a4 	ldrb.w	r3, [r3, #420]	@ 0x1a4
- 8001c6e:	f083 0301 	eor.w	r3, r3, #1
- 8001c72:	b2db      	uxtb	r3, r3
- 8001c74:	2b00      	cmp	r3, #0
- 8001c76:	d00c      	beq.n	8001c92 <ADBMS_CalculateValues_Voltages+0x42>
- 8001c78:	687b      	ldr	r3, [r7, #4]
- 8001c7a:	f893 31a5 	ldrb.w	r3, [r3, #421]	@ 0x1a5
- 8001c7e:	f083 0301 	eor.w	r3, r3, #1
- 8001c82:	b2db      	uxtb	r3, r3
- 8001c84:	2b00      	cmp	r3, #0
- 8001c86:	d004      	beq.n	8001c92 <ADBMS_CalculateValues_Voltages+0x42>
+ 8001ca0:	687b      	ldr	r3, [r7, #4]
+ 8001ca2:	f893 31eb 	ldrb.w	r3, [r3, #491]	@ 0x1eb
+ 8001ca6:	f083 0301 	eor.w	r3, r3, #1
+ 8001caa:	b2db      	uxtb	r3, r3
+ 8001cac:	2b00      	cmp	r3, #0
+ 8001cae:	d014      	beq.n	8001cda <ADBMS_CalculateValues_Voltages+0x42>
+ 8001cb0:	687b      	ldr	r3, [r7, #4]
+ 8001cb2:	f893 31ec 	ldrb.w	r3, [r3, #492]	@ 0x1ec
+ 8001cb6:	f083 0301 	eor.w	r3, r3, #1
+ 8001cba:	b2db      	uxtb	r3, r3
+ 8001cbc:	2b00      	cmp	r3, #0
+ 8001cbe:	d00c      	beq.n	8001cda <ADBMS_CalculateValues_Voltages+0x42>
+ 8001cc0:	687b      	ldr	r3, [r7, #4]
+ 8001cc2:	f893 31ed 	ldrb.w	r3, [r3, #493]	@ 0x1ed
+ 8001cc6:	f083 0301 	eor.w	r3, r3, #1
+ 8001cca:	b2db      	uxtb	r3, r3
+ 8001ccc:	2b00      	cmp	r3, #0
+ 8001cce:	d004      	beq.n	8001cda <ADBMS_CalculateValues_Voltages+0x42>
         adbms->current_pec_failures = 0;
- 8001c88:	687b      	ldr	r3, [r7, #4]
- 8001c8a:	f04f 0200 	mov.w	r2, #0
- 8001c8e:	f8c3 21ac 	str.w	r2, [r3, #428]	@ 0x1ac
+ 8001cd0:	687b      	ldr	r3, [r7, #4]
+ 8001cd2:	f04f 0200 	mov.w	r2, #0
+ 8001cd6:	f8c3 21f4 	str.w	r2, [r3, #500]	@ 0x1f4
     }
 
     // if there is a pec failure, process it and don't update values
     if(adbms->voltage_pec_failure) {
- 8001c92:	687b      	ldr	r3, [r7, #4]
- 8001c94:	f893 31a3 	ldrb.w	r3, [r3, #419]	@ 0x1a3
- 8001c98:	2b00      	cmp	r3, #0
- 8001c9a:	d022      	beq.n	8001ce2 <ADBMS_CalculateValues_Voltages+0x92>
+ 8001cda:	687b      	ldr	r3, [r7, #4]
+ 8001cdc:	f893 31eb 	ldrb.w	r3, [r3, #491]	@ 0x1eb
+ 8001ce0:	2b00      	cmp	r3, #0
+ 8001ce2:	d022      	beq.n	8001d2a <ADBMS_CalculateValues_Voltages+0x92>
         adbms->current_pec_failures += adbms->voltage_pec_failure;
- 8001c9c:	687b      	ldr	r3, [r7, #4]
- 8001c9e:	ed93 7a6b 	vldr	s14, [r3, #428]	@ 0x1ac
- 8001ca2:	687b      	ldr	r3, [r7, #4]
- 8001ca4:	f893 31a3 	ldrb.w	r3, [r3, #419]	@ 0x1a3
- 8001ca8:	ee07 3a90 	vmov	s15, r3
- 8001cac:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8001cb0:	ee77 7a27 	vadd.f32	s15, s14, s15
- 8001cb4:	687b      	ldr	r3, [r7, #4]
- 8001cb6:	edc3 7a6b 	vstr	s15, [r3, #428]	@ 0x1ac
+ 8001ce4:	687b      	ldr	r3, [r7, #4]
+ 8001ce6:	ed93 7a7d 	vldr	s14, [r3, #500]	@ 0x1f4
+ 8001cea:	687b      	ldr	r3, [r7, #4]
+ 8001cec:	f893 31eb 	ldrb.w	r3, [r3, #491]	@ 0x1eb
+ 8001cf0:	ee07 3a90 	vmov	s15, r3
+ 8001cf4:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 8001cf8:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 8001cfc:	687b      	ldr	r3, [r7, #4]
+ 8001cfe:	edc3 7a7d 	vstr	s15, [r3, #500]	@ 0x1f4
         if(adbms->current_pec_failures > PEC_FAILURE_THRESHOLD) {
- 8001cba:	687b      	ldr	r3, [r7, #4]
- 8001cbc:	edd3 7a6b 	vldr	s15, [r3, #428]	@ 0x1ac
- 8001cc0:	eeb2 7a04 	vmov.f32	s14, #36	@ 0x41200000  10.0
- 8001cc4:	eef4 7ac7 	vcmpe.f32	s15, s14
- 8001cc8:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8001ccc:	dd04      	ble.n	8001cd8 <ADBMS_CalculateValues_Voltages+0x88>
+ 8001d02:	687b      	ldr	r3, [r7, #4]
+ 8001d04:	edd3 7a7d 	vldr	s15, [r3, #500]	@ 0x1f4
+ 8001d08:	eeb2 7a04 	vmov.f32	s14, #36	@ 0x41200000  10.0
+ 8001d0c:	eef4 7ac7 	vcmpe.f32	s15, s14
+ 8001d10:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8001d14:	dd04      	ble.n	8001d20 <ADBMS_CalculateValues_Voltages+0x88>
             adbms->pec_fault_ = 1;
- 8001cce:	687b      	ldr	r3, [r7, #4]
- 8001cd0:	2201      	movs	r2, #1
- 8001cd2:	f883 21a2 	strb.w	r2, [r3, #418]	@ 0x1a2
+ 8001d16:	687b      	ldr	r3, [r7, #4]
+ 8001d18:	2201      	movs	r2, #1
+ 8001d1a:	f883 21ea 	strb.w	r2, [r3, #490]	@ 0x1ea
         }else {
             adbms->pec_fault_ = 0;
         }
         return;
- 8001cd6:	e0b5      	b.n	8001e44 <ADBMS_CalculateValues_Voltages+0x1f4>
+ 8001d1e:	e0b5      	b.n	8001e8c <ADBMS_CalculateValues_Voltages+0x1f4>
             adbms->pec_fault_ = 0;
- 8001cd8:	687b      	ldr	r3, [r7, #4]
- 8001cda:	2200      	movs	r2, #0
- 8001cdc:	f883 21a2 	strb.w	r2, [r3, #418]	@ 0x1a2
+ 8001d20:	687b      	ldr	r3, [r7, #4]
+ 8001d22:	2200      	movs	r2, #0
+ 8001d24:	f883 21ea 	strb.w	r2, [r3, #490]	@ 0x1ea
         return;
- 8001ce0:	e0b0      	b.n	8001e44 <ADBMS_CalculateValues_Voltages+0x1f4>
+ 8001d28:	e0b0      	b.n	8001e8c <ADBMS_CalculateValues_Voltages+0x1f4>
     }
 
     // calculate the total, max, and min voltage
     adbms->total_v = 0;
- 8001ce2:	687b      	ldr	r3, [r7, #4]
- 8001ce4:	f04f 0200 	mov.w	r2, #0
- 8001ce8:	f8c3 2180 	str.w	r2, [r3, #384]	@ 0x180
+ 8001d2a:	687b      	ldr	r3, [r7, #4]
+ 8001d2c:	f04f 0200 	mov.w	r2, #0
+ 8001d30:	f8c3 21c8 	str.w	r2, [r3, #456]	@ 0x1c8
     adbms->max_v = 0;
- 8001cec:	687b      	ldr	r3, [r7, #4]
- 8001cee:	f04f 0200 	mov.w	r2, #0
- 8001cf2:	f8c3 2184 	str.w	r2, [r3, #388]	@ 0x184
+ 8001d34:	687b      	ldr	r3, [r7, #4]
+ 8001d36:	f04f 0200 	mov.w	r2, #0
+ 8001d3a:	f8c3 21cc 	str.w	r2, [r3, #460]	@ 0x1cc
     adbms->min_v = FLT_MAX;
- 8001cf6:	687b      	ldr	r3, [r7, #4]
- 8001cf8:	4a54      	ldr	r2, [pc, #336]	@ (8001e4c <ADBMS_CalculateValues_Voltages+0x1fc>)
- 8001cfa:	f8c3 2188 	str.w	r2, [r3, #392]	@ 0x188
+ 8001d3e:	687b      	ldr	r3, [r7, #4]
+ 8001d40:	4a54      	ldr	r2, [pc, #336]	@ (8001e94 <ADBMS_CalculateValues_Voltages+0x1fc>)
+ 8001d42:	f8c3 21d0 	str.w	r2, [r3, #464]	@ 0x1d0
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 8001cfe:	2300      	movs	r3, #0
- 8001d00:	75fb      	strb	r3, [r7, #23]
- 8001d02:	e091      	b.n	8001e28 <ADBMS_CalculateValues_Voltages+0x1d8>
+ 8001d46:	2300      	movs	r3, #0
+ 8001d48:	75fb      	strb	r3, [r7, #23]
+ 8001d4a:	e091      	b.n	8001e70 <ADBMS_CalculateValues_Voltages+0x1d8>
     {
         uint8_t num_reg_grps = NUM_VOLTAGES_CHIP / VOLTAGES_REG_GRP + (NUM_VOLTAGES_CHIP % VOLTAGES_REG_GRP != 0);
- 8001d04:	2305      	movs	r3, #5
- 8001d06:	753b      	strb	r3, [r7, #20]
+ 8001d4c:	2305      	movs	r3, #5
+ 8001d4e:	753b      	strb	r3, [r7, #20]
         for (uint8_t creg_grp = 0; creg_grp < num_reg_grps; creg_grp++)
- 8001d08:	2300      	movs	r3, #0
- 8001d0a:	75bb      	strb	r3, [r7, #22]
- 8001d0c:	e084      	b.n	8001e18 <ADBMS_CalculateValues_Voltages+0x1c8>
+ 8001d50:	2300      	movs	r3, #0
+ 8001d52:	75bb      	strb	r3, [r7, #22]
+ 8001d54:	e084      	b.n	8001e60 <ADBMS_CalculateValues_Voltages+0x1c8>
         {
             for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
- 8001d0e:	2300      	movs	r3, #0
- 8001d10:	757b      	strb	r3, [r7, #21]
- 8001d12:	e079      	b.n	8001e08 <ADBMS_CalculateValues_Voltages+0x1b8>
+ 8001d56:	2300      	movs	r3, #0
+ 8001d58:	757b      	strb	r3, [r7, #21]
+ 8001d5a:	e079      	b.n	8001e50 <ADBMS_CalculateValues_Voltages+0x1b8>
             {
                 if(creg_grp*DATA_LEN/2 + cbyte/2 >= NUM_VOLTAGES_CHIP) break;   // only read 14 when getting 15 -- TODO CHANGE COMMENT
- 8001d14:	7dba      	ldrb	r2, [r7, #22]
- 8001d16:	4613      	mov	r3, r2
- 8001d18:	005b      	lsls	r3, r3, #1
- 8001d1a:	4413      	add	r3, r2
- 8001d1c:	7d7a      	ldrb	r2, [r7, #21]
- 8001d1e:	0852      	lsrs	r2, r2, #1
- 8001d20:	b2d2      	uxtb	r2, r2
- 8001d22:	4413      	add	r3, r2
- 8001d24:	2b0d      	cmp	r3, #13
- 8001d26:	dc73      	bgt.n	8001e10 <ADBMS_CalculateValues_Voltages+0x1c0>
+ 8001d5c:	7dba      	ldrb	r2, [r7, #22]
+ 8001d5e:	4613      	mov	r3, r2
+ 8001d60:	005b      	lsls	r3, r3, #1
+ 8001d62:	4413      	add	r3, r2
+ 8001d64:	7d7a      	ldrb	r2, [r7, #21]
+ 8001d66:	0852      	lsrs	r2, r2, #1
+ 8001d68:	b2d2      	uxtb	r2, r2
+ 8001d6a:	4413      	add	r3, r2
+ 8001d6c:	2b0d      	cmp	r3, #13
+ 8001d6e:	dc73      	bgt.n	8001e58 <ADBMS_CalculateValues_Voltages+0x1c0>
                 int16_t raw_val = (((uint16_t)adbms->ICs.cell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1]) << 8) | adbms->ICs.cell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte];
- 8001d28:	7dba      	ldrb	r2, [r7, #22]
- 8001d2a:	4613      	mov	r3, r2
- 8001d2c:	005b      	lsls	r3, r3, #1
- 8001d2e:	4413      	add	r3, r2
- 8001d30:	009b      	lsls	r3, r3, #2
- 8001d32:	4619      	mov	r1, r3
- 8001d34:	7dfa      	ldrb	r2, [r7, #23]
- 8001d36:	4613      	mov	r3, r2
- 8001d38:	005b      	lsls	r3, r3, #1
- 8001d3a:	4413      	add	r3, r2
- 8001d3c:	005b      	lsls	r3, r3, #1
- 8001d3e:	18ca      	adds	r2, r1, r3
- 8001d40:	7d7b      	ldrb	r3, [r7, #21]
- 8001d42:	4413      	add	r3, r2
- 8001d44:	3301      	adds	r3, #1
- 8001d46:	687a      	ldr	r2, [r7, #4]
- 8001d48:	4413      	add	r3, r2
- 8001d4a:	f893 3038 	ldrb.w	r3, [r3, #56]	@ 0x38
- 8001d4e:	b21b      	sxth	r3, r3
- 8001d50:	021b      	lsls	r3, r3, #8
- 8001d52:	b219      	sxth	r1, r3
- 8001d54:	7dba      	ldrb	r2, [r7, #22]
- 8001d56:	4613      	mov	r3, r2
- 8001d58:	005b      	lsls	r3, r3, #1
- 8001d5a:	4413      	add	r3, r2
- 8001d5c:	009b      	lsls	r3, r3, #2
- 8001d5e:	4618      	mov	r0, r3
- 8001d60:	7dfa      	ldrb	r2, [r7, #23]
- 8001d62:	4613      	mov	r3, r2
- 8001d64:	005b      	lsls	r3, r3, #1
- 8001d66:	4413      	add	r3, r2
- 8001d68:	005b      	lsls	r3, r3, #1
- 8001d6a:	18c2      	adds	r2, r0, r3
- 8001d6c:	7d7b      	ldrb	r3, [r7, #21]
- 8001d6e:	4413      	add	r3, r2
- 8001d70:	687a      	ldr	r2, [r7, #4]
- 8001d72:	4413      	add	r3, r2
- 8001d74:	f893 3038 	ldrb.w	r3, [r3, #56]	@ 0x38
- 8001d78:	b21b      	sxth	r3, r3
- 8001d7a:	430b      	orrs	r3, r1
- 8001d7c:	827b      	strh	r3, [r7, #18]
+ 8001d70:	7dba      	ldrb	r2, [r7, #22]
+ 8001d72:	4613      	mov	r3, r2
+ 8001d74:	005b      	lsls	r3, r3, #1
+ 8001d76:	4413      	add	r3, r2
+ 8001d78:	009b      	lsls	r3, r3, #2
+ 8001d7a:	4619      	mov	r1, r3
+ 8001d7c:	7dfa      	ldrb	r2, [r7, #23]
+ 8001d7e:	4613      	mov	r3, r2
+ 8001d80:	005b      	lsls	r3, r3, #1
+ 8001d82:	4413      	add	r3, r2
+ 8001d84:	005b      	lsls	r3, r3, #1
+ 8001d86:	18ca      	adds	r2, r1, r3
+ 8001d88:	7d7b      	ldrb	r3, [r7, #21]
+ 8001d8a:	4413      	add	r3, r2
+ 8001d8c:	3301      	adds	r3, #1
+ 8001d8e:	687a      	ldr	r2, [r7, #4]
+ 8001d90:	4413      	add	r3, r2
+ 8001d92:	f893 3038 	ldrb.w	r3, [r3, #56]	@ 0x38
+ 8001d96:	b21b      	sxth	r3, r3
+ 8001d98:	021b      	lsls	r3, r3, #8
+ 8001d9a:	b219      	sxth	r1, r3
+ 8001d9c:	7dba      	ldrb	r2, [r7, #22]
+ 8001d9e:	4613      	mov	r3, r2
+ 8001da0:	005b      	lsls	r3, r3, #1
+ 8001da2:	4413      	add	r3, r2
+ 8001da4:	009b      	lsls	r3, r3, #2
+ 8001da6:	4618      	mov	r0, r3
+ 8001da8:	7dfa      	ldrb	r2, [r7, #23]
+ 8001daa:	4613      	mov	r3, r2
+ 8001dac:	005b      	lsls	r3, r3, #1
+ 8001dae:	4413      	add	r3, r2
+ 8001db0:	005b      	lsls	r3, r3, #1
+ 8001db2:	18c2      	adds	r2, r0, r3
+ 8001db4:	7d7b      	ldrb	r3, [r7, #21]
+ 8001db6:	4413      	add	r3, r2
+ 8001db8:	687a      	ldr	r2, [r7, #4]
+ 8001dba:	4413      	add	r3, r2
+ 8001dbc:	f893 3038 	ldrb.w	r3, [r3, #56]	@ 0x38
+ 8001dc0:	b21b      	sxth	r3, r3
+ 8001dc2:	430b      	orrs	r3, r1
+ 8001dc4:	827b      	strh	r3, [r7, #18]
                 float curr_voltage = ADBMS_getVoltage(raw_val);
- 8001d7e:	f9b7 3012 	ldrsh.w	r3, [r7, #18]
- 8001d82:	4618      	mov	r0, r3
- 8001d84:	f000 fa10 	bl	80021a8 <ADBMS_getVoltage>
- 8001d88:	ed87 0a03 	vstr	s0, [r7, #12]
+ 8001dc6:	f9b7 3012 	ldrsh.w	r3, [r7, #18]
+ 8001dca:	4618      	mov	r0, r3
+ 8001dcc:	f7ff f9b4 	bl	8001138 <ADBMS_getVoltage>
+ 8001dd0:	ed87 0a03 	vstr	s0, [r7, #12]
                 adbms->voltages[cic*NUM_VOLTAGES_CHIP + creg_grp*DATA_LEN/2 + cbyte/2] = curr_voltage;
- 8001d8c:	7dfa      	ldrb	r2, [r7, #23]
- 8001d8e:	4613      	mov	r3, r2
- 8001d90:	00db      	lsls	r3, r3, #3
- 8001d92:	1a9b      	subs	r3, r3, r2
- 8001d94:	005b      	lsls	r3, r3, #1
- 8001d96:	4619      	mov	r1, r3
- 8001d98:	7dba      	ldrb	r2, [r7, #22]
- 8001d9a:	4613      	mov	r3, r2
- 8001d9c:	005b      	lsls	r3, r3, #1
- 8001d9e:	4413      	add	r3, r2
- 8001da0:	440b      	add	r3, r1
- 8001da2:	7d7a      	ldrb	r2, [r7, #21]
- 8001da4:	0852      	lsrs	r2, r2, #1
- 8001da6:	b2d2      	uxtb	r2, r2
- 8001da8:	4413      	add	r3, r2
- 8001daa:	687a      	ldr	r2, [r7, #4]
- 8001dac:	3334      	adds	r3, #52	@ 0x34
- 8001dae:	009b      	lsls	r3, r3, #2
- 8001db0:	4413      	add	r3, r2
- 8001db2:	68fa      	ldr	r2, [r7, #12]
- 8001db4:	601a      	str	r2, [r3, #0]
+ 8001dd4:	7dfa      	ldrb	r2, [r7, #23]
+ 8001dd6:	4613      	mov	r3, r2
+ 8001dd8:	00db      	lsls	r3, r3, #3
+ 8001dda:	1a9b      	subs	r3, r3, r2
+ 8001ddc:	005b      	lsls	r3, r3, #1
+ 8001dde:	4619      	mov	r1, r3
+ 8001de0:	7dba      	ldrb	r2, [r7, #22]
+ 8001de2:	4613      	mov	r3, r2
+ 8001de4:	005b      	lsls	r3, r3, #1
+ 8001de6:	4413      	add	r3, r2
+ 8001de8:	440b      	add	r3, r1
+ 8001dea:	7d7a      	ldrb	r2, [r7, #21]
+ 8001dec:	0852      	lsrs	r2, r2, #1
+ 8001dee:	b2d2      	uxtb	r2, r2
+ 8001df0:	4413      	add	r3, r2
+ 8001df2:	687a      	ldr	r2, [r7, #4]
+ 8001df4:	3346      	adds	r3, #70	@ 0x46
+ 8001df6:	009b      	lsls	r3, r3, #2
+ 8001df8:	4413      	add	r3, r2
+ 8001dfa:	68fa      	ldr	r2, [r7, #12]
+ 8001dfc:	601a      	str	r2, [r3, #0]
 
                 adbms->total_v += curr_voltage;
- 8001db6:	687b      	ldr	r3, [r7, #4]
- 8001db8:	ed93 7a60 	vldr	s14, [r3, #384]	@ 0x180
- 8001dbc:	edd7 7a03 	vldr	s15, [r7, #12]
- 8001dc0:	ee77 7a27 	vadd.f32	s15, s14, s15
- 8001dc4:	687b      	ldr	r3, [r7, #4]
- 8001dc6:	edc3 7a60 	vstr	s15, [r3, #384]	@ 0x180
+ 8001dfe:	687b      	ldr	r3, [r7, #4]
+ 8001e00:	ed93 7a72 	vldr	s14, [r3, #456]	@ 0x1c8
+ 8001e04:	edd7 7a03 	vldr	s15, [r7, #12]
+ 8001e08:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 8001e0c:	687b      	ldr	r3, [r7, #4]
+ 8001e0e:	edc3 7a72 	vstr	s15, [r3, #456]	@ 0x1c8
                 if (curr_voltage > adbms->max_v){
- 8001dca:	687b      	ldr	r3, [r7, #4]
- 8001dcc:	edd3 7a61 	vldr	s15, [r3, #388]	@ 0x184
- 8001dd0:	ed97 7a03 	vldr	s14, [r7, #12]
- 8001dd4:	eeb4 7ae7 	vcmpe.f32	s14, s15
- 8001dd8:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8001ddc:	dd03      	ble.n	8001de6 <ADBMS_CalculateValues_Voltages+0x196>
+ 8001e12:	687b      	ldr	r3, [r7, #4]
+ 8001e14:	edd3 7a73 	vldr	s15, [r3, #460]	@ 0x1cc
+ 8001e18:	ed97 7a03 	vldr	s14, [r7, #12]
+ 8001e1c:	eeb4 7ae7 	vcmpe.f32	s14, s15
+ 8001e20:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8001e24:	dd03      	ble.n	8001e2e <ADBMS_CalculateValues_Voltages+0x196>
                     adbms->max_v = curr_voltage;
- 8001dde:	687b      	ldr	r3, [r7, #4]
- 8001de0:	68fa      	ldr	r2, [r7, #12]
- 8001de2:	f8c3 2184 	str.w	r2, [r3, #388]	@ 0x184
+ 8001e26:	687b      	ldr	r3, [r7, #4]
+ 8001e28:	68fa      	ldr	r2, [r7, #12]
+ 8001e2a:	f8c3 21cc 	str.w	r2, [r3, #460]	@ 0x1cc
                 }
                 if (curr_voltage < adbms->min_v){
- 8001de6:	687b      	ldr	r3, [r7, #4]
- 8001de8:	edd3 7a62 	vldr	s15, [r3, #392]	@ 0x188
- 8001dec:	ed97 7a03 	vldr	s14, [r7, #12]
- 8001df0:	eeb4 7ae7 	vcmpe.f32	s14, s15
- 8001df4:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8001df8:	d503      	bpl.n	8001e02 <ADBMS_CalculateValues_Voltages+0x1b2>
+ 8001e2e:	687b      	ldr	r3, [r7, #4]
+ 8001e30:	edd3 7a74 	vldr	s15, [r3, #464]	@ 0x1d0
+ 8001e34:	ed97 7a03 	vldr	s14, [r7, #12]
+ 8001e38:	eeb4 7ae7 	vcmpe.f32	s14, s15
+ 8001e3c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8001e40:	d503      	bpl.n	8001e4a <ADBMS_CalculateValues_Voltages+0x1b2>
                     adbms->min_v = curr_voltage;
- 8001dfa:	687b      	ldr	r3, [r7, #4]
- 8001dfc:	68fa      	ldr	r2, [r7, #12]
- 8001dfe:	f8c3 2188 	str.w	r2, [r3, #392]	@ 0x188
+ 8001e42:	687b      	ldr	r3, [r7, #4]
+ 8001e44:	68fa      	ldr	r2, [r7, #12]
+ 8001e46:	f8c3 21d0 	str.w	r2, [r3, #464]	@ 0x1d0
             for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
- 8001e02:	7d7b      	ldrb	r3, [r7, #21]
- 8001e04:	3302      	adds	r3, #2
- 8001e06:	757b      	strb	r3, [r7, #21]
- 8001e08:	7d7b      	ldrb	r3, [r7, #21]
- 8001e0a:	2b05      	cmp	r3, #5
- 8001e0c:	d982      	bls.n	8001d14 <ADBMS_CalculateValues_Voltages+0xc4>
- 8001e0e:	e000      	b.n	8001e12 <ADBMS_CalculateValues_Voltages+0x1c2>
+ 8001e4a:	7d7b      	ldrb	r3, [r7, #21]
+ 8001e4c:	3302      	adds	r3, #2
+ 8001e4e:	757b      	strb	r3, [r7, #21]
+ 8001e50:	7d7b      	ldrb	r3, [r7, #21]
+ 8001e52:	2b05      	cmp	r3, #5
+ 8001e54:	d982      	bls.n	8001d5c <ADBMS_CalculateValues_Voltages+0xc4>
+ 8001e56:	e000      	b.n	8001e5a <ADBMS_CalculateValues_Voltages+0x1c2>
                 if(creg_grp*DATA_LEN/2 + cbyte/2 >= NUM_VOLTAGES_CHIP) break;   // only read 14 when getting 15 -- TODO CHANGE COMMENT
- 8001e10:	bf00      	nop
+ 8001e58:	bf00      	nop
         for (uint8_t creg_grp = 0; creg_grp < num_reg_grps; creg_grp++)
- 8001e12:	7dbb      	ldrb	r3, [r7, #22]
- 8001e14:	3301      	adds	r3, #1
- 8001e16:	75bb      	strb	r3, [r7, #22]
- 8001e18:	7dba      	ldrb	r2, [r7, #22]
- 8001e1a:	7d3b      	ldrb	r3, [r7, #20]
- 8001e1c:	429a      	cmp	r2, r3
- 8001e1e:	f4ff af76 	bcc.w	8001d0e <ADBMS_CalculateValues_Voltages+0xbe>
+ 8001e5a:	7dbb      	ldrb	r3, [r7, #22]
+ 8001e5c:	3301      	adds	r3, #1
+ 8001e5e:	75bb      	strb	r3, [r7, #22]
+ 8001e60:	7dba      	ldrb	r2, [r7, #22]
+ 8001e62:	7d3b      	ldrb	r3, [r7, #20]
+ 8001e64:	429a      	cmp	r2, r3
+ 8001e66:	f4ff af76 	bcc.w	8001d56 <ADBMS_CalculateValues_Voltages+0xbe>
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
- 8001e22:	7dfb      	ldrb	r3, [r7, #23]
- 8001e24:	3301      	adds	r3, #1
- 8001e26:	75fb      	strb	r3, [r7, #23]
- 8001e28:	7dfb      	ldrb	r3, [r7, #23]
- 8001e2a:	2b01      	cmp	r3, #1
- 8001e2c:	f67f af6a 	bls.w	8001d04 <ADBMS_CalculateValues_Voltages+0xb4>
+ 8001e6a:	7dfb      	ldrb	r3, [r7, #23]
+ 8001e6c:	3301      	adds	r3, #1
+ 8001e6e:	75fb      	strb	r3, [r7, #23]
+ 8001e70:	7dfb      	ldrb	r3, [r7, #23]
+ 8001e72:	2b01      	cmp	r3, #1
+ 8001e74:	f67f af6a 	bls.w	8001d4c <ADBMS_CalculateValues_Voltages+0xb4>
             }
         }
     }
 
     // calculate the avg voltage
     adbms->avg_v = adbms->total_v / (NUM_CHIPS * NUM_VOLTAGES_CHIP);
- 8001e30:	687b      	ldr	r3, [r7, #4]
- 8001e32:	ed93 7a60 	vldr	s14, [r3, #384]	@ 0x180
- 8001e36:	eef3 6a0c 	vmov.f32	s13, #60	@ 0x41e00000  28.0
- 8001e3a:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 8001e3e:	687b      	ldr	r3, [r7, #4]
- 8001e40:	edc3 7a63 	vstr	s15, [r3, #396]	@ 0x18c
+ 8001e78:	687b      	ldr	r3, [r7, #4]
+ 8001e7a:	ed93 7a72 	vldr	s14, [r3, #456]	@ 0x1c8
+ 8001e7e:	eef3 6a0c 	vmov.f32	s13, #60	@ 0x41e00000  28.0
+ 8001e82:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 8001e86:	687b      	ldr	r3, [r7, #4]
+ 8001e88:	edc3 7a75 	vstr	s15, [r3, #468]	@ 0x1d4
 }
- 8001e44:	3718      	adds	r7, #24
- 8001e46:	46bd      	mov	sp, r7
- 8001e48:	bd80      	pop	{r7, pc}
- 8001e4a:	bf00      	nop
- 8001e4c:	7f7fffff 	.word	0x7f7fffff
+ 8001e8c:	3718      	adds	r7, #24
+ 8001e8e:	46bd      	mov	sp, r7
+ 8001e90:	bd80      	pop	{r7, pc}
+ 8001e92:	bf00      	nop
+ 8001e94:	7f7fffff 	.word	0x7f7fffff
 
-08001e50 <ADBMS_CalculateValues_Temps>:
+08001e98 <ADBMS_CalculateValues_Temps>:
 
 void ADBMS_CalculateValues_Temps(adbms_ *adbms)
 {
- 8001e50:	b580      	push	{r7, lr}
- 8001e52:	b08a      	sub	sp, #40	@ 0x28
- 8001e54:	af00      	add	r7, sp, #0
- 8001e56:	6078      	str	r0, [r7, #4]
+ 8001e98:	b580      	push	{r7, lr}
+ 8001e9a:	b08a      	sub	sp, #40	@ 0x28
+ 8001e9c:	af00      	add	r7, sp, #0
+ 8001e9e:	6078      	str	r0, [r7, #4]
     // reset current pec failures if there is no current failure
     if(!adbms->voltage_pec_failure && !adbms->temp_pec_failure && !adbms->status_reg_pec_failure) { 
- 8001e58:	687b      	ldr	r3, [r7, #4]
- 8001e5a:	f893 31a3 	ldrb.w	r3, [r3, #419]	@ 0x1a3
- 8001e5e:	f083 0301 	eor.w	r3, r3, #1
- 8001e62:	b2db      	uxtb	r3, r3
- 8001e64:	2b00      	cmp	r3, #0
- 8001e66:	d014      	beq.n	8001e92 <ADBMS_CalculateValues_Temps+0x42>
- 8001e68:	687b      	ldr	r3, [r7, #4]
- 8001e6a:	f893 31a4 	ldrb.w	r3, [r3, #420]	@ 0x1a4
- 8001e6e:	f083 0301 	eor.w	r3, r3, #1
- 8001e72:	b2db      	uxtb	r3, r3
- 8001e74:	2b00      	cmp	r3, #0
- 8001e76:	d00c      	beq.n	8001e92 <ADBMS_CalculateValues_Temps+0x42>
- 8001e78:	687b      	ldr	r3, [r7, #4]
- 8001e7a:	f893 31a5 	ldrb.w	r3, [r3, #421]	@ 0x1a5
- 8001e7e:	f083 0301 	eor.w	r3, r3, #1
- 8001e82:	b2db      	uxtb	r3, r3
- 8001e84:	2b00      	cmp	r3, #0
- 8001e86:	d004      	beq.n	8001e92 <ADBMS_CalculateValues_Temps+0x42>
+ 8001ea0:	687b      	ldr	r3, [r7, #4]
+ 8001ea2:	f893 31eb 	ldrb.w	r3, [r3, #491]	@ 0x1eb
+ 8001ea6:	f083 0301 	eor.w	r3, r3, #1
+ 8001eaa:	b2db      	uxtb	r3, r3
+ 8001eac:	2b00      	cmp	r3, #0
+ 8001eae:	d014      	beq.n	8001eda <ADBMS_CalculateValues_Temps+0x42>
+ 8001eb0:	687b      	ldr	r3, [r7, #4]
+ 8001eb2:	f893 31ec 	ldrb.w	r3, [r3, #492]	@ 0x1ec
+ 8001eb6:	f083 0301 	eor.w	r3, r3, #1
+ 8001eba:	b2db      	uxtb	r3, r3
+ 8001ebc:	2b00      	cmp	r3, #0
+ 8001ebe:	d00c      	beq.n	8001eda <ADBMS_CalculateValues_Temps+0x42>
+ 8001ec0:	687b      	ldr	r3, [r7, #4]
+ 8001ec2:	f893 31ed 	ldrb.w	r3, [r3, #493]	@ 0x1ed
+ 8001ec6:	f083 0301 	eor.w	r3, r3, #1
+ 8001eca:	b2db      	uxtb	r3, r3
+ 8001ecc:	2b00      	cmp	r3, #0
+ 8001ece:	d004      	beq.n	8001eda <ADBMS_CalculateValues_Temps+0x42>
         adbms->current_pec_failures = 0;
- 8001e88:	687b      	ldr	r3, [r7, #4]
- 8001e8a:	f04f 0200 	mov.w	r2, #0
- 8001e8e:	f8c3 21ac 	str.w	r2, [r3, #428]	@ 0x1ac
+ 8001ed0:	687b      	ldr	r3, [r7, #4]
+ 8001ed2:	f04f 0200 	mov.w	r2, #0
+ 8001ed6:	f8c3 21f4 	str.w	r2, [r3, #500]	@ 0x1f4
     }
 
     // if there is a pec failure, process it and don't update values
     if(adbms->temp_pec_failure) {
- 8001e92:	687b      	ldr	r3, [r7, #4]
- 8001e94:	f893 31a4 	ldrb.w	r3, [r3, #420]	@ 0x1a4
- 8001e98:	2b00      	cmp	r3, #0
- 8001e9a:	d022      	beq.n	8001ee2 <ADBMS_CalculateValues_Temps+0x92>
+ 8001eda:	687b      	ldr	r3, [r7, #4]
+ 8001edc:	f893 31ec 	ldrb.w	r3, [r3, #492]	@ 0x1ec
+ 8001ee0:	2b00      	cmp	r3, #0
+ 8001ee2:	d022      	beq.n	8001f2a <ADBMS_CalculateValues_Temps+0x92>
         adbms->current_pec_failures += adbms->temp_pec_failure;
- 8001e9c:	687b      	ldr	r3, [r7, #4]
- 8001e9e:	ed93 7a6b 	vldr	s14, [r3, #428]	@ 0x1ac
- 8001ea2:	687b      	ldr	r3, [r7, #4]
- 8001ea4:	f893 31a4 	ldrb.w	r3, [r3, #420]	@ 0x1a4
- 8001ea8:	ee07 3a90 	vmov	s15, r3
- 8001eac:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8001eb0:	ee77 7a27 	vadd.f32	s15, s14, s15
- 8001eb4:	687b      	ldr	r3, [r7, #4]
- 8001eb6:	edc3 7a6b 	vstr	s15, [r3, #428]	@ 0x1ac
+ 8001ee4:	687b      	ldr	r3, [r7, #4]
+ 8001ee6:	ed93 7a7d 	vldr	s14, [r3, #500]	@ 0x1f4
+ 8001eea:	687b      	ldr	r3, [r7, #4]
+ 8001eec:	f893 31ec 	ldrb.w	r3, [r3, #492]	@ 0x1ec
+ 8001ef0:	ee07 3a90 	vmov	s15, r3
+ 8001ef4:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 8001ef8:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 8001efc:	687b      	ldr	r3, [r7, #4]
+ 8001efe:	edc3 7a7d 	vstr	s15, [r3, #500]	@ 0x1f4
         if(adbms->current_pec_failures > PEC_FAILURE_THRESHOLD) {
- 8001eba:	687b      	ldr	r3, [r7, #4]
- 8001ebc:	edd3 7a6b 	vldr	s15, [r3, #428]	@ 0x1ac
- 8001ec0:	eeb2 7a04 	vmov.f32	s14, #36	@ 0x41200000  10.0
- 8001ec4:	eef4 7ac7 	vcmpe.f32	s15, s14
- 8001ec8:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8001ecc:	dd04      	ble.n	8001ed8 <ADBMS_CalculateValues_Temps+0x88>
+ 8001f02:	687b      	ldr	r3, [r7, #4]
+ 8001f04:	edd3 7a7d 	vldr	s15, [r3, #500]	@ 0x1f4
+ 8001f08:	eeb2 7a04 	vmov.f32	s14, #36	@ 0x41200000  10.0
+ 8001f0c:	eef4 7ac7 	vcmpe.f32	s15, s14
+ 8001f10:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8001f14:	dd04      	ble.n	8001f20 <ADBMS_CalculateValues_Temps+0x88>
             adbms->pec_fault_ = 1;
- 8001ece:	687b      	ldr	r3, [r7, #4]
- 8001ed0:	2201      	movs	r2, #1
- 8001ed2:	f883 21a2 	strb.w	r2, [r3, #418]	@ 0x1a2
+ 8001f16:	687b      	ldr	r3, [r7, #4]
+ 8001f18:	2201      	movs	r2, #1
+ 8001f1a:	f883 21ea 	strb.w	r2, [r3, #490]	@ 0x1ea
         }else {
             adbms->pec_fault_ = 0;
         }
         return;
- 8001ed6:	e0e7      	b.n	80020a8 <ADBMS_CalculateValues_Temps+0x258>
+ 8001f1e:	e0e7      	b.n	80020f0 <ADBMS_CalculateValues_Temps+0x258>
             adbms->pec_fault_ = 0;
- 8001ed8:	687b      	ldr	r3, [r7, #4]
- 8001eda:	2200      	movs	r2, #0
- 8001edc:	f883 21a2 	strb.w	r2, [r3, #418]	@ 0x1a2
+ 8001f20:	687b      	ldr	r3, [r7, #4]
+ 8001f22:	2200      	movs	r2, #0
+ 8001f24:	f883 21ea 	strb.w	r2, [r3, #490]	@ 0x1ea
         return;
- 8001ee0:	e0e2      	b.n	80020a8 <ADBMS_CalculateValues_Temps+0x258>
+ 8001f28:	e0e2      	b.n	80020f0 <ADBMS_CalculateValues_Temps+0x258>
     }
     
     // calculate the total, max, and min temp
     float total_temp = 0.0;
- 8001ee2:	f04f 0300 	mov.w	r3, #0
- 8001ee6:	627b      	str	r3, [r7, #36]	@ 0x24
+ 8001f2a:	f04f 0300 	mov.w	r3, #0
+ 8001f2e:	627b      	str	r3, [r7, #36]	@ 0x24
     adbms->max_temp = 0;
- 8001ee8:	687b      	ldr	r3, [r7, #4]
- 8001eea:	f04f 0200 	mov.w	r2, #0
- 8001eee:	f8c3 2190 	str.w	r2, [r3, #400]	@ 0x190
+ 8001f30:	687b      	ldr	r3, [r7, #4]
+ 8001f32:	f04f 0200 	mov.w	r2, #0
+ 8001f36:	f8c3 21d8 	str.w	r2, [r3, #472]	@ 0x1d8
     adbms->min_temp = FLT_MAX;
- 8001ef2:	687b      	ldr	r3, [r7, #4]
- 8001ef4:	4a70      	ldr	r2, [pc, #448]	@ (80020b8 <ADBMS_CalculateValues_Temps+0x268>)
- 8001ef6:	f8c3 2194 	str.w	r2, [r3, #404]	@ 0x194
+ 8001f3a:	687b      	ldr	r3, [r7, #4]
+ 8001f3c:	4a70      	ldr	r2, [pc, #448]	@ (8002100 <ADBMS_CalculateValues_Temps+0x268>)
+ 8001f3e:	f8c3 21dc 	str.w	r2, [r3, #476]	@ 0x1dc
     bool openwire_temp_fault = false;
- 8001efa:	2300      	movs	r3, #0
- 8001efc:	f887 3023 	strb.w	r3, [r7, #35]	@ 0x23
+ 8001f42:	2300      	movs	r3, #0
+ 8001f44:	f887 3023 	strb.w	r3, [r7, #35]	@ 0x23
     for (int cic = 0; cic < NUM_CHIPS; cic++)
- 8001f00:	2300      	movs	r3, #0
- 8001f02:	61fb      	str	r3, [r7, #28]
- 8001f04:	e0b1      	b.n	800206a <ADBMS_CalculateValues_Temps+0x21a>
+ 8001f48:	2300      	movs	r3, #0
+ 8001f4a:	61fb      	str	r3, [r7, #28]
+ 8001f4c:	e0b1      	b.n	80020b2 <ADBMS_CalculateValues_Temps+0x21a>
     {
         for (uint8_t creg_grp = 0; creg_grp < AUX_REG_GRP; creg_grp++)
- 8001f06:	2300      	movs	r3, #0
- 8001f08:	76fb      	strb	r3, [r7, #27]
- 8001f0a:	e0a7      	b.n	800205c <ADBMS_CalculateValues_Temps+0x20c>
+ 8001f4e:	2300      	movs	r3, #0
+ 8001f50:	76fb      	strb	r3, [r7, #27]
+ 8001f52:	e0a7      	b.n	80020a4 <ADBMS_CalculateValues_Temps+0x20c>
         {
             for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
- 8001f0c:	2300      	movs	r3, #0
- 8001f0e:	76bb      	strb	r3, [r7, #26]
- 8001f10:	e09d      	b.n	800204e <ADBMS_CalculateValues_Temps+0x1fe>
+ 8001f54:	2300      	movs	r3, #0
+ 8001f56:	76bb      	strb	r3, [r7, #26]
+ 8001f58:	e09d      	b.n	8002096 <ADBMS_CalculateValues_Temps+0x1fe>
             {
                 // skip because only want temps 2-10
                 if((creg_grp==0 && cbyte <= 2) || creg_grp*DATA_LEN/2 + cbyte/2 >= AUX_GPIO) continue;
- 8001f12:	7efb      	ldrb	r3, [r7, #27]
- 8001f14:	2b00      	cmp	r3, #0
- 8001f16:	d103      	bne.n	8001f20 <ADBMS_CalculateValues_Temps+0xd0>
- 8001f18:	7ebb      	ldrb	r3, [r7, #26]
- 8001f1a:	2b02      	cmp	r3, #2
- 8001f1c:	f240 8093 	bls.w	8002046 <ADBMS_CalculateValues_Temps+0x1f6>
- 8001f20:	7efa      	ldrb	r2, [r7, #27]
- 8001f22:	4613      	mov	r3, r2
- 8001f24:	005b      	lsls	r3, r3, #1
- 8001f26:	4413      	add	r3, r2
- 8001f28:	7eba      	ldrb	r2, [r7, #26]
- 8001f2a:	0852      	lsrs	r2, r2, #1
- 8001f2c:	b2d2      	uxtb	r2, r2
- 8001f2e:	4413      	add	r3, r2
- 8001f30:	2b09      	cmp	r3, #9
- 8001f32:	f300 8088 	bgt.w	8002046 <ADBMS_CalculateValues_Temps+0x1f6>
+ 8001f5a:	7efb      	ldrb	r3, [r7, #27]
+ 8001f5c:	2b00      	cmp	r3, #0
+ 8001f5e:	d103      	bne.n	8001f68 <ADBMS_CalculateValues_Temps+0xd0>
+ 8001f60:	7ebb      	ldrb	r3, [r7, #26]
+ 8001f62:	2b02      	cmp	r3, #2
+ 8001f64:	f240 8093 	bls.w	800208e <ADBMS_CalculateValues_Temps+0x1f6>
+ 8001f68:	7efa      	ldrb	r2, [r7, #27]
+ 8001f6a:	4613      	mov	r3, r2
+ 8001f6c:	005b      	lsls	r3, r3, #1
+ 8001f6e:	4413      	add	r3, r2
+ 8001f70:	7eba      	ldrb	r2, [r7, #26]
+ 8001f72:	0852      	lsrs	r2, r2, #1
+ 8001f74:	b2d2      	uxtb	r2, r2
+ 8001f76:	4413      	add	r3, r2
+ 8001f78:	2b09      	cmp	r3, #9
+ 8001f7a:	f300 8088 	bgt.w	800208e <ADBMS_CalculateValues_Temps+0x1f6>
 
                 int16_t raw_val = (((uint16_t)adbms->ICs.aux[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1]) << 8) | adbms->ICs.aux[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte];
- 8001f36:	7efa      	ldrb	r2, [r7, #27]
- 8001f38:	4613      	mov	r3, r2
- 8001f3a:	005b      	lsls	r3, r3, #1
- 8001f3c:	4413      	add	r3, r2
- 8001f3e:	009b      	lsls	r3, r3, #2
- 8001f40:	4619      	mov	r1, r3
- 8001f42:	69fa      	ldr	r2, [r7, #28]
- 8001f44:	4613      	mov	r3, r2
- 8001f46:	005b      	lsls	r3, r3, #1
- 8001f48:	4413      	add	r3, r2
- 8001f4a:	005b      	lsls	r3, r3, #1
- 8001f4c:	18ca      	adds	r2, r1, r3
- 8001f4e:	7ebb      	ldrb	r3, [r7, #26]
- 8001f50:	4413      	add	r3, r2
- 8001f52:	3301      	adds	r3, #1
- 8001f54:	687a      	ldr	r2, [r7, #4]
- 8001f56:	4413      	add	r3, r2
- 8001f58:	f893 3080 	ldrb.w	r3, [r3, #128]	@ 0x80
- 8001f5c:	b21b      	sxth	r3, r3
- 8001f5e:	021b      	lsls	r3, r3, #8
- 8001f60:	b219      	sxth	r1, r3
- 8001f62:	7efa      	ldrb	r2, [r7, #27]
- 8001f64:	4613      	mov	r3, r2
- 8001f66:	005b      	lsls	r3, r3, #1
- 8001f68:	4413      	add	r3, r2
- 8001f6a:	009b      	lsls	r3, r3, #2
- 8001f6c:	4618      	mov	r0, r3
- 8001f6e:	69fa      	ldr	r2, [r7, #28]
- 8001f70:	4613      	mov	r3, r2
- 8001f72:	005b      	lsls	r3, r3, #1
- 8001f74:	4413      	add	r3, r2
- 8001f76:	005b      	lsls	r3, r3, #1
- 8001f78:	18c2      	adds	r2, r0, r3
- 8001f7a:	7ebb      	ldrb	r3, [r7, #26]
- 8001f7c:	4413      	add	r3, r2
- 8001f7e:	687a      	ldr	r2, [r7, #4]
- 8001f80:	4413      	add	r3, r2
- 8001f82:	f893 3080 	ldrb.w	r3, [r3, #128]	@ 0x80
- 8001f86:	b21b      	sxth	r3, r3
- 8001f88:	430b      	orrs	r3, r1
- 8001f8a:	833b      	strh	r3, [r7, #24]
+ 8001f7e:	7efa      	ldrb	r2, [r7, #27]
+ 8001f80:	4613      	mov	r3, r2
+ 8001f82:	005b      	lsls	r3, r3, #1
+ 8001f84:	4413      	add	r3, r2
+ 8001f86:	009b      	lsls	r3, r3, #2
+ 8001f88:	4619      	mov	r1, r3
+ 8001f8a:	69fa      	ldr	r2, [r7, #28]
+ 8001f8c:	4613      	mov	r3, r2
+ 8001f8e:	005b      	lsls	r3, r3, #1
+ 8001f90:	4413      	add	r3, r2
+ 8001f92:	005b      	lsls	r3, r3, #1
+ 8001f94:	18ca      	adds	r2, r1, r3
+ 8001f96:	7ebb      	ldrb	r3, [r7, #26]
+ 8001f98:	4413      	add	r3, r2
+ 8001f9a:	3301      	adds	r3, #1
+ 8001f9c:	687a      	ldr	r2, [r7, #4]
+ 8001f9e:	4413      	add	r3, r2
+ 8001fa0:	f893 30c8 	ldrb.w	r3, [r3, #200]	@ 0xc8
+ 8001fa4:	b21b      	sxth	r3, r3
+ 8001fa6:	021b      	lsls	r3, r3, #8
+ 8001fa8:	b219      	sxth	r1, r3
+ 8001faa:	7efa      	ldrb	r2, [r7, #27]
+ 8001fac:	4613      	mov	r3, r2
+ 8001fae:	005b      	lsls	r3, r3, #1
+ 8001fb0:	4413      	add	r3, r2
+ 8001fb2:	009b      	lsls	r3, r3, #2
+ 8001fb4:	4618      	mov	r0, r3
+ 8001fb6:	69fa      	ldr	r2, [r7, #28]
+ 8001fb8:	4613      	mov	r3, r2
+ 8001fba:	005b      	lsls	r3, r3, #1
+ 8001fbc:	4413      	add	r3, r2
+ 8001fbe:	005b      	lsls	r3, r3, #1
+ 8001fc0:	18c2      	adds	r2, r0, r3
+ 8001fc2:	7ebb      	ldrb	r3, [r7, #26]
+ 8001fc4:	4413      	add	r3, r2
+ 8001fc6:	687a      	ldr	r2, [r7, #4]
+ 8001fc8:	4413      	add	r3, r2
+ 8001fca:	f893 30c8 	ldrb.w	r3, [r3, #200]	@ 0xc8
+ 8001fce:	b21b      	sxth	r3, r3
+ 8001fd0:	430b      	orrs	r3, r1
+ 8001fd2:	833b      	strh	r3, [r7, #24]
                 float raw_temp_voltage = ADBMS_getVoltage(raw_val);
- 8001f8c:	f9b7 3018 	ldrsh.w	r3, [r7, #24]
- 8001f90:	4618      	mov	r0, r3
- 8001f92:	f000 f909 	bl	80021a8 <ADBMS_getVoltage>
- 8001f96:	ed87 0a05 	vstr	s0, [r7, #20]
+ 8001fd4:	f9b7 3018 	ldrsh.w	r3, [r7, #24]
+ 8001fd8:	4618      	mov	r0, r3
+ 8001fda:	f7ff f8ad 	bl	8001138 <ADBMS_getVoltage>
+ 8001fde:	ed87 0a05 	vstr	s0, [r7, #20]
 
                 // get ref voltage from status reg - not getting status regs because takes too long
                 //float vref = ADBMS_getVoltage(ICs[i].stata.vref2);
                 float vref = 3; // 3V defined in the datasheet
- 8001f9a:	4b48      	ldr	r3, [pc, #288]	@ (80020bc <ADBMS_CalculateValues_Temps+0x26c>)
- 8001f9c:	613b      	str	r3, [r7, #16]
+ 8001fe2:	4b48      	ldr	r3, [pc, #288]	@ (8002104 <ADBMS_CalculateValues_Temps+0x26c>)
+ 8001fe4:	613b      	str	r3, [r7, #16]
                 if (vref - raw_temp_voltage < 1e-1)
- 8001f9e:	ed97 7a04 	vldr	s14, [r7, #16]
- 8001fa2:	edd7 7a05 	vldr	s15, [r7, #20]
- 8001fa6:	ee77 7a67 	vsub.f32	s15, s14, s15
- 8001faa:	ee17 0a90 	vmov	r0, s15
- 8001fae:	f7fe facb 	bl	8000548 <__aeabi_f2d>
- 8001fb2:	a33f      	add	r3, pc, #252	@ (adr r3, 80020b0 <ADBMS_CalculateValues_Temps+0x260>)
- 8001fb4:	e9d3 2300 	ldrd	r2, r3, [r3]
- 8001fb8:	f7fe fd90 	bl	8000adc <__aeabi_dcmplt>
- 8001fbc:	4603      	mov	r3, r0
- 8001fbe:	2b00      	cmp	r3, #0
- 8001fc0:	d002      	beq.n	8001fc8 <ADBMS_CalculateValues_Temps+0x178>
+ 8001fe6:	ed97 7a04 	vldr	s14, [r7, #16]
+ 8001fea:	edd7 7a05 	vldr	s15, [r7, #20]
+ 8001fee:	ee77 7a67 	vsub.f32	s15, s14, s15
+ 8001ff2:	ee17 0a90 	vmov	r0, s15
+ 8001ff6:	f7fe faa7 	bl	8000548 <__aeabi_f2d>
+ 8001ffa:	a33f      	add	r3, pc, #252	@ (adr r3, 80020f8 <ADBMS_CalculateValues_Temps+0x260>)
+ 8001ffc:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 8002000:	f7fe fd6c 	bl	8000adc <__aeabi_dcmplt>
+ 8002004:	4603      	mov	r3, r0
+ 8002006:	2b00      	cmp	r3, #0
+ 8002008:	d002      	beq.n	8002010 <ADBMS_CalculateValues_Temps+0x178>
                     openwire_temp_fault = true;
- 8001fc2:	2301      	movs	r3, #1
- 8001fc4:	f887 3023 	strb.w	r3, [r7, #35]	@ 0x23
+ 800200a:	2301      	movs	r3, #1
+ 800200c:	f887 3023 	strb.w	r3, [r7, #35]	@ 0x23
 
                 float curr_temp = getTemp(raw_temp_voltage, vref);
- 8001fc8:	edd7 0a04 	vldr	s1, [r7, #16]
- 8001fcc:	ed97 0a05 	vldr	s0, [r7, #20]
- 8001fd0:	f000 ff9e 	bl	8002f10 <getTemp>
- 8001fd4:	ed87 0a03 	vstr	s0, [r7, #12]
+ 8002010:	edd7 0a04 	vldr	s1, [r7, #16]
+ 8002014:	ed97 0a05 	vldr	s0, [r7, #20]
+ 8002018:	f000 ff7a 	bl	8002f10 <getTemp>
+ 800201c:	ed87 0a03 	vstr	s0, [r7, #12]
                 adbms->temperatures[cic*NUM_TEMPS_CHIP + creg_grp*DATA_LEN/2 + cbyte/2 - 2] = curr_temp;  // -2 because offset for skipped temps
- 8001fd8:	69fb      	ldr	r3, [r7, #28]
- 8001fda:	00d9      	lsls	r1, r3, #3
- 8001fdc:	7efa      	ldrb	r2, [r7, #27]
- 8001fde:	4613      	mov	r3, r2
- 8001fe0:	005b      	lsls	r3, r3, #1
- 8001fe2:	4413      	add	r3, r2
- 8001fe4:	440b      	add	r3, r1
- 8001fe6:	7eba      	ldrb	r2, [r7, #26]
- 8001fe8:	0852      	lsrs	r2, r2, #1
- 8001fea:	b2d2      	uxtb	r2, r2
- 8001fec:	4413      	add	r3, r2
- 8001fee:	3b02      	subs	r3, #2
- 8001ff0:	687a      	ldr	r2, [r7, #4]
- 8001ff2:	3350      	adds	r3, #80	@ 0x50
- 8001ff4:	009b      	lsls	r3, r3, #2
- 8001ff6:	4413      	add	r3, r2
- 8001ff8:	68fa      	ldr	r2, [r7, #12]
- 8001ffa:	601a      	str	r2, [r3, #0]
+ 8002020:	69fb      	ldr	r3, [r7, #28]
+ 8002022:	00d9      	lsls	r1, r3, #3
+ 8002024:	7efa      	ldrb	r2, [r7, #27]
+ 8002026:	4613      	mov	r3, r2
+ 8002028:	005b      	lsls	r3, r3, #1
+ 800202a:	4413      	add	r3, r2
+ 800202c:	440b      	add	r3, r1
+ 800202e:	7eba      	ldrb	r2, [r7, #26]
+ 8002030:	0852      	lsrs	r2, r2, #1
+ 8002032:	b2d2      	uxtb	r2, r2
+ 8002034:	4413      	add	r3, r2
+ 8002036:	3b02      	subs	r3, #2
+ 8002038:	687a      	ldr	r2, [r7, #4]
+ 800203a:	3362      	adds	r3, #98	@ 0x62
+ 800203c:	009b      	lsls	r3, r3, #2
+ 800203e:	4413      	add	r3, r2
+ 8002040:	68fa      	ldr	r2, [r7, #12]
+ 8002042:	601a      	str	r2, [r3, #0]
                 total_temp += curr_temp;
- 8001ffc:	ed97 7a09 	vldr	s14, [r7, #36]	@ 0x24
- 8002000:	edd7 7a03 	vldr	s15, [r7, #12]
- 8002004:	ee77 7a27 	vadd.f32	s15, s14, s15
- 8002008:	edc7 7a09 	vstr	s15, [r7, #36]	@ 0x24
+ 8002044:	ed97 7a09 	vldr	s14, [r7, #36]	@ 0x24
+ 8002048:	edd7 7a03 	vldr	s15, [r7, #12]
+ 800204c:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 8002050:	edc7 7a09 	vstr	s15, [r7, #36]	@ 0x24
                 if (curr_temp > adbms->max_temp)
- 800200c:	687b      	ldr	r3, [r7, #4]
- 800200e:	edd3 7a64 	vldr	s15, [r3, #400]	@ 0x190
- 8002012:	ed97 7a03 	vldr	s14, [r7, #12]
- 8002016:	eeb4 7ae7 	vcmpe.f32	s14, s15
- 800201a:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 800201e:	dd03      	ble.n	8002028 <ADBMS_CalculateValues_Temps+0x1d8>
+ 8002054:	687b      	ldr	r3, [r7, #4]
+ 8002056:	edd3 7a76 	vldr	s15, [r3, #472]	@ 0x1d8
+ 800205a:	ed97 7a03 	vldr	s14, [r7, #12]
+ 800205e:	eeb4 7ae7 	vcmpe.f32	s14, s15
+ 8002062:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8002066:	dd03      	ble.n	8002070 <ADBMS_CalculateValues_Temps+0x1d8>
                     adbms->max_temp = curr_temp;
- 8002020:	687b      	ldr	r3, [r7, #4]
- 8002022:	68fa      	ldr	r2, [r7, #12]
- 8002024:	f8c3 2190 	str.w	r2, [r3, #400]	@ 0x190
+ 8002068:	687b      	ldr	r3, [r7, #4]
+ 800206a:	68fa      	ldr	r2, [r7, #12]
+ 800206c:	f8c3 21d8 	str.w	r2, [r3, #472]	@ 0x1d8
                 if (curr_temp < adbms->min_temp)
- 8002028:	687b      	ldr	r3, [r7, #4]
- 800202a:	edd3 7a65 	vldr	s15, [r3, #404]	@ 0x194
- 800202e:	ed97 7a03 	vldr	s14, [r7, #12]
- 8002032:	eeb4 7ae7 	vcmpe.f32	s14, s15
- 8002036:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 800203a:	d505      	bpl.n	8002048 <ADBMS_CalculateValues_Temps+0x1f8>
+ 8002070:	687b      	ldr	r3, [r7, #4]
+ 8002072:	edd3 7a77 	vldr	s15, [r3, #476]	@ 0x1dc
+ 8002076:	ed97 7a03 	vldr	s14, [r7, #12]
+ 800207a:	eeb4 7ae7 	vcmpe.f32	s14, s15
+ 800207e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8002082:	d505      	bpl.n	8002090 <ADBMS_CalculateValues_Temps+0x1f8>
                     adbms->min_temp = curr_temp;
- 800203c:	687b      	ldr	r3, [r7, #4]
- 800203e:	68fa      	ldr	r2, [r7, #12]
- 8002040:	f8c3 2194 	str.w	r2, [r3, #404]	@ 0x194
- 8002044:	e000      	b.n	8002048 <ADBMS_CalculateValues_Temps+0x1f8>
+ 8002084:	687b      	ldr	r3, [r7, #4]
+ 8002086:	68fa      	ldr	r2, [r7, #12]
+ 8002088:	f8c3 21dc 	str.w	r2, [r3, #476]	@ 0x1dc
+ 800208c:	e000      	b.n	8002090 <ADBMS_CalculateValues_Temps+0x1f8>
                 if((creg_grp==0 && cbyte <= 2) || creg_grp*DATA_LEN/2 + cbyte/2 >= AUX_GPIO) continue;
- 8002046:	bf00      	nop
+ 800208e:	bf00      	nop
             for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
- 8002048:	7ebb      	ldrb	r3, [r7, #26]
- 800204a:	3302      	adds	r3, #2
- 800204c:	76bb      	strb	r3, [r7, #26]
- 800204e:	7ebb      	ldrb	r3, [r7, #26]
- 8002050:	2b05      	cmp	r3, #5
- 8002052:	f67f af5e 	bls.w	8001f12 <ADBMS_CalculateValues_Temps+0xc2>
+ 8002090:	7ebb      	ldrb	r3, [r7, #26]
+ 8002092:	3302      	adds	r3, #2
+ 8002094:	76bb      	strb	r3, [r7, #26]
+ 8002096:	7ebb      	ldrb	r3, [r7, #26]
+ 8002098:	2b05      	cmp	r3, #5
+ 800209a:	f67f af5e 	bls.w	8001f5a <ADBMS_CalculateValues_Temps+0xc2>
         for (uint8_t creg_grp = 0; creg_grp < AUX_REG_GRP; creg_grp++)
- 8002056:	7efb      	ldrb	r3, [r7, #27]
- 8002058:	3301      	adds	r3, #1
- 800205a:	76fb      	strb	r3, [r7, #27]
- 800205c:	7efb      	ldrb	r3, [r7, #27]
- 800205e:	2b03      	cmp	r3, #3
- 8002060:	f67f af54 	bls.w	8001f0c <ADBMS_CalculateValues_Temps+0xbc>
+ 800209e:	7efb      	ldrb	r3, [r7, #27]
+ 80020a0:	3301      	adds	r3, #1
+ 80020a2:	76fb      	strb	r3, [r7, #27]
+ 80020a4:	7efb      	ldrb	r3, [r7, #27]
+ 80020a6:	2b03      	cmp	r3, #3
+ 80020a8:	f67f af54 	bls.w	8001f54 <ADBMS_CalculateValues_Temps+0xbc>
     for (int cic = 0; cic < NUM_CHIPS; cic++)
- 8002064:	69fb      	ldr	r3, [r7, #28]
- 8002066:	3301      	adds	r3, #1
- 8002068:	61fb      	str	r3, [r7, #28]
- 800206a:	69fb      	ldr	r3, [r7, #28]
- 800206c:	2b01      	cmp	r3, #1
- 800206e:	f77f af4a 	ble.w	8001f06 <ADBMS_CalculateValues_Temps+0xb6>
+ 80020ac:	69fb      	ldr	r3, [r7, #28]
+ 80020ae:	3301      	adds	r3, #1
+ 80020b0:	61fb      	str	r3, [r7, #28]
+ 80020b2:	69fb      	ldr	r3, [r7, #28]
+ 80020b4:	2b01      	cmp	r3, #1
+ 80020b6:	f77f af4a 	ble.w	8001f4e <ADBMS_CalculateValues_Temps+0xb6>
             }
         }
     }
     adbms->openwire_temp_fault_ = adbms->openwire_temp_fault_ || openwire_temp_fault;
- 8002072:	687b      	ldr	r3, [r7, #4]
- 8002074:	f893 31a1 	ldrb.w	r3, [r3, #417]	@ 0x1a1
- 8002078:	2b00      	cmp	r3, #0
- 800207a:	d103      	bne.n	8002084 <ADBMS_CalculateValues_Temps+0x234>
- 800207c:	f897 3023 	ldrb.w	r3, [r7, #35]	@ 0x23
- 8002080:	2b00      	cmp	r3, #0
- 8002082:	d001      	beq.n	8002088 <ADBMS_CalculateValues_Temps+0x238>
- 8002084:	2301      	movs	r3, #1
- 8002086:	e000      	b.n	800208a <ADBMS_CalculateValues_Temps+0x23a>
- 8002088:	2300      	movs	r3, #0
- 800208a:	f003 0301 	and.w	r3, r3, #1
- 800208e:	b2da      	uxtb	r2, r3
- 8002090:	687b      	ldr	r3, [r7, #4]
- 8002092:	f883 21a1 	strb.w	r2, [r3, #417]	@ 0x1a1
+ 80020ba:	687b      	ldr	r3, [r7, #4]
+ 80020bc:	f893 31e9 	ldrb.w	r3, [r3, #489]	@ 0x1e9
+ 80020c0:	2b00      	cmp	r3, #0
+ 80020c2:	d103      	bne.n	80020cc <ADBMS_CalculateValues_Temps+0x234>
+ 80020c4:	f897 3023 	ldrb.w	r3, [r7, #35]	@ 0x23
+ 80020c8:	2b00      	cmp	r3, #0
+ 80020ca:	d001      	beq.n	80020d0 <ADBMS_CalculateValues_Temps+0x238>
+ 80020cc:	2301      	movs	r3, #1
+ 80020ce:	e000      	b.n	80020d2 <ADBMS_CalculateValues_Temps+0x23a>
+ 80020d0:	2300      	movs	r3, #0
+ 80020d2:	f003 0301 	and.w	r3, r3, #1
+ 80020d6:	b2da      	uxtb	r2, r3
+ 80020d8:	687b      	ldr	r3, [r7, #4]
+ 80020da:	f883 21e9 	strb.w	r2, [r3, #489]	@ 0x1e9
     // calculate the avg temp
     adbms->avg_temp = total_temp / (NUM_CHIPS * NUM_TEMPS_CHIP);
- 8002096:	ed97 7a09 	vldr	s14, [r7, #36]	@ 0x24
- 800209a:	eef3 6a00 	vmov.f32	s13, #48	@ 0x41800000  16.0
- 800209e:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 80020a2:	687b      	ldr	r3, [r7, #4]
- 80020a4:	edc3 7a66 	vstr	s15, [r3, #408]	@ 0x198
+ 80020de:	ed97 7a09 	vldr	s14, [r7, #36]	@ 0x24
+ 80020e2:	eef3 6a00 	vmov.f32	s13, #48	@ 0x41800000  16.0
+ 80020e6:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 80020ea:	687b      	ldr	r3, [r7, #4]
+ 80020ec:	edc3 7a78 	vstr	s15, [r3, #480]	@ 0x1e0
     
 }
- 80020a8:	3728      	adds	r7, #40	@ 0x28
- 80020aa:	46bd      	mov	sp, r7
- 80020ac:	bd80      	pop	{r7, pc}
- 80020ae:	bf00      	nop
- 80020b0:	9999999a 	.word	0x9999999a
- 80020b4:	3fb99999 	.word	0x3fb99999
- 80020b8:	7f7fffff 	.word	0x7f7fffff
- 80020bc:	40400000 	.word	0x40400000
+ 80020f0:	3728      	adds	r7, #40	@ 0x28
+ 80020f2:	46bd      	mov	sp, r7
+ 80020f4:	bd80      	pop	{r7, pc}
+ 80020f6:	bf00      	nop
+ 80020f8:	9999999a 	.word	0x9999999a
+ 80020fc:	3fb99999 	.word	0x3fb99999
+ 8002100:	7f7fffff 	.word	0x7f7fffff
+ 8002104:	40400000 	.word	0x40400000
 
-080020c0 <UpdateADInternalFault>:
+08002108 <UpdateADInternalFault>:
 
 void UpdateADInternalFault(adbms_ *adbms)
 {
- 80020c0:	b580      	push	{r7, lr}
- 80020c2:	b082      	sub	sp, #8
- 80020c4:	af00      	add	r7, sp, #0
- 80020c6:	6078      	str	r0, [r7, #4]
+ 8002108:	b580      	push	{r7, lr}
+ 800210a:	b082      	sub	sp, #8
+ 800210c:	af00      	add	r7, sp, #0
+ 800210e:	6078      	str	r0, [r7, #4]
     // check overvoltage fault
     adbms->overvoltage_fault_ = adbms->overvoltage_fault_ || (adbms->max_v > OVERVOLTAGE);
- 80020c8:	687b      	ldr	r3, [r7, #4]
- 80020ca:	f893 319d 	ldrb.w	r3, [r3, #413]	@ 0x19d
- 80020ce:	2b00      	cmp	r3, #0
- 80020d0:	d10d      	bne.n	80020ee <UpdateADInternalFault+0x2e>
- 80020d2:	687b      	ldr	r3, [r7, #4]
- 80020d4:	f8d3 3184 	ldr.w	r3, [r3, #388]	@ 0x184
- 80020d8:	4618      	mov	r0, r3
- 80020da:	f7fe fa35 	bl	8000548 <__aeabi_f2d>
- 80020de:	a330      	add	r3, pc, #192	@ (adr r3, 80021a0 <UpdateADInternalFault+0xe0>)
- 80020e0:	e9d3 2300 	ldrd	r2, r3, [r3]
- 80020e4:	f7fe fd18 	bl	8000b18 <__aeabi_dcmpgt>
- 80020e8:	4603      	mov	r3, r0
- 80020ea:	2b00      	cmp	r3, #0
- 80020ec:	d001      	beq.n	80020f2 <UpdateADInternalFault+0x32>
- 80020ee:	2301      	movs	r3, #1
- 80020f0:	e000      	b.n	80020f4 <UpdateADInternalFault+0x34>
- 80020f2:	2300      	movs	r3, #0
- 80020f4:	f003 0301 	and.w	r3, r3, #1
- 80020f8:	b2da      	uxtb	r2, r3
- 80020fa:	687b      	ldr	r3, [r7, #4]
- 80020fc:	f883 219d 	strb.w	r2, [r3, #413]	@ 0x19d
+ 8002110:	687b      	ldr	r3, [r7, #4]
+ 8002112:	f893 31e5 	ldrb.w	r3, [r3, #485]	@ 0x1e5
+ 8002116:	2b00      	cmp	r3, #0
+ 8002118:	d10d      	bne.n	8002136 <UpdateADInternalFault+0x2e>
+ 800211a:	687b      	ldr	r3, [r7, #4]
+ 800211c:	f8d3 31cc 	ldr.w	r3, [r3, #460]	@ 0x1cc
+ 8002120:	4618      	mov	r0, r3
+ 8002122:	f7fe fa11 	bl	8000548 <__aeabi_f2d>
+ 8002126:	a330      	add	r3, pc, #192	@ (adr r3, 80021e8 <UpdateADInternalFault+0xe0>)
+ 8002128:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 800212c:	f7fe fcf4 	bl	8000b18 <__aeabi_dcmpgt>
+ 8002130:	4603      	mov	r3, r0
+ 8002132:	2b00      	cmp	r3, #0
+ 8002134:	d001      	beq.n	800213a <UpdateADInternalFault+0x32>
+ 8002136:	2301      	movs	r3, #1
+ 8002138:	e000      	b.n	800213c <UpdateADInternalFault+0x34>
+ 800213a:	2300      	movs	r3, #0
+ 800213c:	f003 0301 	and.w	r3, r3, #1
+ 8002140:	b2da      	uxtb	r2, r3
+ 8002142:	687b      	ldr	r3, [r7, #4]
+ 8002144:	f883 21e5 	strb.w	r2, [r3, #485]	@ 0x1e5
 
     // check undervoltage fault
     adbms->undervoltage_fault_ = adbms->undervoltage_fault_ || (adbms->min_v < UNDERVOLTAGE);
- 8002100:	687b      	ldr	r3, [r7, #4]
- 8002102:	f893 319c 	ldrb.w	r3, [r3, #412]	@ 0x19c
- 8002106:	2b00      	cmp	r3, #0
- 8002108:	d109      	bne.n	800211e <UpdateADInternalFault+0x5e>
- 800210a:	687b      	ldr	r3, [r7, #4]
- 800210c:	edd3 7a62 	vldr	s15, [r3, #392]	@ 0x188
- 8002110:	eeb0 7a04 	vmov.f32	s14, #4	@ 0x40200000  2.5
- 8002114:	eef4 7ac7 	vcmpe.f32	s15, s14
- 8002118:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 800211c:	d501      	bpl.n	8002122 <UpdateADInternalFault+0x62>
- 800211e:	2301      	movs	r3, #1
- 8002120:	e000      	b.n	8002124 <UpdateADInternalFault+0x64>
- 8002122:	2300      	movs	r3, #0
- 8002124:	f003 0301 	and.w	r3, r3, #1
- 8002128:	b2da      	uxtb	r2, r3
- 800212a:	687b      	ldr	r3, [r7, #4]
- 800212c:	f883 219c 	strb.w	r2, [r3, #412]	@ 0x19c
+ 8002148:	687b      	ldr	r3, [r7, #4]
+ 800214a:	f893 31e4 	ldrb.w	r3, [r3, #484]	@ 0x1e4
+ 800214e:	2b00      	cmp	r3, #0
+ 8002150:	d109      	bne.n	8002166 <UpdateADInternalFault+0x5e>
+ 8002152:	687b      	ldr	r3, [r7, #4]
+ 8002154:	edd3 7a74 	vldr	s15, [r3, #464]	@ 0x1d0
+ 8002158:	eeb0 7a04 	vmov.f32	s14, #4	@ 0x40200000  2.5
+ 800215c:	eef4 7ac7 	vcmpe.f32	s15, s14
+ 8002160:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8002164:	d501      	bpl.n	800216a <UpdateADInternalFault+0x62>
+ 8002166:	2301      	movs	r3, #1
+ 8002168:	e000      	b.n	800216c <UpdateADInternalFault+0x64>
+ 800216a:	2300      	movs	r3, #0
+ 800216c:	f003 0301 	and.w	r3, r3, #1
+ 8002170:	b2da      	uxtb	r2, r3
+ 8002172:	687b      	ldr	r3, [r7, #4]
+ 8002174:	f883 21e4 	strb.w	r2, [r3, #484]	@ 0x1e4
 
     // check overtemperature fault
     adbms->overtemperature_fault_ = adbms->overtemperature_fault_ || (adbms->max_temp > OVERTEMP);
- 8002130:	687b      	ldr	r3, [r7, #4]
- 8002132:	f893 319f 	ldrb.w	r3, [r3, #415]	@ 0x19f
- 8002136:	2b00      	cmp	r3, #0
- 8002138:	d109      	bne.n	800214e <UpdateADInternalFault+0x8e>
- 800213a:	687b      	ldr	r3, [r7, #4]
- 800213c:	edd3 7a64 	vldr	s15, [r3, #400]	@ 0x190
- 8002140:	ed9f 7a15 	vldr	s14, [pc, #84]	@ 8002198 <UpdateADInternalFault+0xd8>
- 8002144:	eef4 7ac7 	vcmpe.f32	s15, s14
- 8002148:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 800214c:	dd01      	ble.n	8002152 <UpdateADInternalFault+0x92>
- 800214e:	2301      	movs	r3, #1
- 8002150:	e000      	b.n	8002154 <UpdateADInternalFault+0x94>
- 8002152:	2300      	movs	r3, #0
- 8002154:	f003 0301 	and.w	r3, r3, #1
- 8002158:	b2da      	uxtb	r2, r3
- 800215a:	687b      	ldr	r3, [r7, #4]
- 800215c:	f883 219f 	strb.w	r2, [r3, #415]	@ 0x19f
+ 8002178:	687b      	ldr	r3, [r7, #4]
+ 800217a:	f893 31e7 	ldrb.w	r3, [r3, #487]	@ 0x1e7
+ 800217e:	2b00      	cmp	r3, #0
+ 8002180:	d109      	bne.n	8002196 <UpdateADInternalFault+0x8e>
+ 8002182:	687b      	ldr	r3, [r7, #4]
+ 8002184:	edd3 7a76 	vldr	s15, [r3, #472]	@ 0x1d8
+ 8002188:	ed9f 7a15 	vldr	s14, [pc, #84]	@ 80021e0 <UpdateADInternalFault+0xd8>
+ 800218c:	eef4 7ac7 	vcmpe.f32	s15, s14
+ 8002190:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8002194:	dd01      	ble.n	800219a <UpdateADInternalFault+0x92>
+ 8002196:	2301      	movs	r3, #1
+ 8002198:	e000      	b.n	800219c <UpdateADInternalFault+0x94>
+ 800219a:	2300      	movs	r3, #0
+ 800219c:	f003 0301 	and.w	r3, r3, #1
+ 80021a0:	b2da      	uxtb	r2, r3
+ 80021a2:	687b      	ldr	r3, [r7, #4]
+ 80021a4:	f883 21e7 	strb.w	r2, [r3, #487]	@ 0x1e7
 
-    // check under
+    // check undertemperature fault
     adbms->undertemperature_fault_ = adbms->undertemperature_fault_ || (adbms->min_temp < UNDERTEMP);
- 8002160:	687b      	ldr	r3, [r7, #4]
- 8002162:	f893 319e 	ldrb.w	r3, [r3, #414]	@ 0x19e
- 8002166:	2b00      	cmp	r3, #0
- 8002168:	d109      	bne.n	800217e <UpdateADInternalFault+0xbe>
- 800216a:	687b      	ldr	r3, [r7, #4]
- 800216c:	edd3 7a65 	vldr	s15, [r3, #404]	@ 0x194
- 8002170:	ed9f 7a0a 	vldr	s14, [pc, #40]	@ 800219c <UpdateADInternalFault+0xdc>
- 8002174:	eef4 7ac7 	vcmpe.f32	s15, s14
- 8002178:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 800217c:	d501      	bpl.n	8002182 <UpdateADInternalFault+0xc2>
- 800217e:	2301      	movs	r3, #1
- 8002180:	e000      	b.n	8002184 <UpdateADInternalFault+0xc4>
- 8002182:	2300      	movs	r3, #0
- 8002184:	f003 0301 	and.w	r3, r3, #1
- 8002188:	b2da      	uxtb	r2, r3
- 800218a:	687b      	ldr	r3, [r7, #4]
- 800218c:	f883 219e 	strb.w	r2, [r3, #414]	@ 0x19e
+ 80021a8:	687b      	ldr	r3, [r7, #4]
+ 80021aa:	f893 31e6 	ldrb.w	r3, [r3, #486]	@ 0x1e6
+ 80021ae:	2b00      	cmp	r3, #0
+ 80021b0:	d109      	bne.n	80021c6 <UpdateADInternalFault+0xbe>
+ 80021b2:	687b      	ldr	r3, [r7, #4]
+ 80021b4:	edd3 7a77 	vldr	s15, [r3, #476]	@ 0x1dc
+ 80021b8:	ed9f 7a0a 	vldr	s14, [pc, #40]	@ 80021e4 <UpdateADInternalFault+0xdc>
+ 80021bc:	eef4 7ac7 	vcmpe.f32	s15, s14
+ 80021c0:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 80021c4:	d501      	bpl.n	80021ca <UpdateADInternalFault+0xc2>
+ 80021c6:	2301      	movs	r3, #1
+ 80021c8:	e000      	b.n	80021cc <UpdateADInternalFault+0xc4>
+ 80021ca:	2300      	movs	r3, #0
+ 80021cc:	f003 0301 	and.w	r3, r3, #1
+ 80021d0:	b2da      	uxtb	r2, r3
+ 80021d2:	687b      	ldr	r3, [r7, #4]
+ 80021d4:	f883 21e6 	strb.w	r2, [r3, #486]	@ 0x1e6
 
     // TODO: check status regs for faults - need calcuate status reg values fn that handles status reg pec fualts
 }
- 8002190:	bf00      	nop
- 8002192:	3708      	adds	r7, #8
- 8002194:	46bd      	mov	sp, r7
- 8002196:	bd80      	pop	{r7, pc}
- 8002198:	42b40000 	.word	0x42b40000
- 800219c:	c2200000 	.word	0xc2200000
- 80021a0:	cccccccd 	.word	0xcccccccd
- 80021a4:	4010cccc 	.word	0x4010cccc
-
-080021a8 <ADBMS_getVoltage>:
-    }
-}
-*/
-
-float ADBMS_getVoltage(int data)
-{
- 80021a8:	b580      	push	{r7, lr}
- 80021aa:	b084      	sub	sp, #16
- 80021ac:	af00      	add	r7, sp, #0
- 80021ae:	6078      	str	r0, [r7, #4]
-    float voltage_float; // voltage in Volts
-    voltage_float = ((data + 10000) * 0.000150);
- 80021b0:	687b      	ldr	r3, [r7, #4]
- 80021b2:	f503 531c 	add.w	r3, r3, #9984	@ 0x2700
- 80021b6:	3310      	adds	r3, #16
- 80021b8:	4618      	mov	r0, r3
- 80021ba:	f7fe f9b3 	bl	8000524 <__aeabi_i2d>
- 80021be:	a30a      	add	r3, pc, #40	@ (adr r3, 80021e8 <ADBMS_getVoltage+0x40>)
- 80021c0:	e9d3 2300 	ldrd	r2, r3, [r3]
- 80021c4:	f7fe fa18 	bl	80005f8 <__aeabi_dmul>
- 80021c8:	4602      	mov	r2, r0
- 80021ca:	460b      	mov	r3, r1
- 80021cc:	4610      	mov	r0, r2
- 80021ce:	4619      	mov	r1, r3
- 80021d0:	f7fe fcea 	bl	8000ba8 <__aeabi_d2f>
- 80021d4:	4603      	mov	r3, r0
- 80021d6:	60fb      	str	r3, [r7, #12]
-    return voltage_float;
- 80021d8:	68fb      	ldr	r3, [r7, #12]
- 80021da:	ee07 3a90 	vmov	s15, r3
-}
- 80021de:	eeb0 0a67 	vmov.f32	s0, s15
- 80021e2:	3710      	adds	r7, #16
- 80021e4:	46bd      	mov	sp, r7
- 80021e6:	bd80      	pop	{r7, pc}
- 80021e8:	30553261 	.word	0x30553261
- 80021ec:	3f23a92a 	.word	0x3f23a92a
+ 80021d8:	bf00      	nop
+ 80021da:	3708      	adds	r7, #8
+ 80021dc:	46bd      	mov	sp, r7
+ 80021de:	bd80      	pop	{r7, pc}
+ 80021e0:	42b40000 	.word	0x42b40000
+ 80021e4:	c2200000 	.word	0xc2200000
+ 80021e8:	cccccccd 	.word	0xcccccccd
+ 80021ec:	4010cccc 	.word	0x4010cccc
 
 080021f0 <ADBMS_Print_Vals>:
+    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
+    Delay_ms(1);    // S-Channels are updated at 8ms
+}
 
 void ADBMS_Print_Vals(adbms_ *adbms)
 {
@@ -3789,7 +3789,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  80021fa:	f009 fc53 	bl	800baa4 <puts>
     printf("total v: %f\n", adbms->total_v);
  80021fe:	687b      	ldr	r3, [r7, #4]
- 8002200:	f8d3 3180 	ldr.w	r3, [r3, #384]	@ 0x180
+ 8002200:	f8d3 31c8 	ldr.w	r3, [r3, #456]	@ 0x1c8
  8002204:	4618      	mov	r0, r3
  8002206:	f7fe f99f 	bl	8000548 <__aeabi_f2d>
  800220a:	4602      	mov	r2, r0
@@ -3798,7 +3798,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  8002210:	f009 fbd8 	bl	800b9c4 <iprintf>
     printf("max v: %f\t", adbms->max_v);
  8002214:	687b      	ldr	r3, [r7, #4]
- 8002216:	f8d3 3184 	ldr.w	r3, [r3, #388]	@ 0x184
+ 8002216:	f8d3 31cc 	ldr.w	r3, [r3, #460]	@ 0x1cc
  800221a:	4618      	mov	r0, r3
  800221c:	f7fe f994 	bl	8000548 <__aeabi_f2d>
  8002220:	4602      	mov	r2, r0
@@ -3807,7 +3807,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  8002226:	f009 fbcd 	bl	800b9c4 <iprintf>
     printf("min v: %f\t", adbms->min_v);
  800222a:	687b      	ldr	r3, [r7, #4]
- 800222c:	f8d3 3188 	ldr.w	r3, [r3, #392]	@ 0x188
+ 800222c:	f8d3 31d0 	ldr.w	r3, [r3, #464]	@ 0x1d0
  8002230:	4618      	mov	r0, r3
  8002232:	f7fe f989 	bl	8000548 <__aeabi_f2d>
  8002236:	4602      	mov	r2, r0
@@ -3816,7 +3816,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  800223c:	f009 fbc2 	bl	800b9c4 <iprintf>
     printf("avg v: %f\t", adbms->avg_v);
  8002240:	687b      	ldr	r3, [r7, #4]
- 8002242:	f8d3 318c 	ldr.w	r3, [r3, #396]	@ 0x18c
+ 8002242:	f8d3 31d4 	ldr.w	r3, [r3, #468]	@ 0x1d4
  8002246:	4618      	mov	r0, r3
  8002248:	f7fe f97e 	bl	8000548 <__aeabi_f2d>
  800224c:	4602      	mov	r2, r0
@@ -3825,9 +3825,9 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  8002252:	f009 fbb7 	bl	800b9c4 <iprintf>
     printf("max-min: %f\n", adbms->max_v - adbms->min_v);
  8002256:	687b      	ldr	r3, [r7, #4]
- 8002258:	ed93 7a61 	vldr	s14, [r3, #388]	@ 0x184
+ 8002258:	ed93 7a73 	vldr	s14, [r3, #460]	@ 0x1cc
  800225c:	687b      	ldr	r3, [r7, #4]
- 800225e:	edd3 7a62 	vldr	s15, [r3, #392]	@ 0x188
+ 800225e:	edd3 7a74 	vldr	s15, [r3, #464]	@ 0x1d0
  8002262:	ee77 7a67 	vsub.f32	s15, s14, s15
  8002266:	ee17 0a90 	vmov	r0, s15
  800226a:	f7fe f96d 	bl	8000548 <__aeabi_f2d>
@@ -3866,7 +3866,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  80022a2:	693b      	ldr	r3, [r7, #16]
  80022a4:	4413      	add	r3, r2
  80022a6:	687a      	ldr	r2, [r7, #4]
- 80022a8:	3334      	adds	r3, #52	@ 0x34
+ 80022a8:	3346      	adds	r3, #70	@ 0x46
  80022aa:	009b      	lsls	r3, r3, #2
  80022ac:	4413      	add	r3, r2
  80022ae:	681b      	ldr	r3, [r3, #0]
@@ -3903,7 +3903,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  80022e2:	f009 fbdf 	bl	800baa4 <puts>
     printf("max temp: %f\t", adbms->max_temp);
  80022e6:	687b      	ldr	r3, [r7, #4]
- 80022e8:	f8d3 3190 	ldr.w	r3, [r3, #400]	@ 0x190
+ 80022e8:	f8d3 31d8 	ldr.w	r3, [r3, #472]	@ 0x1d8
  80022ec:	4618      	mov	r0, r3
  80022ee:	f7fe f92b 	bl	8000548 <__aeabi_f2d>
  80022f2:	4602      	mov	r2, r0
@@ -3912,7 +3912,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  80022f8:	f009 fb64 	bl	800b9c4 <iprintf>
     printf("min temp: %f\t", adbms->min_temp);
  80022fc:	687b      	ldr	r3, [r7, #4]
- 80022fe:	f8d3 3194 	ldr.w	r3, [r3, #404]	@ 0x194
+ 80022fe:	f8d3 31dc 	ldr.w	r3, [r3, #476]	@ 0x1dc
  8002302:	4618      	mov	r0, r3
  8002304:	f7fe f920 	bl	8000548 <__aeabi_f2d>
  8002308:	4602      	mov	r2, r0
@@ -3921,7 +3921,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  800230e:	f009 fb59 	bl	800b9c4 <iprintf>
     printf("avg temp: %f\n", adbms->avg_temp);
  8002312:	687b      	ldr	r3, [r7, #4]
- 8002314:	f8d3 3198 	ldr.w	r3, [r3, #408]	@ 0x198
+ 8002314:	f8d3 31e0 	ldr.w	r3, [r3, #480]	@ 0x1e0
  8002318:	4618      	mov	r0, r3
  800231a:	f7fe f915 	bl	8000548 <__aeabi_f2d>
  800231e:	4602      	mov	r2, r0
@@ -3950,7 +3950,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  8002342:	68bb      	ldr	r3, [r7, #8]
  8002344:	4413      	add	r3, r2
  8002346:	687a      	ldr	r2, [r7, #4]
- 8002348:	3350      	adds	r3, #80	@ 0x50
+ 8002348:	3362      	adds	r3, #98	@ 0x62
  800234a:	009b      	lsls	r3, r3, #2
  800234c:	4413      	add	r3, r2
  800234e:	681b      	ldr	r3, [r3, #0]
@@ -3986,37 +3986,37 @@ void ADBMS_Print_Vals(adbms_ *adbms)
  8002382:	f009 fb8f 	bl	800baa4 <puts>
     printf("undervoltage: %d\t", adbms->undervoltage_fault_);
  8002386:	687b      	ldr	r3, [r7, #4]
- 8002388:	f893 319c 	ldrb.w	r3, [r3, #412]	@ 0x19c
+ 8002388:	f893 31e4 	ldrb.w	r3, [r3, #484]	@ 0x1e4
  800238c:	4619      	mov	r1, r3
  800238e:	4822      	ldr	r0, [pc, #136]	@ (8002418 <ADBMS_Print_Vals+0x228>)
  8002390:	f009 fb18 	bl	800b9c4 <iprintf>
     printf("overvoltage: %d\t", adbms->overvoltage_fault_);
  8002394:	687b      	ldr	r3, [r7, #4]
- 8002396:	f893 319d 	ldrb.w	r3, [r3, #413]	@ 0x19d
+ 8002396:	f893 31e5 	ldrb.w	r3, [r3, #485]	@ 0x1e5
  800239a:	4619      	mov	r1, r3
  800239c:	481f      	ldr	r0, [pc, #124]	@ (800241c <ADBMS_Print_Vals+0x22c>)
  800239e:	f009 fb11 	bl	800b9c4 <iprintf>
     printf("pec: %d\t", adbms->pec_fault_);
  80023a2:	687b      	ldr	r3, [r7, #4]
- 80023a4:	f893 31a2 	ldrb.w	r3, [r3, #418]	@ 0x1a2
+ 80023a4:	f893 31ea 	ldrb.w	r3, [r3, #490]	@ 0x1ea
  80023a8:	4619      	mov	r1, r3
  80023aa:	481d      	ldr	r0, [pc, #116]	@ (8002420 <ADBMS_Print_Vals+0x230>)
  80023ac:	f009 fb0a 	bl	800b9c4 <iprintf>
     printf("overtemperature: %d\t", adbms->overtemperature_fault_);
  80023b0:	687b      	ldr	r3, [r7, #4]
- 80023b2:	f893 319f 	ldrb.w	r3, [r3, #415]	@ 0x19f
+ 80023b2:	f893 31e7 	ldrb.w	r3, [r3, #487]	@ 0x1e7
  80023b6:	4619      	mov	r1, r3
  80023b8:	481a      	ldr	r0, [pc, #104]	@ (8002424 <ADBMS_Print_Vals+0x234>)
  80023ba:	f009 fb03 	bl	800b9c4 <iprintf>
     printf("openwire: %d\t", adbms->openwire_fault_);
  80023be:	687b      	ldr	r3, [r7, #4]
- 80023c0:	f893 31a0 	ldrb.w	r3, [r3, #416]	@ 0x1a0
+ 80023c0:	f893 31e8 	ldrb.w	r3, [r3, #488]	@ 0x1e8
  80023c4:	4619      	mov	r1, r3
  80023c6:	4818      	ldr	r0, [pc, #96]	@ (8002428 <ADBMS_Print_Vals+0x238>)
  80023c8:	f009 fafc 	bl	800b9c4 <iprintf>
     printf("openwire_temp: %d\n", adbms->openwire_temp_fault_);
  80023cc:	687b      	ldr	r3, [r7, #4]
- 80023ce:	f893 31a1 	ldrb.w	r3, [r3, #417]	@ 0x1a1
+ 80023ce:	f893 31e9 	ldrb.w	r3, [r3, #489]	@ 0x1e9
  80023d2:	4619      	mov	r1, r3
  80023d4:	4815      	ldr	r0, [pc, #84]	@ (800242c <ADBMS_Print_Vals+0x23c>)
  80023d6:	f009 faf5 	bl	800b9c4 <iprintf>
@@ -4200,7 +4200,7 @@ int main(void)
   ADBMS_Initialize(&adbms, &hspi1);
  80024f6:	490c      	ldr	r1, [pc, #48]	@ (8002528 <main+0x70>)
  80024f8:	480c      	ldr	r0, [pc, #48]	@ (800252c <main+0x74>)
- 80024fa:	f7ff f9ed 	bl	80018d8 <ADBMS_Initialize>
+ 80024fa:	f7ff fa11 	bl	8001920 <ADBMS_Initialize>
   while (1)
   {
     /* USER CODE END WHILE */
@@ -4208,13 +4208,13 @@ int main(void)
     /* USER CODE BEGIN 3 */
     ADBMS_UpdateVoltages(&adbms);
  80024fe:	480b      	ldr	r0, [pc, #44]	@ (800252c <main+0x74>)
- 8002500:	f7ff faa2 	bl	8001a48 <ADBMS_UpdateVoltages>
+ 8002500:	f7ff fac6 	bl	8001a90 <ADBMS_UpdateVoltages>
 	  ADBMS_UpdateTemps(&adbms);
  8002504:	4809      	ldr	r0, [pc, #36]	@ (800252c <main+0x74>)
- 8002506:	f7ff fb29 	bl	8001b5c <ADBMS_UpdateTemps>
+ 8002506:	f7ff fb4d 	bl	8001ba4 <ADBMS_UpdateTemps>
 	  UpdateADInternalFault(&adbms);
  800250a:	4808      	ldr	r0, [pc, #32]	@ (800252c <main+0x74>)
- 800250c:	f7ff fdd8 	bl	80020c0 <UpdateADInternalFault>
+ 800250c:	f7ff fdfc 	bl	8002108 <UpdateADInternalFault>
 
     if(ENABLE_PRINTF_DEBUG_COMMS) ADBMS_Print_Vals(&adbms);
  8002510:	4806      	ldr	r0, [pc, #24]	@ (800252c <main+0x74>)
@@ -5441,7 +5441,7 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* hcan)
  8002c24:	bd80      	pop	{r7, pc}
  8002c26:	bf00      	nop
  8002c28:	40006400 	.word	0x40006400
- 8002c2c:	200005f4 	.word	0x200005f4
+ 8002c2c:	2000063c 	.word	0x2000063c
  8002c30:	40023800 	.word	0x40023800
  8002c34:	40020400 	.word	0x40020400
  8002c38:	40006800 	.word	0x40006800
@@ -5800,7 +5800,7 @@ void OTG_FS_IRQHandler(void)
  8002d8a:	bf00      	nop
  8002d8c:	bd80      	pop	{r7, pc}
  8002d8e:	bf00      	nop
- 8002d90:	20001ae0 	.word	0x20001ae0
+ 8002d90:	20001b28 	.word	0x20001b28
 
 08002d94 <_getpid>:
 void initialise_monitor_handles()
@@ -6067,8 +6067,8 @@ void *_sbrk(ptrdiff_t incr)
  8002ed6:	bd80      	pop	{r7, pc}
  8002ed8:	20020000 	.word	0x20020000
  8002edc:	00000400 	.word	0x00000400
- 8002ee0:	200005f8 	.word	0x200005f8
- 8002ee4:	20002330 	.word	0x20002330
+ 8002ee0:	20000640 	.word	0x20000640
+ 8002ee4:	20002378 	.word	0x20002378
 
 08002ee8 <SystemInit>:
   *         configuration.
@@ -6297,7 +6297,7 @@ LoopFillZerobss:
   ldr r2, =_sbss
  8003068:	200002ec 	.word	0x200002ec
   ldr r4, =_ebss
- 800306c:	20002330 	.word	0x20002330
+ 800306c:	20002378 	.word	0x20002378
 
 08003070 <ADC_IRQHandler>:
  * @retval None       
@@ -6460,7 +6460,7 @@ __weak void HAL_IncTick(void)
  8003134:	4770      	bx	lr
  8003136:	bf00      	nop
  8003138:	20000030 	.word	0x20000030
- 800313c:	200005fc 	.word	0x200005fc
+ 800313c:	20000644 	.word	0x20000644
 
 08003140 <HAL_GetTick>:
   * @note This function is declared as __weak to be overwritten in case of other 
@@ -6480,7 +6480,7 @@ __weak uint32_t HAL_GetTick(void)
  800314c:	f85d 7b04 	ldr.w	r7, [sp], #4
  8003150:	4770      	bx	lr
  8003152:	bf00      	nop
- 8003154:	200005fc 	.word	0x200005fc
+ 8003154:	20000644 	.word	0x20000644
 
 08003158 <HAL_Delay>:
   *       implementations in user file.
@@ -25846,7 +25846,7 @@ static USBD_StatusTypeDef USBD_SetConfig(USBD_HandleTypeDef *pdev, USBD_SetupReq
  800a1ca:	46bd      	mov	sp, r7
  800a1cc:	bd80      	pop	{r7, pc}
  800a1ce:	bf00      	nop
- 800a1d0:	20000600 	.word	0x20000600
+ 800a1d0:	20000648 	.word	0x20000648
 
 0800a1d4 <USBD_GetConfig>:
   * @param  pdev: device instance
@@ -26676,7 +26676,7 @@ void MX_USB_DEVICE_Init(void)
  800a5f8:	bf00      	nop
  800a5fa:	bd80      	pop	{r7, pc}
  800a5fc:	200000d4 	.word	0x200000d4
- 800a600:	20000604 	.word	0x20000604
+ 800a600:	2000064c 	.word	0x2000064c
  800a604:	20000040 	.word	0x20000040
  800a608:	200000c0 	.word	0x200000c0
 
@@ -26706,9 +26706,9 @@ static int8_t CDC_Init_FS(void)
 }
  800a624:	4618      	mov	r0, r3
  800a626:	bd80      	pop	{r7, pc}
- 800a628:	200010e0 	.word	0x200010e0
- 800a62c:	20000604 	.word	0x20000604
- 800a630:	200008e0 	.word	0x200008e0
+ 800a628:	20001128 	.word	0x20001128
+ 800a62c:	2000064c 	.word	0x2000064c
+ 800a630:	20000928 	.word	0x20000928
 
 0800a634 <CDC_DeInit_FS>:
 /**
@@ -26835,7 +26835,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
  800a71e:	46bd      	mov	sp, r7
  800a720:	bd80      	pop	{r7, pc}
  800a722:	bf00      	nop
- 800a724:	20000604 	.word	0x20000604
+ 800a724:	2000064c 	.word	0x2000064c
 
 0800a728 <CDC_TransmitCplt_FS>:
   * @param  Buf: Buffer of data to be received
@@ -26966,7 +26966,7 @@ uint8_t * USBD_FS_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length
  800a7c2:	46bd      	mov	sp, r7
  800a7c4:	bd80      	pop	{r7, pc}
  800a7c6:	bf00      	nop
- 800a7c8:	200018e0 	.word	0x200018e0
+ 800a7c8:	20001928 	.word	0x20001928
  800a7cc:	0800e3dc 	.word	0x0800e3dc
 
 0800a7d0 <USBD_FS_ManufacturerStrDescriptor>:
@@ -26995,7 +26995,7 @@ uint8_t * USBD_FS_ManufacturerStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *l
  800a7ea:	3708      	adds	r7, #8
  800a7ec:	46bd      	mov	sp, r7
  800a7ee:	bd80      	pop	{r7, pc}
- 800a7f0:	200018e0 	.word	0x200018e0
+ 800a7f0:	20001928 	.word	0x20001928
  800a7f4:	0800e3f4 	.word	0x0800e3f4
 
 0800a7f8 <USBD_FS_SerialStrDescriptor>:
@@ -27074,7 +27074,7 @@ uint8_t * USBD_FS_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
  800a84a:	46bd      	mov	sp, r7
  800a84c:	bd80      	pop	{r7, pc}
  800a84e:	bf00      	nop
- 800a850:	200018e0 	.word	0x200018e0
+ 800a850:	20001928 	.word	0x20001928
  800a854:	0800e408 	.word	0x0800e408
 
 0800a858 <USBD_FS_InterfaceStrDescriptor>:
@@ -27118,7 +27118,7 @@ uint8_t * USBD_FS_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *leng
  800a886:	46bd      	mov	sp, r7
  800a888:	bd80      	pop	{r7, pc}
  800a88a:	bf00      	nop
- 800a88c:	200018e0 	.word	0x200018e0
+ 800a88c:	20001928 	.word	0x20001928
  800a890:	0800e414 	.word	0x0800e414
 
 0800a894 <Get_SerialNum>:
@@ -27834,7 +27834,7 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
  800ac86:	3708      	adds	r7, #8
  800ac88:	46bd      	mov	sp, r7
  800ac8a:	bd80      	pop	{r7, pc}
- 800ac8c:	20001ae0 	.word	0x20001ae0
+ 800ac8c:	20001b28 	.word	0x20001b28
 
 0800ac90 <USBD_LL_Start>:
   * @brief  Starts the low level portion of the device driver.
@@ -28308,7 +28308,7 @@ void *USBD_static_malloc(uint32_t size)
  800af1c:	f85d 7b04 	ldr.w	r7, [sp], #4
  800af20:	4770      	bx	lr
  800af22:	bf00      	nop
- 800af24:	20001fc4 	.word	0x20001fc4
+ 800af24:	2000200c 	.word	0x2000200c
 
 0800af28 <USBD_static_free>:
   * @brief  Dummy memory free
@@ -29345,7 +29345,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800b89c:	0800bad7 	.word	0x0800bad7
  800b8a0:	0800bb0f 	.word	0x0800bb0f
  800b8a4:	0800bb33 	.word	0x0800bb33
- 800b8a8:	200021e4 	.word	0x200021e4
+ 800b8a8:	2000222c 	.word	0x2000222c
 
 0800b8ac <stdio_exit_handler>:
  800b8ac:	4a02      	ldr	r2, [pc, #8]	@ (800b8b8 <stdio_exit_handler+0xc>)
@@ -29380,9 +29380,9 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800b8f0:	f001 bed2 	b.w	800d698 <_fflush_r>
  800b8f4:	bd10      	pop	{r4, pc}
  800b8f6:	bf00      	nop
- 800b8f8:	200021e4 	.word	0x200021e4
- 800b8fc:	2000224c 	.word	0x2000224c
- 800b900:	200022b4 	.word	0x200022b4
+ 800b8f8:	2000222c 	.word	0x2000222c
+ 800b8fc:	20002294 	.word	0x20002294
+ 800b900:	200022fc 	.word	0x200022fc
 
 0800b904 <global_stdio_init.part.0>:
  800b904:	b510      	push	{r4, lr}
@@ -29403,21 +29403,21 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800b92a:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
  800b92e:	2112      	movs	r1, #18
  800b930:	f7ff bf86 	b.w	800b840 <std>
- 800b934:	2000231c 	.word	0x2000231c
- 800b938:	200021e4 	.word	0x200021e4
+ 800b934:	20002364 	.word	0x20002364
+ 800b938:	2000222c 	.word	0x2000222c
  800b93c:	0800b8ad 	.word	0x0800b8ad
 
 0800b940 <__sfp_lock_acquire>:
  800b940:	4801      	ldr	r0, [pc, #4]	@ (800b948 <__sfp_lock_acquire+0x8>)
  800b942:	f000 ba0c 	b.w	800bd5e <__retarget_lock_acquire_recursive>
  800b946:	bf00      	nop
- 800b948:	20002325 	.word	0x20002325
+ 800b948:	2000236d 	.word	0x2000236d
 
 0800b94c <__sfp_lock_release>:
  800b94c:	4801      	ldr	r0, [pc, #4]	@ (800b954 <__sfp_lock_release+0x8>)
  800b94e:	f000 ba07 	b.w	800bd60 <__retarget_lock_release_recursive>
  800b952:	bf00      	nop
- 800b954:	20002325 	.word	0x20002325
+ 800b954:	2000236d 	.word	0x2000236d
 
 0800b958 <__sinit>:
  800b958:	b510      	push	{r4, lr}
@@ -29437,7 +29437,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800b97c:	e7f2      	b.n	800b964 <__sinit+0xc>
  800b97e:	bf00      	nop
  800b980:	0800b8c5 	.word	0x0800b8c5
- 800b984:	2000231c 	.word	0x2000231c
+ 800b984:	20002364 	.word	0x20002364
 
 0800b988 <_fwalk_sglue>:
  800b988:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
@@ -29798,7 +29798,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800bc92:	b103      	cbz	r3, 800bc96 <_close_r+0x1a>
  800bc94:	6023      	str	r3, [r4, #0]
  800bc96:	bd38      	pop	{r3, r4, r5, pc}
- 800bc98:	20002320 	.word	0x20002320
+ 800bc98:	20002368 	.word	0x20002368
 
 0800bc9c <_lseek_r>:
  800bc9c:	b538      	push	{r3, r4, r5, lr}
@@ -29816,7 +29816,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800bcb6:	b103      	cbz	r3, 800bcba <_lseek_r+0x1e>
  800bcb8:	6023      	str	r3, [r4, #0]
  800bcba:	bd38      	pop	{r3, r4, r5, pc}
- 800bcbc:	20002320 	.word	0x20002320
+ 800bcbc:	20002368 	.word	0x20002368
 
 0800bcc0 <_read_r>:
  800bcc0:	b538      	push	{r3, r4, r5, lr}
@@ -29834,7 +29834,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800bcda:	b103      	cbz	r3, 800bcde <_read_r+0x1e>
  800bcdc:	6023      	str	r3, [r4, #0]
  800bcde:	bd38      	pop	{r3, r4, r5, pc}
- 800bce0:	20002320 	.word	0x20002320
+ 800bce0:	20002368 	.word	0x20002368
 
 0800bce4 <_write_r>:
  800bce4:	b538      	push	{r3, r4, r5, lr}
@@ -29852,7 +29852,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800bcfe:	b103      	cbz	r3, 800bd02 <_write_r+0x1e>
  800bd00:	6023      	str	r3, [r4, #0]
  800bd02:	bd38      	pop	{r3, r4, r5, pc}
- 800bd04:	20002320 	.word	0x20002320
+ 800bd04:	20002368 	.word	0x20002368
 
 0800bd08 <__errno>:
  800bd08:	4b01      	ldr	r3, [pc, #4]	@ (800bd10 <__errno+0x8>)
@@ -31226,7 +31226,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800caa2:	e7ca      	b.n	800ca3a <_free_r+0x22>
  800caa4:	bd38      	pop	{r3, r4, r5, pc}
  800caa6:	bf00      	nop
- 800caa8:	2000232c 	.word	0x2000232c
+ 800caa8:	20002374 	.word	0x20002374
 
 0800caac <malloc>:
  800caac:	4b02      	ldr	r3, [pc, #8]	@ (800cab8 <malloc+0xc>)
@@ -31264,7 +31264,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800caf6:	d1f2      	bne.n	800cade <sbrk_aligned+0x22>
  800caf8:	e7ef      	b.n	800cada <sbrk_aligned+0x1e>
  800cafa:	bf00      	nop
- 800cafc:	20002328 	.word	0x20002328
+ 800cafc:	20002370 	.word	0x20002370
 
 0800cb00 <_malloc_r>:
  800cb00:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
@@ -31374,19 +31374,19 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800cbf6:	6005      	str	r5, [r0, #0]
  800cbf8:	e7d6      	b.n	800cba8 <_malloc_r+0xa8>
  800cbfa:	bf00      	nop
- 800cbfc:	2000232c 	.word	0x2000232c
+ 800cbfc:	20002374 	.word	0x20002374
 
 0800cc00 <__malloc_lock>:
  800cc00:	4801      	ldr	r0, [pc, #4]	@ (800cc08 <__malloc_lock+0x8>)
  800cc02:	f7ff b8ac 	b.w	800bd5e <__retarget_lock_acquire_recursive>
  800cc06:	bf00      	nop
- 800cc08:	20002324 	.word	0x20002324
+ 800cc08:	2000236c 	.word	0x2000236c
 
 0800cc0c <__malloc_unlock>:
  800cc0c:	4801      	ldr	r0, [pc, #4]	@ (800cc14 <__malloc_unlock+0x8>)
  800cc0e:	f7ff b8a7 	b.w	800bd60 <__retarget_lock_release_recursive>
  800cc12:	bf00      	nop
- 800cc14:	20002324 	.word	0x20002324
+ 800cc14:	2000236c 	.word	0x2000236c
 
 0800cc18 <_Balloc>:
  800cc18:	b570      	push	{r4, r5, r6, lr}
@@ -32666,7 +32666,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800d82e:	6023      	str	r3, [r4, #0]
  800d830:	bd38      	pop	{r3, r4, r5, pc}
  800d832:	bf00      	nop
- 800d834:	20002320 	.word	0x20002320
+ 800d834:	20002368 	.word	0x20002368
 
 0800d838 <_isatty_r>:
  800d838:	b538      	push	{r3, r4, r5, lr}
@@ -32682,7 +32682,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800d84e:	b103      	cbz	r3, 800d852 <_isatty_r+0x1a>
  800d850:	6023      	str	r3, [r4, #0]
  800d852:	bd38      	pop	{r3, r4, r5, pc}
- 800d854:	20002320 	.word	0x20002320
+ 800d854:	20002368 	.word	0x20002368
 
 0800d858 <_sbrk_r>:
  800d858:	b538      	push	{r3, r4, r5, lr}
@@ -32698,7 +32698,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800d86e:	b103      	cbz	r3, 800d872 <_sbrk_r+0x1a>
  800d870:	6023      	str	r3, [r4, #0]
  800d872:	bd38      	pop	{r3, r4, r5, pc}
- 800d874:	20002320 	.word	0x20002320
+ 800d874:	20002368 	.word	0x20002368
 
 0800d878 <memcpy>:
  800d878:	440a      	add	r2, r1
@@ -32875,7 +32875,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
  800d9e6:	6023      	str	r3, [r4, #0]
  800d9e8:	bd38      	pop	{r3, r4, r5, pc}
  800d9ea:	bf00      	nop
- 800d9ec:	20002320 	.word	0x20002320
+ 800d9ec:	20002368 	.word	0x20002368
 
 0800d9f0 <_getpid_r>:
  800d9f0:	f7f5 b9d0 	b.w	8002d94 <_getpid>
