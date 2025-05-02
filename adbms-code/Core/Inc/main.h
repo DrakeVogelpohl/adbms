@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define Current_ADC_Pin GPIO_PIN_2
 #define Current_ADC_GPIO_Port GPIOA
+#define SPI_CSB_Pin GPIO_PIN_4
+#define SPI_CSB_GPIO_Port GPIOA
 #define SD_Contactors_IN_Pin GPIO_PIN_1
 #define SD_Contactors_IN_GPIO_Port GPIOB
 #define Comms_6822_State_GPIO_Pin GPIO_PIN_15

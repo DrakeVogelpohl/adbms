@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "adbms_driver.h": "c",
+        "stm32f4xx_hal_spi.h": "c",
+        "stdbool.h": "c",
+        "adbms_update_values.h": "c",
+        "adbms_cmd.h": "c"
+    }
+}
