@@ -1,5 +1,5 @@
-Core/Src/adbms_update_values.o: ../Core/Src/adbms_update_values.c \
- ../Core/Inc/adbms_update_values.h ../Core/Inc/adbms_driver.h \
+Core/Src/adbms_interface.o: ../Core/Src/adbms_interface.c \
+ ../Core/Inc/adbms_interface.h ../Core/Inc/adbms_driver.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -37,7 +37,7 @@ Core/Src/adbms_update_values.o: ../Core/Src/adbms_update_values.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  ../Core/Inc/adbms_cmd.h ../Core/Inc/ad_system_prams.h \
  ../Core/Inc/thermistor_driver.h
-../Core/Inc/adbms_update_values.h:
+../Core/Inc/adbms_interface.h:
 ../Core/Inc/adbms_driver.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:

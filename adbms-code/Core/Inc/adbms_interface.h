@@ -13,6 +13,10 @@ typedef struct
 
     cfa_ cfa[NUM_CHIPS];
     cfb_ cfb[NUM_CHIPS];
+    adcv_ adcv;
+    adsv_ adsv;
+    adax_ adax;
+
     float voltages[NUM_CHIPS * NUM_VOLTAGES_CHIP];
     float temperatures[NUM_CHIPS * NUM_TEMPS_CHIP];
 

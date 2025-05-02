@@ -14,10 +14,14 @@ void ADBMS_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi)
         adbms->cfb[cic].vuv = Set_UnderOver_Voltage_Threshold(UNDERVOLTAGE);
         adbms->cfb[cic].vov = Set_UnderOver_Voltage_Threshold(OVERVOLTAGE);
     }
+    // Init sensing cmd
+    adbms->adcv.cont = 1;
 
-    // Package config structs into transmitable data
+    // Package config and sensing structs into transmitable data
     ADBMS_Set_Config_A(adbms->cfa, adbms->ICs.cfg_a);
     ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
+    ADBMS_Set_ADCV(adbms->adcv, &adbms->ICs.adcv);
+    ADBMS_Set_ADAX(adbms->adax, &adbms->ICs.adax);
 
     // Write Config 
     ADBMS_WakeUP_ICs();
@@ -26,13 +30,10 @@ void ADBMS_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi)
     ADBMS_WakeUP_ICs();
     ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
 
-    // turn on cell sensing
-    // TODO: These are currently hard coded from the datasheet. Make them configurable before release
-    adbms->ICs.ADCV = 0x3E0;  // Cont on, everything else off
-    adbms->ICs.ADAX = 0x410;  // Everything off
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.ADCV);
+    // Turn on sensing
+    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adcv);
     HAL_Delay(1);
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.ADAX);
+    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adax);
     HAL_Delay(8); // ADCs are updated at their conversion rate of 1ms
 }
 
@@ -65,7 +66,7 @@ void ADBMS_UpdateTemps(adbms_ *adbms)
     adbms->temp_pec_failure = pec;
 
     // need to start new poll for conversion before next read (no continous mode)
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.ADAX);
+    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adax);
 
     // calulate new values with the updated raw ones
     ADBMS_CalculateValues_Temps(adbms);
@@ -194,11 +195,35 @@ void UpdateADInternalFault(adbms_ *adbms)
     // TODO: check status regs for faults - need calcuate status reg values fn that handles status reg pec fualts
 }
 
-/*
+
 void UpdateOWCFault(adbms_ *adbms)
 {
     // check openwire fault
-    cellBalanceOff();   // need to turn off cell balancing to check for OWC
+    ADBMS_WakeUP_ICs();
+    cellBalanceOff(adbms);   // need to turn off cell balancing to check for OWC
+
+    adbms->adsv.cont = 1;
+    adbms->adsv.ow = 1; // Enable OW on even-channel 
+    ADBMS_Set_ADSV(adbms->adsv, adbms->ICs.adsv);
+    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
+    Delay_ms(8);    // S-Channels are updated at 8ms
+
+    // Get new s-channel voltages
+    bool pec = 0;
+    ADBMS_WakeUP_ICs();
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVA, (adbms->ICs.scell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVB, (adbms->ICs.scell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVC, (adbms->ICs.scell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVD, (adbms->ICs.scell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVE, (adbms->ICs.scell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+
+    if(pec){
+        adbms->current_owc_failures += 1;
+        if(adbms->current_owc_failures > PEC_FAILURE_THRESHOLD){
+            adbms->pec_fault_ = 1;
+        }
+        return;
+    }
 
     enum owc_output owc = Owc(&ICs[0]);
     if(owc == OWC_PEC_Failure) {
@@ -216,38 +241,37 @@ void UpdateOWCFault(adbms_ *adbms)
 
 void cellBalanceOn(adbms_ *adbms)
 {
+    // Turn on CB indication LED
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
-    for (int i = 0; i < NUM_CHIPS; i++)
+
+    for (int cic = 0; cic < NUM_CHIPS; cic++)
     {
         uint16_t dcc = 0;
-        for (int j = 0; j < NUM_VOLTAGES_CHIP; j++)
+        for (int cvoltage = 0; cvoltage < NUM_VOLTAGES_CHIP; cvoltage++)
         {
-            if (adbms->voltages[i * NUM_VOLTAGES_CHIP + j] - adbms->min_v > CB_THRESHOLD && adbms->voltages[i * NUM_VOLTAGES_CHIP + j] > CB_MIN_V_THRESHOLD)
+            float curr_v = adbms->voltages[cic * NUM_VOLTAGES_CHIP + cvoltage];
+            if ((curr_v - adbms->min_v) > CB_THRESHOLD && curr_v > CB_MIN_V_THRESHOLD)
             {
-                dcc |= 1 << j;
+                dcc |= 1 << cvoltage;
             }
         }
-        ICs[i].tx_cfgb.dcc = dcc;
+        adbms->cfb[cic].dcc = dcc;
     }
-    adBmsWriteData(NUM_CHIPS, ICs, WRCFGB, Config, B);
+    ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
+    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
 }
 
-void cellBalanceOff()
+void cellBalanceOff(adbms_ *adbms)
 {
+    // Turn off CB indication LED
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-    for (int i = 0; i < NUM_CHIPS; i++)
-    {
-        ICs[i].tx_cfgb.dcc = 0;
-        adBmsWriteData(NUM_CHIPS, ICs, WRCFGB, Config, B);
-    }
-}
-*/
 
-float ADBMS_getVoltage(int data)
-{
-    float voltage_float; // voltage in Volts
-    voltage_float = ((data + 10000) * 0.000150);
-    return voltage_float;
+    for (int cic = 0; cic < NUM_CHIPS; cic++)
+    {
+        adbms->cfb[cic].dcc = 0;
+    }
+    ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
+    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
 }
 
 void ADBMS_Print_Vals(adbms_ *adbms)

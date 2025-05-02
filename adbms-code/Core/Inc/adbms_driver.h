@@ -19,13 +19,14 @@ typedef struct
     uint8_t cfg_a[NUM_CHIPS * DATA_LEN];
     uint8_t cfg_b[NUM_CHIPS * DATA_LEN];
 
-    // TODO: Figure out a better way to handle these
-    uint16_t ADCV;
-    uint16_t ADSV;
-    uint16_t ADAX; 
-    uint16_t ADAX2; 
+    // AD Commands 
+    uint16_t adcv;
+    uint16_t adsv;
+    uint16_t adax;
+    uint16_t adax2;
 
     uint8_t cell[CELL_REG_GRP * NUM_CHIPS * DATA_LEN];
+    uint8_t scell[CELL_REG_GRP * NUM_CHIPS * DATA_LEN];
     uint8_t aux[AUX_REG_GRP * NUM_CHIPS * DATA_LEN];
 
 } adbms6830_ICs;
@@ -56,13 +57,46 @@ typedef struct
   uint16_t 	dcc     :16;
 }cfb_;
 
+typedef struct
+{
+  uint8_t rd    :1;
+  uint8_t cont  :1;
+  uint8_t dcp   :1;
+  uint8_t rstf  :1;
+  uint8_t ow    :2;
+}adcv_;
+
+typedef struct
+{
+  uint8_t cont  :1;
+  uint8_t dcp   :1;
+  uint8_t ow    :2;
+}adsv_;
+
+typedef struct
+{
+  uint8_t ow    :1;
+  uint8_t pup   :1;
+  uint8_t ch    :5;
+}adax_;
+
+typedef struct
+{
+  uint8_t ch    :4;
+}adax2_;
+
 uint16_t Pec15_Calc(uint8_t len, uint8_t *data);
 uint16_t Pec10_Calc(bool isRxCmd, int len, uint8_t *data);
 
 uint16_t Set_UnderOver_Voltage_Threshold(float voltage);
+float ADBMS_getVoltage(int data);
 
 void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer);
 void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t *cfg_b_tx_buffer);
+void ADBMS_Set_ADCV(adcv_ adcv, uint16_t *adcv_cmd_buffer);
+void ADBMS_Set_ADSV(adsv_ adsv, uint16_t *adsv_cmd_buffer);
+void ADBMS_Set_ADAX(adax_ adax, uint16_t *adax_cmd_buffer);
+void ADBMS_Set_ADAX2(adax2_ adax2, uint16_t *adax2_cmd_buffer);
 
 void ADBMS_WakeUP_ICs();
 void ADBMS_Write_CMD(SPI_HandleTypeDef *hspi, uint16_t tx_cmd);

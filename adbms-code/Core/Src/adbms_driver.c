@@ -151,6 +151,13 @@ uint16_t Set_UnderOver_Voltage_Threshold(float voltage)
   return v_th_value;
 }
 
+float ADBMS_getVoltage(int data)
+{
+    // voltage in Volts
+    float voltage_float = ((data + 10000) * 0.000150);
+    return voltage_float;
+}
+
 void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer)
 {
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
@@ -175,6 +182,43 @@ void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t *cfg_b_tx_buffer)
         cfg_b_tx_buffer[cic * DATA_LEN + 4] = (uint8_t)(cfg_b[cic].dcc & 0x00FF);
         cfg_b_tx_buffer[cic * DATA_LEN + 5] = (uint8_t)((cfg_b[cic].dcc & 0xFF00) >> 8);
     }
+}
+
+void ADBMS_Set_ADCV(adcv_ adcv, uint16_t *adcv_cmd_buffer)
+{
+    *adcv_cmd_buffer = (0x1 << 9) 
+                        | ((adcv.rd && 0x1) << 8) 
+                        | ((adcv.cont && 0x1) << 7) 
+                        | (0x3 << 5) 
+                        | ((adcv.dcp && 0x1) << 4) 
+                        | ((adcv.rstf && 0x1) << 2) 
+                        | (adcv.ow && 0x3);
+}
+
+void ADBMS_Set_ADSV(adsv_ adsv, uint16_t *adsv_cmd_buffer)
+{
+    *adsv_cmd_buffer = (0x1 << 8)
+                        | ((adsv.cont && 0x1) << 7)
+                        | (0x3 << 5)
+                        | ((adsv.dcp && 0x1) << 4)
+                        | (0x1 << 3)
+                        | (adsv.ow && 0x3);
+}
+
+void ADBMS_Set_ADAX(adax_ adax, uint16_t *adax_cmd_buffer)
+{
+    *adax_cmd_buffer = (0x1 << 10) 
+                        | ((adax.ow && 0x1) << 8)
+                        | ((adax.pup && 0x1) << 7)
+                        | ((adax.ch && 0x10) << 6)
+                        | (0x1 << 4)
+                        | (adax.ch && 0xF);
+}
+
+void ADBMS_Set_ADAX2(adax2_ adax2, uint16_t *adax2_cmd_buffer)
+{
+    *adax2_cmd_buffer = (0x1 << 10) 
+                        | (adax2.ch && 0xF);
 }
 
 void ADBMS_WakeUP_ICs()
