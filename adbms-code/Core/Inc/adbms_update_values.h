@@ -11,8 +11,8 @@ typedef struct
 {
     adbms6830_ICs ICs;
 
-    cfa_ cfg_a[NUM_CHIPS];
-    cfb_ cfg_b[NUM_CHIPS];
+    cfa_ cfa[NUM_CHIPS];
+    cfb_ cfb[NUM_CHIPS];
     float voltages[NUM_CHIPS * NUM_VOLTAGES_CHIP];
     float temperatures[NUM_CHIPS * NUM_TEMPS_CHIP];
 
@@ -42,7 +42,7 @@ typedef struct
 } adbms_;
 
 
-void ADBMS_Initialize(adbms_ *adbms);
+void ADBMS_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi);
 
 void UpdateADInternalFault(adbms_ *adbms);
 

@@ -1,51 +1,56 @@
 #include "adbms_update_values.h"
 
-void ADBMS_Initialize(adbms_ *adbms)
+void ADBMS_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi)
 {
+    adbms->ICs.hspi = hspi;
     // Set initial configurations
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
     {
         // Init config A
-        adbms->cfg_a[cic].refon = 1;
-        adbms->cfg_a[cic].gpo = 0x3FF;  // all gpo tunred on
+        adbms->cfa[cic].refon = 1;
+        adbms->cfa[cic].gpo = 0x3FF;  // all gpo tunred on
 
         // Init config B
-        adbms->cfg_b[cic].vuv = Set_UnderOver_Voltage_Threshold(UNDERVOLTAGE);
-        adbms->cfg_b[cic].vov = Set_UnderOver_Voltage_Threshold(OVERVOLTAGE);
+        adbms->cfb[cic].vuv = Set_UnderOver_Voltage_Threshold(UNDERVOLTAGE);
+        adbms->cfb[cic].vov = Set_UnderOver_Voltage_Threshold(OVERVOLTAGE);
     }
 
     // Package config structs into transmitable data
-    ADBMS_Set_Config_A(adbms->cfg_a, adbms->ICs.cfg_a);
-    ADBMS_Set_Config_B(adbms->cfg_b, adbms->ICs.cfg_b);
+    ADBMS_Set_Config_A(adbms->cfa, adbms->ICs.cfg_a);
+    ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
 
     // Write Config 
-    ADBMS_WakeUP_ICs(adbms->ICs.hspi);
+    ADBMS_WakeUP_ICs();
+    ADBMS_WakeUP_ICs();
     ADBMS_Write_Data(adbms->ICs.hspi, WRCFGA, adbms->ICs.cfg_a, adbms->ICs.spi_dataBuf);
+    ADBMS_WakeUP_ICs();
     ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
 
     // turn on cell sensing
     // TODO: These are currently hard coded from the datasheet. Make them configurable before release
-    adbms->ICs.ADCV = 0x2E0;  // Cont on, everything else off
-    adbms->ICs.ADAX = 0x810;  // Everything off
+    adbms->ICs.ADCV = 0x3E0;  // Cont on, everything else off
+    adbms->ICs.ADAX = 0x410;  // Everything off
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.ADCV);
+    HAL_Delay(1);
     ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.ADAX);
-    HAL_Delay(10); // ADCs are updated at their conversion rate of 1ms
+    HAL_Delay(8); // ADCs are updated at their conversion rate of 1ms
 }
 
 void ADBMS_UpdateVoltages(adbms_ *adbms)
 {
     // get voltages from ADBMS
     bool pec = 0;
-    ADBMS_WakeUP_ICs(adbms->ICs.hspi);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVA, adbms->ICs.cell[0], adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVB, adbms->ICs.cell[1], adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVC, adbms->ICs.cell[2], adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVD, adbms->ICs.cell[3], adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVE, adbms->ICs.cell[4], adbms->ICs.spi_dataBuf);
+    ADBMS_WakeUP_ICs();
+
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVA, (adbms->ICs.cell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
     adbms->voltage_pec_failure = pec;
 
     // calulate new values with the updated raw ones
-    ADBMS_CalculateValues_Voltages(adbms);
+     ADBMS_CalculateValues_Voltages(adbms);
 }
 
 void ADBMS_UpdateTemps(adbms_ *adbms)
@@ -95,8 +100,10 @@ void ADBMS_CalculateValues_Voltages(adbms_ *adbms)
         {
             for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
             {
-                int16_t raw_val = (((uint16_t)adbms->ICs.cell[creg_grp][cic][cbyte]) << 8) | adbms->ICs.cell[creg_grp][cic][cbyte+1];
+                printf("%d\n", NUM_CHIPS * DATA_LEN/2 * num_reg_grps);
+                int16_t raw_val = (((uint16_t)adbms->ICs.cell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1]) << 8) | adbms->ICs.cell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte];
                 float curr_voltage = ADBMS_getVoltage(raw_val);
+                printf("currV: %f", curr_voltage);
                 adbms->voltages[cic*NUM_VOLTAGES_CHIP + creg_grp*DATA_LEN/2 + cbyte/2] = curr_voltage;
 
                 adbms->total_v += curr_voltage;
@@ -147,7 +154,7 @@ void ADBMS_CalculateValues_Temps(adbms_ *adbms)
                 // skip because only want temps 2-10
                 if(creg_grp==0 && cbyte <= 2) continue;
 
-                int16_t raw_val = (((uint16_t)adbms->ICs.aux[creg_grp][cic][cbyte]) << 8) | adbms->ICs.aux[creg_grp][cic][cbyte+1];
+                int16_t raw_val = (((uint16_t)adbms->ICs.aux[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte]) << 8) | adbms->ICs.aux[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1];
                 float raw_temp_voltage = ADBMS_getVoltage(raw_val);
 
                 // get ref voltage from status reg - not getting status regs because takes too long

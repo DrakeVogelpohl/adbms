@@ -103,7 +103,7 @@ uint16_t Pec10_Calc(bool isRxCmd, int len, uint8_t *data)
     }
  
     /* If array is from received buffer add command counter to crc calculation */
-    if (isRxCmd == true)
+    if (isRxCmd)
     {  
         nRemainder ^= (uint16_t)(((uint16_t)data[len] & (uint8_t)0xFC) << 2u);
     }
@@ -151,42 +151,40 @@ uint16_t Set_UnderOver_Voltage_Threshold(float voltage)
   return v_th_value;
 }
 
-void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t **cfg_a_tx_buffer)
+void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer)
 {
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
     {
-        cfg_a_tx_buffer[cic][0] = (uint8_t)(((cfg_a[cic].refon & 0x01) << 7) | (cfg_a[cic].cth & 0x07));
-        cfg_a_tx_buffer[cic][1] = (uint8_t)(cfg_a[cic].flag_d & 0xFF);
-        cfg_a_tx_buffer[cic][2] = (uint8_t)(((cfg_a[cic].soakon & 0x01) << 7) | ((cfg_a[cic].owrng & 0x01) << 6) | ((cfg_a[cic].owa & 0x07) << 3));
-        cfg_a_tx_buffer[cic][3] = (uint8_t)(cfg_a[cic].gpo & 0x00FF);
-        cfg_a_tx_buffer[cic][4] = (uint8_t)((cfg_a[cic].gpo & 0x0300) >> 8);
-        cfg_a_tx_buffer[cic][5] = (uint8_t)(((cfg_a[cic].snap & 0x01) << 5) | ((cfg_a[cic].mute_st & 0x01) << 4) | ((cfg_a[cic].comm_bk & 0x01) << 3) | (cfg_a[cic].fc & 0x07));
+        cfg_a_tx_buffer[cic * DATA_LEN + 0] = (uint8_t)(((cfg_a[cic].refon & 0x01) << 7) | (cfg_a[cic].cth & 0x07));
+        cfg_a_tx_buffer[cic * DATA_LEN + 1] = (uint8_t)(cfg_a[cic].flag_d & 0xFF);
+        cfg_a_tx_buffer[cic * DATA_LEN + 2] = (uint8_t)(((cfg_a[cic].soakon & 0x01) << 7) | ((cfg_a[cic].owrng & 0x01) << 6) | ((cfg_a[cic].owa & 0x07) << 3));
+        cfg_a_tx_buffer[cic * DATA_LEN + 3] = (uint8_t)(cfg_a[cic].gpo & 0x00FF);
+        cfg_a_tx_buffer[cic * DATA_LEN + 4] = (uint8_t)((cfg_a[cic].gpo & 0x0300) >> 8);
+        cfg_a_tx_buffer[cic * DATA_LEN + 5] = (uint8_t)(((cfg_a[cic].snap & 0x01) << 5) | ((cfg_a[cic].mute_st & 0x01) << 4) | ((cfg_a[cic].comm_bk & 0x01) << 3) | (cfg_a[cic].fc & 0x07));
     }
 }
 
-void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t **cfg_b_tx_buffer)
+void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t *cfg_b_tx_buffer)
 {
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
     {
-        cfg_b_tx_buffer[cic][0] = (uint8_t)(cfg_b[cic].vuv & 0x0FF);
-        cfg_b_tx_buffer[cic][1] = (uint8_t)(((cfg_b[cic].vov & 0x00F) << 4) | ((cfg_b[cic].vuv & 0xF00) >> 8));
-        cfg_b_tx_buffer[cic][2] = (uint8_t)((cfg_b[cic].vov & 0xFF0) >> 4);
-        cfg_b_tx_buffer[cic][3] = (uint8_t)(((cfg_b[cic].dtmen & 0x01) << 7) | ((cfg_b[cic].dtrng & 0x01) << 6) | (cfg_b[cic].dcto & 0x3F));
-        cfg_b_tx_buffer[cic][4] = (uint8_t)(cfg_b[cic].dcc & 0x00FF);
-        cfg_b_tx_buffer[cic][5] = (uint8_t)((cfg_b[cic].dcc & 0xFF00) >> 8);
+        cfg_b_tx_buffer[cic * DATA_LEN + 0] = (uint8_t)(cfg_b[cic].vuv & 0x0FF);
+        cfg_b_tx_buffer[cic * DATA_LEN + 1] = (uint8_t)(((cfg_b[cic].vov & 0x00F) << 4) | ((cfg_b[cic].vuv & 0xF00) >> 8));
+        cfg_b_tx_buffer[cic * DATA_LEN + 2] = (uint8_t)((cfg_b[cic].vov & 0xFF0) >> 4);
+        cfg_b_tx_buffer[cic * DATA_LEN + 3] = (uint8_t)(((cfg_b[cic].dtmen & 0x01) << 7) | ((cfg_b[cic].dtrng & 0x01) << 6) | (cfg_b[cic].dcto & 0x3F));
+        cfg_b_tx_buffer[cic * DATA_LEN + 4] = (uint8_t)(cfg_b[cic].dcc & 0x00FF);
+        cfg_b_tx_buffer[cic * DATA_LEN + 5] = (uint8_t)((cfg_b[cic].dcc & 0xFF00) >> 8);
     }
 }
 
-void ADBMS_WakeUP_ICs(SPI_HandleTypeDef *hspi)
+void ADBMS_WakeUP_ICs()
 {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-	HAL_Delay(1);
     for(uint8_t i = 0; i < NUM_CHIPS; i++){
         // Blocking Transmit the msg
     	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-    	HAL_Delay(1);
+    	HAL_Delay(4);
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-        HAL_Delay(1);
+        HAL_Delay(4);
     }
 }
 
@@ -201,6 +199,11 @@ void ADBMS_Write_CMD(SPI_HandleTypeDef *hspi, uint16_t tx_cmd)
     spi_dataBuf[3] = (uint8_t)(cmd_pec);
 
     // Blocking Transmit the cmd
+//    for(uint8_t i = 0; i < CMD_LEN + PEC_LEN; i++)
+//    {
+//    	printf("byte%d: 0x%02x\n", i, spi_dataBuf[i]);
+//    }
+
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
     if (HAL_SPI_Transmit(hspi, spi_dataBuf, CMD_LEN + PEC_LEN, SPI_TIME_OUT) != HAL_OK)
     {
@@ -209,7 +212,7 @@ void ADBMS_Write_CMD(SPI_HandleTypeDef *hspi, uint16_t tx_cmd)
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
 
-void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t **data, uint8_t *spi_dataBuf)
+void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf)
 {
     spi_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
     spi_dataBuf[1] = (uint8_t)(tx_cmd);
@@ -222,16 +225,22 @@ void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t **data, 
     for(uint8_t cic = NUM_CHIPS; cic > 0; cic--){
         // Copy over data from data ptr
         for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++){
-            spi_dataBuf[4 + cbyte + (cic*(DATA_LEN + PEC_LEN))] = data[cic][cbyte];
+            spi_dataBuf[4 + cbyte + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = data[(NUM_CHIPS-cic) * DATA_LEN + cbyte];
         }
 
         // Caclulate PEC10
-        uint16_t data_pec = Pec10_Calc(false, DATA_LEN, data[cic]);  
-        spi_dataBuf[4 + DATA_LEN + (cic*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec >> 8);
-        spi_dataBuf[4 + DATA_LEN + 1 + (cic*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec);
+        uint16_t data_pec = Pec10_Calc(false, DATA_LEN, (data + (NUM_CHIPS-cic) * DATA_LEN));  
+        spi_dataBuf[4 + DATA_LEN + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec >> 8);
+        spi_dataBuf[4 + DATA_LEN + 1 + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec);
     }
 
     // Blocking Transmit the cmd and data
+
+//    for(uint8_t i = 0; i < DATABUF_LEN; i++)
+//    {
+//    	printf("byte%d: 0x%02x\n", i, spi_dataBuf[i]);
+//    }
+
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
     if (HAL_SPI_Transmit(hspi, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
     {
@@ -240,35 +249,45 @@ void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t **data, 
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
 
-bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t **dataBuf, uint8_t *spi_dataBuf)
+float getVoltage(int data)
 {
-    uint8_t spi_tx_dataBuf[DATABUF_LEN] = {0};
+    float voltage_float; // voltage in Volts
+    voltage_float = ((data + 10000) * 0.000150);
+    return voltage_float;
+}
+
+bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf)
+{
+//    uint8_t spi_tx_dataBuf[4] = {0x00, 0x04, 0x07, 0xc2};
+
+    uint8_t spi_tx_dataBuf[4] = {0};
     spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
     spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
 
-    uint16_t cmd_pec = Pec15_Calc(2, spi_dataBuf);
+    uint16_t cmd_pec = Pec15_Calc(2, spi_tx_dataBuf);
     spi_tx_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
     spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
 
+    //    for(uint8_t i = 0; i < 4; i++)
+    //    {
+    //    	printf("byte%d: 0x%02x\n", i, spi_tx_dataBuf[i]);
+    //    }
+
     // Blocking Transmit Receive the cmd and data
-    uint8_t dBuf[DATABUF_LEN] = {0};
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(hspi, spi_tx_dataBuf, 4, SPI_TIME_OUT);
-    HAL_SPI_Receive(hspi, dBuf, DATABUF_LEN-4, SPI_TIME_OUT);
-//    if (HAL_SPI_TransmitReceive(hspi, spi_tx_dataBuf, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
-//    {
-//        // TODO: do something if fails
-//    }
+    if (HAL_SPI_TransmitReceive(hspi, spi_tx_dataBuf, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
+    {
+        // TODO: do something if fails
+    }
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+
+    // Discard data received during transmit phase
+    uint8_t *rx_dataBuf = spi_dataBuf + CMD_LEN + PEC_LEN;
 
     for(uint8_t i = 0; i < DATABUF_LEN-4; i++)
     {
-    	printf("byte%d: 0x%02x\n", i, dBuf[i]);
+    	printf("byte%d: 0x%02x\n", i, rx_dataBuf[i]);
     }
-
-    // Discard data received during transmit phase
-//    uint8_t *rx_dataBuf = spi_dataBuf + CMD_LEN + PEC_LEN;
-    uint8_t *rx_dataBuf = dBuf;
 
     // Move the incoming data from the spi data buffer to the correspoding data buffer array in memory
     bool pec_error = 0;
@@ -276,10 +295,14 @@ bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t **dataBuf
     {
         for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++)
         {
-            dataBuf[cic][cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
+            dataBuf[cic * DATA_LEN + cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
+            if(cbyte % 2 == 1){
+                float v = getVoltage(((uint16_t)dataBuf[cic * DATA_LEN + cbyte]) << 8 | dataBuf[cic * DATA_LEN + cbyte - 1]);
+                printf("v%d: %f\n", cbyte/2, v);
+            }
         }
         uint16_t rx_pec = (uint16_t)(((rx_dataBuf[DATA_LEN + (DATA_LEN+PEC_LEN)*cic] & 0x03) << 8) | rx_dataBuf[DATA_LEN + 1 + (DATA_LEN+PEC_LEN)*cic]);
-        uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, dataBuf[cic]);
+        uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * DATA_LEN));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
         pec_error |= (rx_pec != calc_pec);
     }
 
