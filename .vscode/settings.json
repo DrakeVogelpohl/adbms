@@ -10,6 +10,8 @@
         "adbms_interface.h": "c",
         "virtual_timer.h": "c",
         "current_driver.h": "c",
-        "bms_system_prams.h": "c"
+        "bms_system_prams.h": "c",
+        "bms_can.h": "c",
+        "nfr_can_driver.h": "c"
     }
 }

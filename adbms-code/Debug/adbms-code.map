@@ -514,6 +514,536 @@ Discarded input sections
  .debug_macro   0x00000000       0xba ./Core/Src/adbms_interface.o
  .debug_macro   0x00000000      0x12d ./Core/Src/adbms_interface.o
  .debug_macro   0x00000000       0xbe ./Core/Src/adbms_interface.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms.o
+ .text          0x00000000        0x0 ./Core/Src/bms.o
+ .data          0x00000000        0x0 ./Core/Src/bms.o
+ .bss           0x00000000        0x0 ./Core/Src/bms.o
+ .data.WRCFGA   0x00000000        0x2 ./Core/Src/bms.o
+ .data.WRCFGB   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCFGA   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCFGB   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCVA    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCVB    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCVC    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCVD    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCVE    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCVF    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDACA    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDACB    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDACC    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDACD    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDACE    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDACF    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSVA    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSVB    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSVC    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSVD    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSVE    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSVF    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDFCA    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDFCB    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDFCC    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDFCD    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDFCE    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDFCF    0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDAUXA   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDAUXB   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDAUXC   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDAUXD   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDRAXA   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDRAXB   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDRAXC   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDRAXD   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSTATA  0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSTATB  0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSTATC  0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSTATD  0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSTATE  0x00000000        0x2 ./Core/Src/bms.o
+ .data.WRPWM1   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDPWM1   0x00000000        0x2 ./Core/Src/bms.o
+ .data.WRPWM2   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDPWM2   0x00000000        0x2 ./Core/Src/bms.o
+ .data.CLRCELL  0x00000000        0x2 ./Core/Src/bms.o
+ .data.CLRAUX   0x00000000        0x2 ./Core/Src/bms.o
+ .data.CLRSPIN  0x00000000        0x2 ./Core/Src/bms.o
+ .data.CLRFLAG  0x00000000        0x2 ./Core/Src/bms.o
+ .data.CLRFC    0x00000000        0x2 ./Core/Src/bms.o
+ .data.CLOVUV   0x00000000        0x2 ./Core/Src/bms.o
+ .data.PLADC    0x00000000        0x2 ./Core/Src/bms.o
+ .data.PLAUT    0x00000000        0x2 ./Core/Src/bms.o
+ .data.PLCADC   0x00000000        0x2 ./Core/Src/bms.o
+ .data.PLSADC   0x00000000        0x2 ./Core/Src/bms.o
+ .data.PLAUX1   0x00000000        0x2 ./Core/Src/bms.o
+ .data.PLAUX2   0x00000000        0x2 ./Core/Src/bms.o
+ .data.WRCOMM   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDCOMM   0x00000000        0x2 ./Core/Src/bms.o
+ .data.STCOMM   0x00000000        0x2 ./Core/Src/bms.o
+ .data.MUTE     0x00000000        0x2 ./Core/Src/bms.o
+ .data.UNMUTE   0x00000000        0x2 ./Core/Src/bms.o
+ .data.RSTCC    0x00000000        0x2 ./Core/Src/bms.o
+ .data.SNAP     0x00000000        0x2 ./Core/Src/bms.o
+ .data.UNSNAP   0x00000000        0x2 ./Core/Src/bms.o
+ .data.SRST     0x00000000        0x2 ./Core/Src/bms.o
+ .data.RDSID    0x00000000        0x2 ./Core/Src/bms.o
+ .bss.mainboard
+                0x00000000      0x228 ./Core/Src/bms.o
+ .text.adbms_mainbaord_setup
+                0x00000000       0xfc ./Core/Src/bms.o
+ .text.tick_mainboard_timers
+                0x00000000       0x18 ./Core/Src/bms.o
+ .text.adbms_mainboard_loop
+                0x00000000       0x10 ./Core/Src/bms.o
+ .text.adbms_owc_loop
+                0x00000000       0x14 ./Core/Src/bms.o
+ .text.UpdateValues
+                0x00000000       0xdc ./Core/Src/bms.o
+ .text.CheckFaults
+                0x00000000       0xcc ./Core/Src/bms.o
+ .rodata        0x00000000       0x17 ./Core/Src/bms.o
+ .text.send_data_over_printf
+                0x00000000       0x2c ./Core/Src/bms.o
+ .text.send_data_over_USB
+                0x00000000       0x8c ./Core/Src/bms.o
+ .debug_info    0x00000000     0x1ac2 ./Core/Src/bms.o
+ .debug_abbrev  0x00000000      0x2e2 ./Core/Src/bms.o
+ .debug_aranges
+                0x00000000       0x58 ./Core/Src/bms.o
+ .debug_rnglists
+                0x00000000       0x41 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x456 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0xad8 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x22 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x5b ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x2a ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x94 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x43 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x34 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x57 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x9e ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x370 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x112 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x10 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x4a ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x34 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x10 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x58 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x8e ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x1c ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x185 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x146 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x103 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x6a ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x1df ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x3c ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x29 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x20 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x22 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x2ad ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x2e ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x2f ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x1c ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x22 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0xfb ./Core/Src/bms.o
+ .debug_macro   0x00000000     0x1011 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x11f ./Core/Src/bms.o
+ .debug_macro   0x00000000    0x1426d ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x6d ./Core/Src/bms.o
+ .debug_macro   0x00000000     0x369a ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x56 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x8bc ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x9e9 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x115 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x130 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0xa5 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x174 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x287 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x5f ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x236 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0xb5b ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x38b ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x176 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0xf9 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x40f ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x12c ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x21e ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x2e ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x127 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x7e ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x89 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x225 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x8ed ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x4d ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x293 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0xba ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x12d ./Core/Src/bms.o
+ .debug_macro   0x00000000       0xbe ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x19b ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x201 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0xa6 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x65 ./Core/Src/bms.o
+ .debug_macro   0x00000000      0x20f ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x95 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x10 ./Core/Src/bms.o
+ .debug_macro   0x00000000       0x4c ./Core/Src/bms.o
+ .debug_line    0x00000000      0xd80 ./Core/Src/bms.o
+ .debug_str     0x00000000    0xcee61 ./Core/Src/bms.o
+ .comment       0x00000000       0x44 ./Core/Src/bms.o
+ .debug_frame   0x00000000      0x104 ./Core/Src/bms.o
+ .ARM.attributes
+                0x00000000       0x34 ./Core/Src/bms.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .group         0x00000000        0xc ./Core/Src/bms_can.o
+ .text          0x00000000        0x0 ./Core/Src/bms_can.o
+ .data          0x00000000        0x0 ./Core/Src/bms_can.o
+ .bss           0x00000000        0x0 ./Core/Src/bms_can.o
+ .data.WRCFGA   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.WRCFGB   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCFGA   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCFGB   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCVA    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCVB    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCVC    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCVD    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCVE    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCVF    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDACA    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDACB    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDACC    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDACD    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDACE    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDACF    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSVA    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSVB    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSVC    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSVD    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSVE    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSVF    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDFCA    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDFCB    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDFCC    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDFCD    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDFCE    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDFCF    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDAUXA   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDAUXB   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDAUXC   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDAUXD   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDRAXA   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDRAXB   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDRAXC   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDRAXD   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSTATA  0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSTATB  0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSTATC  0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSTATD  0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSTATE  0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.WRPWM1   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDPWM1   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.WRPWM2   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDPWM2   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.CLRCELL  0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.CLRAUX   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.CLRSPIN  0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.CLRFLAG  0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.CLRFC    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.CLOVUV   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.PLADC    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.PLAUT    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.PLCADC   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.PLSADC   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.PLAUX1   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.PLAUX2   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.WRCOMM   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDCOMM   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.STCOMM   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.MUTE     0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.UNMUTE   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RSTCC    0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.SNAP     0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.UNSNAP   0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.SRST     0x00000000        0x2 ./Core/Src/bms_can.o
+ .data.RDSID    0x00000000        0x2 ./Core/Src/bms_can.o
+ .bss.adbms_can
+                0x00000000       0xec ./Core/Src/bms_can.o
+ .text.ADBMS_Initialize_Can
+                0x00000000       0xfc ./Core/Src/bms_can.o
+ .text.drive_can_loop
+                0x00000000       0x70 ./Core/Src/bms_can.o
+ .text.data_can_loop
+                0x00000000       0xb0 ./Core/Src/bms_can.o
+ .rodata        0x00000000       0x13 ./Core/Src/bms_can.o
+ .text.send_can_messages
+                0x00000000       0x3c ./Core/Src/bms_can.o
+ .text.populateBMS_SOC
+                0x00000000      0x108 ./Core/Src/bms_can.o
+ .text.populateBMS_Faults
+                0x00000000      0x1ec ./Core/Src/bms_can.o
+ .text.populateBMS_Status
+                0x00000000      0x168 ./Core/Src/bms_can.o
+ .text.populateBMS_VoltageMessages
+                0x00000000      0x100 ./Core/Src/bms_can.o
+ .text.populateBMS_TemperatureMessages
+                0x00000000       0xdc ./Core/Src/bms_can.o
+ .debug_info    0x00000000     0x1c5b ./Core/Src/bms_can.o
+ .debug_abbrev  0x00000000      0x2f5 ./Core/Src/bms_can.o
+ .debug_aranges
+                0x00000000       0x60 ./Core/Src/bms_can.o
+ .debug_rnglists
+                0x00000000       0x4a ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x446 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0xad8 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x22 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x5b ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x2a ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x94 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x43 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x34 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x57 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x9e ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x370 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x112 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x10 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x4a ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x34 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x10 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x58 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x8e ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x1c ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x185 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x146 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x103 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x6a ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x1df ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x3c ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x20 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x4c ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x16 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x29 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x22 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x2ad ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x2e ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x2f ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x1c ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x22 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0xfb ./Core/Src/bms_can.o
+ .debug_macro   0x00000000     0x1011 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x11f ./Core/Src/bms_can.o
+ .debug_macro   0x00000000    0x1426d ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x6d ./Core/Src/bms_can.o
+ .debug_macro   0x00000000     0x369a ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x56 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x8bc ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x9e9 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x115 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x130 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0xa5 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x174 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x287 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x5f ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x236 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0xb5b ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x38b ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x176 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0xf9 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x40f ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x12c ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x21e ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x2e ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x127 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x7e ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x89 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x225 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x8ed ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x4d ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x293 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0xba ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x12d ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0xbe ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x19b ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x201 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0xa6 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x65 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000      0x20f ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x95 ./Core/Src/bms_can.o
+ .debug_macro   0x00000000       0x10 ./Core/Src/bms_can.o
+ .debug_line    0x00000000      0xdde ./Core/Src/bms_can.o
+ .debug_str     0x00000000    0xceebd ./Core/Src/bms_can.o
+ .comment       0x00000000       0x44 ./Core/Src/bms_can.o
+ .debug_frame   0x00000000      0x170 ./Core/Src/bms_can.o
+ .ARM.attributes
+                0x00000000       0x34 ./Core/Src/bms_can.o
  .group         0x00000000        0xc ./Core/Src/current_driver.o
  .group         0x00000000        0xc ./Core/Src/current_driver.o
  .group         0x00000000        0xc ./Core/Src/current_driver.o
@@ -845,6 +1375,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x29 ./Core/Src/main.o
  .debug_macro   0x00000000       0x16 ./Core/Src/main.o
  .debug_macro   0x00000000       0x20 ./Core/Src/main.o
+ .debug_macro   0x00000000       0x65 ./Core/Src/main.o
+ .debug_macro   0x00000000      0x20f ./Core/Src/main.o
  .debug_macro   0x00000000       0x22 ./Core/Src/main.o
  .debug_macro   0x00000000       0xbe ./Core/Src/main.o
  .debug_macro   0x00000000      0x19b ./Core/Src/main.o
@@ -4845,6 +5377,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xa0 ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
  .debug_macro   0x00000000       0x65 ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
  .debug_macro   0x00000000      0x20f ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
+ .debug_macro   0x00000000       0x95 ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
  .group         0x00000000        0xc ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
  .group         0x00000000        0xc ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
  .group         0x00000000        0xc ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
@@ -5452,6 +5985,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x29 ./USB_DEVICE/App/usb_device.o
  .debug_macro   0x00000000       0x16 ./USB_DEVICE/App/usb_device.o
  .debug_macro   0x00000000       0x20 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x00000000       0xa6 ./USB_DEVICE/App/usb_device.o
  .debug_macro   0x00000000       0x65 ./USB_DEVICE/App/usb_device.o
  .debug_macro   0x00000000      0x20f ./USB_DEVICE/App/usb_device.o
  .debug_macro   0x00000000       0x95 ./USB_DEVICE/App/usb_device.o
@@ -5611,6 +6145,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x65 ./USB_DEVICE/App/usbd_cdc_if.o
  .debug_macro   0x00000000      0x20f ./USB_DEVICE/App/usbd_cdc_if.o
  .debug_macro   0x00000000       0x95 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x00000000       0x10 ./USB_DEVICE/App/usbd_cdc_if.o
  .group         0x00000000        0xc ./USB_DEVICE/App/usbd_desc.o
  .group         0x00000000        0xc ./USB_DEVICE/App/usbd_desc.o
  .group         0x00000000        0xc ./USB_DEVICE/App/usbd_desc.o
@@ -6325,6 +6860,8 @@ LOAD C:/ST/STM32CubeIDE_1.17.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
 LOAD C:/ST/STM32CubeIDE_1.17.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
 LOAD ./Core/Src/adbms_driver.o
 LOAD ./Core/Src/adbms_interface.o
+LOAD ./Core/Src/bms.o
+LOAD ./Core/Src/bms_can.o
 LOAD ./Core/Src/current_driver.o
 LOAD ./Core/Src/main.o
 LOAD ./Core/Src/nfr_can_driver.o
@@ -8208,7 +8745,7 @@ LOAD C:/ST/STM32CubeIDE_1.17.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_rnglists
                 0x000010d2       0xc9 ./USB_DEVICE/Target/usbd_conf.o
 
-.debug_macro    0x00000000    0x2562c
+.debug_macro    0x00000000    0x2526d
  .debug_macro   0x00000000      0x37a ./Core/Src/adbms_driver.o
  .debug_macro   0x0000037a      0xad8 ./Core/Src/adbms_driver.o
  .debug_macro   0x00000e52       0x22 ./Core/Src/adbms_driver.o
@@ -8289,63 +8826,58 @@ LOAD C:/ST/STM32CubeIDE_1.17.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x0001fcb1      0x3db ./Core/Src/main.o
  .debug_macro   0x0002008c       0xa0 ./Core/Src/main.o
  .debug_macro   0x0002012c       0x61 ./Core/Src/main.o
- .debug_macro   0x0002018d       0x65 ./Core/Src/main.o
- .debug_macro   0x000201f2      0x20f ./Core/Src/main.o
- .debug_macro   0x00020401      0x233 ./Core/Src/stm32f4xx_hal_msp.o
- .debug_macro   0x00020634      0x23d ./Core/Src/stm32f4xx_it.o
- .debug_macro   0x00020871      0x274 ./Core/Src/syscalls.o
- .debug_macro   0x00020ae5       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x00020af5       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x00020b05       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x00020b15       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x00020b25       0x1c ./Core/Src/syscalls.o
- .debug_macro   0x00020b41       0x52 ./Core/Src/syscalls.o
- .debug_macro   0x00020b93       0x22 ./Core/Src/syscalls.o
- .debug_macro   0x00020bb5       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x00020bc5       0x52 ./Core/Src/syscalls.o
- .debug_macro   0x00020c17       0xcf ./Core/Src/syscalls.o
- .debug_macro   0x00020ce6       0x1c ./Core/Src/syscalls.o
- .debug_macro   0x00020d02       0x3d ./Core/Src/syscalls.o
- .debug_macro   0x00020d3f       0x35 ./Core/Src/syscalls.o
- .debug_macro   0x00020d74      0x12c ./Core/Src/syscalls.o
- .debug_macro   0x00020ea0       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x00020eb0      0x242 ./Core/Src/syscalls.o
- .debug_macro   0x000210f2       0x1c ./Core/Src/syscalls.o
- .debug_macro   0x0002110e       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x0002111e      0x18a ./Core/Src/syscalls.o
- .debug_macro   0x000212a8       0x16 ./Core/Src/syscalls.o
- .debug_macro   0x000212be       0xce ./Core/Src/syscalls.o
- .debug_macro   0x0002138c      0x112 ./Core/Src/sysmem.o
- .debug_macro   0x0002149e      0x23c ./Core/Src/sysmem.o
- .debug_macro   0x000216da      0x224 ./Core/Src/system_stm32f4xx.o
- .debug_macro   0x000218fe       0xe6 ./Core/Src/thermistor_driver.o
- .debug_macro   0x000219e4      0x284 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
- .debug_macro   0x00021c68      0x225 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
- .debug_macro   0x00021e8d      0x233 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.o
- .debug_macro   0x000220c0      0x224 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
- .debug_macro   0x000222e4      0x22a ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o
- .debug_macro   0x0002250e      0x230 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.o
- .debug_macro   0x0002273e      0x224 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.o
- .debug_macro   0x00022962      0x248 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o
- .debug_macro   0x00022baa      0x233 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o
- .debug_macro   0x00022ddd      0x225 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o
- .debug_macro   0x00023002      0x224 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o
- .debug_macro   0x00023226      0x224 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o
- .debug_macro   0x0002344a      0x3c2 ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
- .debug_macro   0x0002380c       0x95 ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
- .debug_macro   0x000238a1      0x3a9 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
- .debug_macro   0x00023c4a      0x215 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
- .debug_macro   0x00023e5f      0x3b3 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
- .debug_macro   0x00024212      0x3af ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
- .debug_macro   0x000245c1      0x3e2 ./USB_DEVICE/App/usb_device.o
- .debug_macro   0x000249a3       0xa6 ./USB_DEVICE/App/usb_device.o
- .debug_macro   0x00024a49       0x22 ./USB_DEVICE/App/usb_device.o
- .debug_macro   0x00024a6b       0x16 ./USB_DEVICE/App/usb_device.o
- .debug_macro   0x00024a81      0x3cd ./USB_DEVICE/App/usbd_cdc_if.o
- .debug_macro   0x00024e4e       0x10 ./USB_DEVICE/App/usbd_cdc_if.o
- .debug_macro   0x00024e5e      0x3ec ./USB_DEVICE/App/usbd_desc.o
- .debug_macro   0x0002524a       0x1c ./USB_DEVICE/App/usbd_desc.o
- .debug_macro   0x00025266      0x3c6 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0002018d      0x233 ./Core/Src/stm32f4xx_hal_msp.o
+ .debug_macro   0x000203c0      0x23d ./Core/Src/stm32f4xx_it.o
+ .debug_macro   0x000205fd      0x274 ./Core/Src/syscalls.o
+ .debug_macro   0x00020871       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x00020881       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x00020891       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x000208a1       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x000208b1       0x1c ./Core/Src/syscalls.o
+ .debug_macro   0x000208cd       0x52 ./Core/Src/syscalls.o
+ .debug_macro   0x0002091f       0x22 ./Core/Src/syscalls.o
+ .debug_macro   0x00020941       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x00020951       0x52 ./Core/Src/syscalls.o
+ .debug_macro   0x000209a3       0xcf ./Core/Src/syscalls.o
+ .debug_macro   0x00020a72       0x1c ./Core/Src/syscalls.o
+ .debug_macro   0x00020a8e       0x3d ./Core/Src/syscalls.o
+ .debug_macro   0x00020acb       0x35 ./Core/Src/syscalls.o
+ .debug_macro   0x00020b00      0x12c ./Core/Src/syscalls.o
+ .debug_macro   0x00020c2c       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x00020c3c      0x242 ./Core/Src/syscalls.o
+ .debug_macro   0x00020e7e       0x1c ./Core/Src/syscalls.o
+ .debug_macro   0x00020e9a       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x00020eaa      0x18a ./Core/Src/syscalls.o
+ .debug_macro   0x00021034       0x16 ./Core/Src/syscalls.o
+ .debug_macro   0x0002104a       0xce ./Core/Src/syscalls.o
+ .debug_macro   0x00021118      0x112 ./Core/Src/sysmem.o
+ .debug_macro   0x0002122a      0x23c ./Core/Src/sysmem.o
+ .debug_macro   0x00021466      0x224 ./Core/Src/system_stm32f4xx.o
+ .debug_macro   0x0002168a       0xe6 ./Core/Src/thermistor_driver.o
+ .debug_macro   0x00021770      0x284 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
+ .debug_macro   0x000219f4      0x225 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
+ .debug_macro   0x00021c19      0x233 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.o
+ .debug_macro   0x00021e4c      0x224 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
+ .debug_macro   0x00022070      0x22a ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o
+ .debug_macro   0x0002229a      0x230 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.o
+ .debug_macro   0x000224ca      0x224 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.o
+ .debug_macro   0x000226ee      0x248 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o
+ .debug_macro   0x00022936      0x233 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o
+ .debug_macro   0x00022b69      0x225 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o
+ .debug_macro   0x00022d8e      0x224 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o
+ .debug_macro   0x00022fb2      0x224 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o
+ .debug_macro   0x000231d6      0x3c2 ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
+ .debug_macro   0x00023598      0x3a9 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
+ .debug_macro   0x00023941      0x215 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
+ .debug_macro   0x00023b56      0x3b3 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
+ .debug_macro   0x00023f09      0x3af ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
+ .debug_macro   0x000242b8      0x3e2 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0002469a       0x22 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x000246bc       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x000246d2      0x3cd ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x00024a9f      0x3ec ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x00024e8b       0x1c ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x00024ea7      0x3c6 ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_line     0x00000000    0x1d207
  .debug_line    0x00000000      0xf67 ./Core/Src/adbms_driver.o

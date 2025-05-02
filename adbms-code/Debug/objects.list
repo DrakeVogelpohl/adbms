@@ -1,5 +1,7 @@
 "./Core/Src/adbms_driver.o"
 "./Core/Src/adbms_interface.o"
+"./Core/Src/bms.o"
+"./Core/Src/bms_can.o"
 "./Core/Src/current_driver.o"
 "./Core/Src/main.o"
 "./Core/Src/nfr_can_driver.o"
