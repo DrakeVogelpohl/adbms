@@ -182,9 +182,9 @@ void ADBMS_WakeUP_ICs()
     for(uint8_t i = 0; i < NUM_CHIPS; i++){
         // Blocking Transmit the msg
     	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-    	HAL_Delay(4);
+    	HAL_Delay(1);
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-        HAL_Delay(4);
+        HAL_Delay(1);
     }
 }
 
@@ -268,7 +268,7 @@ bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf,
             dataBuf[cic * DATA_LEN + cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
         }
         uint16_t rx_pec = (uint16_t)(((rx_dataBuf[DATA_LEN + (DATA_LEN+PEC_LEN)*cic] & 0x03) << 8) | rx_dataBuf[DATA_LEN + 1 + (DATA_LEN+PEC_LEN)*cic]);
-        uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * DATA_LEN));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
+        uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * (DATA_LEN + PEC_LEN)));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
         pec_error |= (rx_pec != calc_pec);
     }
 

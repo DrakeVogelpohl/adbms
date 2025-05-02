@@ -1,4 +1,4 @@
-#include "adbms_update_values.h"
+#include "adbms_interface.h"
 
 void ADBMS_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi)
 {
@@ -57,7 +57,7 @@ void ADBMS_UpdateTemps(adbms_ *adbms)
 {
     // get temps from ADBMS
     bool pec = 0;
-    ADBMS_WakeUP_ICs(adbms->ICs.hspi);
+    ADBMS_WakeUP_ICs();
     pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXA, (adbms->ICs.aux + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
     pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXB, (adbms->ICs.aux + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
     pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXC, (adbms->ICs.aux + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
@@ -164,12 +164,10 @@ void ADBMS_CalculateValues_Temps(adbms_ *adbms)
                 float curr_temp = getTemp(raw_temp_voltage, vref);
                 adbms->temperatures[cic*NUM_TEMPS_CHIP + creg_grp*DATA_LEN/2 + cbyte/2 - 2] = curr_temp;  // -2 because offset for skipped temps
                 total_temp += curr_temp;
-                if (curr_temp > adbms->max_temp){
+                if (curr_temp > adbms->max_temp)
                     adbms->max_temp = curr_temp;
-                }
-                if (curr_temp < adbms->min_temp){
+                if (curr_temp < adbms->min_temp)
                     adbms->min_temp = curr_temp;
-                }
             }
         }
     }
