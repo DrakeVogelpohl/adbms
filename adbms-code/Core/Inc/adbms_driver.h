@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
 #include "adbms_cmd.h"
+#include "adbms2950_cmd.h"
 #include "bms_system_prams.h"
 
 // TODO: Change this value
@@ -30,6 +31,12 @@ typedef struct
     uint8_t aux[AUX_REG_GRP * NUM_CHIPS * DATA_LEN];
 
 } adbms6830_ICs;
+
+typedef struct {
+  uint8_t vbat[NUM_CHIPS * DATA_LEN];
+  uint8_t current[NUM_CHIPS * DATA_LEN];
+
+} adbms2950;
 
 typedef struct
 {
@@ -90,6 +97,7 @@ uint16_t Pec10_Calc(bool isRxCmd, int len, uint8_t *data);
 
 uint16_t Set_UnderOver_Voltage_Threshold(float voltage);
 float ADBMS_getVoltage(int data);
+float ADBMS2950_getVoltage(int data);
 
 void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer);
 void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t *cfg_b_tx_buffer);

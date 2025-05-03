@@ -158,6 +158,13 @@ float ADBMS_getVoltage(int data)
     return voltage_float;
 }
 
+float ADBMS2950_getVoltage(int data)
+{
+  float voltage;
+  voltage = 100e-6 * (int16_t)data; /* Interpreting as 16-bit to be sure of length so signed works */
+  return voltage;
+}
+
 void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer)
 {
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)

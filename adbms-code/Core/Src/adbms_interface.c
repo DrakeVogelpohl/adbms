@@ -72,6 +72,16 @@ void ADBMS_UpdateTemps(adbms_ *adbms)
     ADBMS_CalculateValues_Temps(adbms);
 }
 
+void ADBMS2950_UpdateVoltages(adbms_ *adbms)
+{
+    bool pec = 0;
+    ADBMS_WakeUP_ICs();
+    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDVB, adbms->adbms2950.vbat, adbms->ICs.spi_dataBuf);
+    adbms->ad2950_voltage_pec_failure = pec;
+
+    ADBMS2950_UpdateVoltages(adbms);
+}
+
 void ADBMS_CalculateValues_Voltages(adbms_ *adbms)
 {
     // reset current pec failures if there is no current failure
@@ -119,6 +129,36 @@ void ADBMS_CalculateValues_Voltages(adbms_ *adbms)
 
     // calculate the avg voltage
     adbms->avg_v = adbms->total_v / (NUM_CHIPS * NUM_VOLTAGES_CHIP);
+}
+
+void ADBMS2950_CalculateValues_Vbat(adbms_ *adbms)
+{
+        // reset current pec failures if there is no current failure
+        if(!adbms->voltage_pec_failure && !adbms->temp_pec_failure && !adbms->status_reg_pec_failure && !adbms->ad2950_voltage_pec_failure) { 
+            adbms->current_pec_failures = 0;
+        }
+    
+        // if there is a pec failure, process it and don't update values
+        if(adbms->voltage_pec_failure) {
+            adbms->current_pec_failures += adbms->voltage_pec_failure;
+            if(adbms->current_pec_failures > PEC_FAILURE_THRESHOLD) {
+                adbms->pec_fault_ = 1;
+            }else {
+                adbms->pec_fault_ = 0;
+            }
+            return;
+        }
+
+        adbms->vbat1 = 0;
+        adbms->vbat2 = 0;
+
+        // we assume adbms2950 is the first chip in the daisy chain
+        uint16_t vbat1_raw_val = ((uint16_t)(adbms->adbms2950.vbat[3] << 8)) | adbms->adbms2950.vbat[2];
+        uint16_t vbat2_raw_val = ((uint16_t)(adbms->adbms2950.vbat[5] << 8)) | adbms->adbms2950.vbat[4];
+
+        adbms->vbat1 = ADBMS_getVoltage(vbat1_raw_val);
+        adbms->vbat2 = ADBMS_getVoltage(vbat2_raw_val);
+    
 }
 
 void ADBMS_CalculateValues_Temps(adbms_ *adbms)

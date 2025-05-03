@@ -10,6 +10,7 @@
 typedef struct
 {
     adbms6830_ICs ICs;
+    adbms2950 adbms2950;
 
     cfa_ cfa[NUM_CHIPS];
     cfb_ cfb[NUM_CHIPS];
@@ -24,6 +25,8 @@ typedef struct
     float max_v;
     float min_v;
     float avg_v;
+    float vbat1;
+    float vbat2;
 
     float max_temp;
     float min_temp;
@@ -38,6 +41,7 @@ typedef struct
     bool pec_fault_;
 
     bool voltage_pec_failure;
+    bool ad2950_voltage_pec_failure;
     bool temp_pec_failure;
     bool status_reg_pec_failure;
     float current_owc_failures;
