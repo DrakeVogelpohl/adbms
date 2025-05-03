@@ -1,9 +1,9 @@
 ../Core/Src/bms_can.c:5:6:BMS_Initialize_Can	16	static
-../Core/Src/bms_can.c:53:6:drive_can_loop	8	static
-../Core/Src/bms_can.c:70:6:data_can_loop	16	static
-../Core/Src/bms_can.c:91:9:send_can_messages	32	static
-../Core/Src/bms_can.c:105:6:populateBMS_SOC	176	static
-../Core/Src/bms_can.c:116:6:populateBMS_Faults	272	static
-../Core/Src/bms_can.c:130:6:populateBMS_Status	240	static
-../Core/Src/bms_can.c:145:6:populateBMS_VoltageMessages	280	static
-../Core/Src/bms_can.c:156:6:populateBMS_TemperatureMessages	280	static
+../Core/Src/bms_can.c:53:9:send_can_messages	32	static
+../Core/Src/bms_can.c:67:6:drive_can_loop	8	static
+../Core/Src/bms_can.c:84:6:data_can_loop	16	static
+../Core/Src/bms_can.c:103:6:populateBMS_SOC	176	static
+../Core/Src/bms_can.c:114:6:populateBMS_Faults	272	static
+../Core/Src/bms_can.c:128:6:populateBMS_Status	240	static
+../Core/Src/bms_can.c:143:6:populateBMS_VoltageMessages	280	static
+../Core/Src/bms_can.c:154:6:populateBMS_TemperatureMessages	280	static

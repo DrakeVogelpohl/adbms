@@ -50,6 +50,20 @@ void BMS_Initialize_Can(mainboard_ *mainboard)
 	bms_can.TxHeaderTemperatures_.DLC = 8;
 }
 
+uint8_t send_can_messages(CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *TxHeader, uint8_t *data, uint32_t *TxMailBox)
+{
+	// send msg
+	HAL_StatusTypeDef msg_status = HAL_CAN_AddTxMessage(hcan, TxHeader, data, TxMailBox);
+
+	if (msg_status != HAL_OK)
+	{
+		// Error handling
+//		printf("CAN Message failed\n");
+		return 1;
+	}
+	return 0;
+}
+
 void drive_can_loop()
 {
 	// printf("Sending Drive CAN\n");
@@ -69,8 +83,6 @@ void drive_can_loop()
 
 void data_can_loop()
 {
-	// printf("Sending Data CAN\n");
-
 	// send voltage messages
 	bms_can.TxHeaderVoltages_.StdId = 0x153; // set the message id for next iteration
 	for(int i = 0; i < NUM_DATA_CAN_VOLTAGE_MSGS; i++) {
@@ -88,27 +100,13 @@ void data_can_loop()
 	}
 }
 
-uint8_t send_can_messages(CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *TxHeader, uint8_t *data, uint32_t *TxMailBox)
-{
-	// send msg
-	HAL_StatusTypeDef msg_status = HAL_CAN_AddTxMessage(hcan, TxHeader, data, TxMailBox);
-
-	if (msg_status != HAL_OK)
-	{
-		// Error handling
-		printf("CAN Message failed\n");
-		return 1;
-	}
-	return 0;
-}
-
 void populateBMS_SOC(uint8_t *data)
 {
 	RawCanSignal signals[5];
 	populateRawMessage(&signals[0], 0, 12, 0.1, 0);									  // max discharge current
 	populateRawMessage(&signals[1], 0, 12, 0.1, 0);									  // max regen current
-	populateRawMessage(&signals[2], bms_can.mainboard->adbms.total_v, 16, 0.01, 0); // battery voltage
-	populateRawMessage(&signals[3], bms_can.mainboard->adbms.avg_temp, 8, 1, -40);  // battery temp
+	populateRawMessage(&signals[2], bms_can.mainboard->adbms.total_v, 16, 0.01, 0);   // battery voltage
+	populateRawMessage(&signals[3], bms_can.mainboard->adbms.avg_temp, 8, 1, -40);    // battery temp
 	populateRawMessage(&signals[4], bms_can.mainboard->current, 16, 0.01, 0);		  // battery current
 	encodeSignals(data, 5, signals[0], signals[1], signals[2], signals[3], signals[4]);
 }
@@ -133,8 +131,8 @@ void populateBMS_Status(uint8_t *data)
 
 	populateRawMessage(&signals[0], 0, 8, 1, 0);		 // BMS State
 	populateRawMessage(&signals[1], bms_can.mainboard->imd_status, 8, 1, 0);		 // IMD State
-	populateRawMessage(&signals[2], bms_can.mainboard->adbms.max_temp, 8, 1, -40); // max cell temp
-	populateRawMessage(&signals[3], bms_can.mainboard->adbms.min_temp, 8, 1, -40); // min cell temp
+	populateRawMessage(&signals[2], bms_can.mainboard->adbms.max_temp, 8, 1, -40);   // max cell temp
+	populateRawMessage(&signals[3], bms_can.mainboard->adbms.min_temp, 8, 1, -40);   // min cell temp
 	populateRawMessage(&signals[4], bms_can.mainboard->adbms.max_v, 8, 0.012, 2);	 // max cell voltage
 	populateRawMessage(&signals[5], bms_can.mainboard->adbms.min_v, 8, 0.012, 2);	 // min cell voltage
 	populateRawMessage(&signals[6], 0, 8, 0.5, 0);									 // BMS SOC
