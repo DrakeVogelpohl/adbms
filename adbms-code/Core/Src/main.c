@@ -34,7 +34,8 @@ int _write(int le, char *ptr, int len)
 	return len;
 }
 
-#include "adbms_interface.h"
+#include "bms.h"
+#include "bms_system_prams.h"
 
 /* USER CODE END Includes */
 
@@ -124,8 +125,11 @@ int main(void)
   // turn gpio1 on
   HAL_Delay(5);
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
+
+  // init mainboard
+  bms_mainbaord_setup(&hspi1, &hadc1, &hcan1, &hcan2);
+
   printf("Board Starting...\n");
-  ADBMS_Initialize(&adbms, &hspi1);
 
   bool bms_fault;
   /* USER CODE END 2 */
@@ -134,29 +138,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    tick_mainboard_timers();
+    
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    ADBMS_UpdateVoltages(&adbms);
-    ADBMS_UpdateTemps(&adbms);
-    UpdateOWCFault(&adbms);
-	  UpdateADInternalFault(&adbms);
-
-	  bms_fault = bms_fault
-                    || adbms.overvoltage_fault_
-                    || adbms.undervoltage_fault_
-                    || adbms.overtemperature_fault_
-                    || adbms.undertemperature_fault_
-                    || adbms.openwire_fault_
-                    || adbms.openwire_temp_fault_
-                    || adbms.pec_fault_;
-    // write BMS_Status - healthy is high
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, !bms_fault);
-
-    if(ENABLE_PRINTF_DEBUG_COMMS) ADBMS_Print_Vals(&adbms);
-    if(ENABLE_USB_COMMS) ADBMS_USB_Serial_Print_Vals(&adbms);
-
-    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }

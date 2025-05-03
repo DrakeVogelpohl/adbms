@@ -33,16 +33,20 @@ typedef struct
 
 	CAN_TxHeaderTypeDef TxHeaderTemperatures_;
 	uint8_t txDataTemperatures_[8];
-} adbms_can_;
+} bms_can_;
 
-void ADBMS_Initialize_Can(mainboard_ *mainboard);
+void BMS_Initialize_Can(mainboard_ *mainboard);
 
 uint8_t send_can_messages(CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *TxHeader, uint8_t *data, uint32_t *TxMailBox);
-
-// void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 
 // CAN Loops
 void drive_can_loop();
 void data_can_loop();
+
+void populateBMS_SOC(uint8_t *data);
+void populateBMS_Faults(uint8_t *data);
+void populateBMS_Status(uint8_t *data);
+void populateBMS_VoltageMessages(uint8_t *data, int volt_msg_num);
+void populateBMS_TemperatureMessages(uint8_t *data, int temp_num);
 
 #endif // ADBMS_CAN_H

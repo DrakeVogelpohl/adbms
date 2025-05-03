@@ -4,6 +4,7 @@
 #include "adbms_interface.h"
 #include "current_driver.h"
 #include "virtual_timer.h"
+#include "stm32f4xx_it.h"
 #include "stm32f4xx_hal.h"
 #include "usb_device.h"
 #include "usbd_cdc_if.h"

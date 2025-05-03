@@ -2,7 +2,7 @@
 
 mainboard_ mainboard;
 
-void adbms_mainbaord_setup(SPI_HandleTypeDef *hspi, ADC_HandleTypeDef *hadc, CAN_HandleTypeDef *hcan1, CAN_HandleTypeDef *hcan2)
+void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, ADC_HandleTypeDef *hadc, CAN_HandleTypeDef *hcan1, CAN_HandleTypeDef *hcan2)
 {
 	// initialize handles
 	mainboard.hadc = hadc;
@@ -16,10 +16,10 @@ void adbms_mainbaord_setup(SPI_HandleTypeDef *hspi, ADC_HandleTypeDef *hadc, CAN
 	ADBMS_Initialize(&mainboard.adbms, hspi);
 
 	// initialize CAN;
-	ADBMS_Initialize_Can(&mainboard);
+	BMS_Initialize_Can(&mainboard);
 
 	// initialize the timers: adbms_mainboard_loop, drive_can, data_can
-	timer_ t_adbms = CreateTimer(500, adbms_mainboard_loop);
+	timer_ t_adbms = CreateTimer(500, bms_mainboard_loop);
 	timer_ t_adbms_owc_check = CreateTimer(30000, adbms_owc_loop);
 	timer_ t_drive_can = CreateTimer(100, drive_can_loop);
 	timer_ t_data_can = CreateTimer(1000, data_can_loop);
@@ -35,7 +35,7 @@ void tick_mainboard_timers()
 }
 
 // ADBMS loop that gets ticked
-void adbms_mainboard_loop()
+void bms_mainboard_loop()
 {
 	UpdateValues();
 	CheckFaults();
@@ -99,7 +99,7 @@ void send_data_over_printf()
 	ADBMS_Print_Vals(&mainboard.adbms);
 
 	// Mainboard Prints
-	printf("Time: %d\n", HAL_GetTick() - mainboard.start_time);
+	printf("Time: %d\n", (int)(HAL_GetTick() - mainboard.start_time));
 //	printf("BMS fault: %d\n", mainboard.bms_fault);
 //	printf("External fault: %d\n", mainboard.external_fault);
 //	printf("Current: %f\n", mainboard.current);
@@ -118,7 +118,7 @@ void send_data_over_USB()
     int len = 0;
     int remaining = BUFFER_SIZE;
 
-    len += snprintf(logBuf + len, remaining, "Time: %d\r\n", HAL_GetTick() - mainboard.start_time);
+    len += snprintf(logBuf + len, remaining, "Time: %d\r\n", (int)(HAL_GetTick() - mainboard.start_time));
     remaining = BUFFER_SIZE - len;
 
 //	len += snprintf(logBuf + len, remaining, "Current: %f\r\n", mainboard.current);

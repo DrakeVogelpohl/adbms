@@ -1,4 +1,4 @@
-../Core/Src/bms_can.c:5:6:ADBMS_Initialize_Can	1
+../Core/Src/bms_can.c:5:6:BMS_Initialize_Can	1
 ../Core/Src/bms_can.c:53:6:drive_can_loop	1
 ../Core/Src/bms_can.c:70:6:data_can_loop	3
 ../Core/Src/bms_can.c:91:9:send_can_messages	2
