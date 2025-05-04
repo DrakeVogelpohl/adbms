@@ -98,6 +98,7 @@ uint16_t Pec10_Calc(bool isRxCmd, int len, uint8_t *data);
 uint16_t Set_UnderOver_Voltage_Threshold(float voltage);
 float ADBMS_getVoltage(int data);
 float ADBMS2950_getVoltage(int data);
+float ADBMS2950_getCurrent(uint32_t data);
 
 void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer);
 void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t *cfg_b_tx_buffer);

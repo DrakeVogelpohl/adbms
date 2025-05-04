@@ -27,6 +27,8 @@ typedef struct
     float avg_v;
     float vbat1;
     float vbat2;
+    float i1;
+    float i2;
 
     float max_temp;
     float min_temp;
@@ -42,6 +44,7 @@ typedef struct
 
     bool voltage_pec_failure;
     bool ad2950_voltage_pec_failure;
+    bool ad2950_current_pec_failure;
     bool temp_pec_failure;
     bool status_reg_pec_failure;
     float current_owc_failures;
