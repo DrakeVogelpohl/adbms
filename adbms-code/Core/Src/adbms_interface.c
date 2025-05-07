@@ -98,6 +98,8 @@ void ADBMS_CalculateValues_Voltages(adbms_ *adbms)
     adbms->total_v = 0;
     adbms->max_v = 0;
     adbms->min_v = FLT_MAX;
+
+    // cic set to 1 since first chip is ADBMS 2950
     for (uint8_t cic = 1; cic < NUM_CHIPS; cic++)
     {
         uint8_t num_reg_grps = NUM_VOLTAGES_CHIP / VOLTAGES_REG_GRP + (NUM_VOLTAGES_CHIP % VOLTAGES_REG_GRP != 0);
@@ -405,7 +407,7 @@ void ADBMS_Print_Vals(adbms_ *adbms)
 
 void ADBMS_USB_Serial_Print_Vals(adbms_ *adbms)
 {
-    #define BUFFER_SIZE 3500  // Increase this if more snprintfs are added
+    #define BUFFER_SIZE 4000  // Increase this if more snprintfs are added
     char logBuf[BUFFER_SIZE];
     int len = 0;
     int remaining = BUFFER_SIZE;
@@ -424,6 +426,18 @@ void ADBMS_USB_Serial_Print_Vals(adbms_ *adbms)
     remaining = BUFFER_SIZE - len;
 
     len += snprintf(logBuf + len, remaining, "max-min: %f\r\n", adbms->max_v - adbms->min_v);
+    remaining = BUFFER_SIZE - len;
+
+    len += snprintf(logBuf + len, remaining, "adbms2950 vbat1: %f\t", adbms->vbat1);
+    remaining = BUFFER_SIZE - len;
+
+    len += snprintf(logBuf + len, remaining, "adbms2950 vbat2: %f\t", adbms->vbat2);
+    remaining = BUFFER_SIZE - len;
+
+    len += snprintf(logBuf + len, remaining, "adbms2950 i1: %f\t", adbms->i1);
+    remaining = BUFFER_SIZE - len;
+
+    len += snprintf(logBuf + len, remaining, "adbms2950 i2: %f\t", adbms->i2);
     remaining = BUFFER_SIZE - len;
 
     for (int i = 0; i < NUM_CHIPS; i++)
