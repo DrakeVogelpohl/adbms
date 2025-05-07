@@ -32,12 +32,6 @@ typedef struct
 
 } adbms6830_ICs;
 
-typedef struct {
-  uint8_t vbat[NUM_CHIPS * DATA_LEN];
-  uint8_t current[NUM_CHIPS * DATA_LEN];
-
-} adbms2950;
-
 typedef struct
 {
   uint8_t       refon   :1;

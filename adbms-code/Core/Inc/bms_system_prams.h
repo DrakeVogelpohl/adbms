@@ -4,7 +4,7 @@
 // Note for NFR25 we precharged across the negative contactor. 
 // This might change in future years, if so change which contactors are closed accoringly in the FSM 
 
-#define NUM_CHIPS 2						/* Number of ICs 					*/
+#define NUM_CHIPS (10 + 1)				/* Number of ICs: 10 6830s + 1 2950 */
 #define NUM_VOLTAGES_CHIP 14			/* Number of Cells to read per IC 	*/
 #define NUM_TEMPS_CHIP 8				/* Number of Temps to read per IC 	*/
 
