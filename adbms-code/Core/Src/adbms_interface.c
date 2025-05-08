@@ -373,10 +373,10 @@ void ADBMS_Print_Vals(adbms_ *adbms)
     printf("min v: %f\t", adbms->min_v);
     printf("avg v: %f\t", adbms->avg_v);
     printf("max-min: %f\n", adbms->max_v - adbms->min_v);
-    printf(logBuf + len, remaining, "adbms2950 vbat1: %f\t", adbms->vbat1);
-    printf(logBuf + len, remaining, "adbms2950 vbat2: %f\t", adbms->vbat2);
-    printf(logBuf + len, remaining, "adbms2950 i1: %f\t", adbms->i1);
-    printf(logBuf + len, remaining, "adbms2950 i2: %f\t", adbms->i2);
+    printf("adbms2950 vbat1: %f\t", adbms->vbat1);
+    printf("adbms2950 vbat2: %f\t", adbms->vbat2);
+    printf("adbms2950 i1: %f\t", adbms->i1);
+    printf("adbms2950 i2: %f\t", adbms->i2);
 
     // print every voltage
     for (int i = 0; i < NUM_CHIPS; i++)
