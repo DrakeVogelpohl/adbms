@@ -14,5 +14,11 @@
         "bms_can.h": "c",
         "nfr_can_driver.h": "c",
         "stm32f4xx_hal.h": "c"
+    },
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
     }
 }
