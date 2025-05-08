@@ -190,8 +190,8 @@ void ADBMS2950_CalculateValues_Vbat(adbms_ *adbms)
         adbms->vbat2 = 0;
 
         // we assume adbms2950 is the first chip in the daisy chain
-        uint16_t vbat1_raw_val = ((uint16_t)(adbms->adbms2950.vbat[3 + (DATA_LEN*NUM_CHIPS)] << 8)) | adbms->adbms2950.vbat[2 + (DATA_LEN*NUM_CHIPS)];
-        uint16_t vbat2_raw_val = ((uint16_t)(adbms->adbms2950.vbat[5 + (DATA_LEN*NUM_CHIPS)] << 8)) | adbms->adbms2950.vbat[4 + (DATA_LEN*NUM_CHIPS)];
+        uint16_t vbat1_raw_val = ((uint16_t)(adbms->ICs.cell[3 + (DATA_LEN*NUM_CHIPS)] << 8)) | adbms->ICs.cell[2 + (DATA_LEN*NUM_CHIPS)];
+        uint16_t vbat2_raw_val = ((uint16_t)(adbms->ICs.cell[5 + (DATA_LEN*NUM_CHIPS)] << 8)) | adbms->ICs.cell[4 + (DATA_LEN*NUM_CHIPS)];
 
         adbms->vbat1 = ADBMS2950_getVoltage(vbat1_raw_val);
         adbms->vbat2 = ADBMS2950_getVoltage(vbat2_raw_val);
@@ -204,8 +204,8 @@ void ADBMS2950_CalculateValues_Current(adbms_ *adbms)
         adbms->i2 = 0;
 
         // we assume adbms2950 is the first chip in the daisy chain
-        uint32_t i1_raw_val = ((uint32_t)(adbms->adbms2950.current[2]) << 16) | ((uint32_t)(adbms->adbms2950.current[1]) << 8) | adbms->adbms2950.current[0];
-        uint32_t i2_raw_val = ((uint32_t)(adbms->adbms2950.current[5]) << 16) | ((uint32_t)(adbms->adbms2950.current[4]) << 8) | adbms->adbms2950.current[3];
+        uint32_t i1_raw_val = ((uint32_t)(adbms->ICs.cell[2]) << 16) | ((uint32_t)(adbms->ICs.cell[1]) << 8) | adbms->ICs.cell[0];
+        uint32_t i2_raw_val = ((uint32_t)(adbms->ICs.cell[5]) << 16) | ((uint32_t)(adbms->ICs.cell[4]) << 8) | adbms->ICs.cell[3];
 
         adbms->i1 = ADBMS2950_UpdateCurrent(i1_raw_val);
         adbms->i2 = ADBMS2950_UpdateCurrent(i2_raw_val);
