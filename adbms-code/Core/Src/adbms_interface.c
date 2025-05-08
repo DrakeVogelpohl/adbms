@@ -207,8 +207,8 @@ void ADBMS2950_CalculateValues_Current(adbms_ *adbms)
         uint32_t i1_raw_val = ((uint32_t)(adbms->ICs.cell[2]) << 16) | ((uint32_t)(adbms->ICs.cell[1]) << 8) | adbms->ICs.cell[0];
         uint32_t i2_raw_val = ((uint32_t)(adbms->ICs.cell[5]) << 16) | ((uint32_t)(adbms->ICs.cell[4]) << 8) | adbms->ICs.cell[3];
 
-        adbms->i1 = ADBMS2950_UpdateCurrent(i1_raw_val);
-        adbms->i2 = ADBMS2950_UpdateCurrent(i2_raw_val);
+        adbms->i1 = ADBMS2950_getCurrent(i1_raw_val);
+        adbms->i2 = ADBMS2950_getCurrent(i2_raw_val);
 }
 
 void UpdateADInternalFault(adbms_ *adbms)
