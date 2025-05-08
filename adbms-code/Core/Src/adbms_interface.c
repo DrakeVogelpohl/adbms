@@ -150,7 +150,9 @@ void ADBMS_CalculateValues_Temps(adbms_ *adbms)
     adbms->max_temp = 0;
     adbms->min_temp = FLT_MAX;
     bool openwire_temp_fault = false;
-    for (int cic = 0; cic < NUM_CHIPS; cic++)
+
+    // cic set to 1 since first chip is ADBMS 2950
+    for (int cic = 1; cic < NUM_CHIPS; cic++)
     {
         for (uint8_t creg_grp = 0; creg_grp < AUX_REG_GRP; creg_grp++)
         {
@@ -233,7 +235,8 @@ void cellBalanceOn(adbms_ *adbms)
     // Turn on CB indication LED
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
 
-    for (int cic = 0; cic < NUM_CHIPS; cic++)
+    // cic set to 1 since first chip is ADBMS 2950
+    for (int cic = 1; cic < NUM_CHIPS; cic++)
     {
         uint16_t dcc = 0;
         for (int cvoltage = 0; cvoltage < NUM_VOLTAGES_CHIP; cvoltage++)
