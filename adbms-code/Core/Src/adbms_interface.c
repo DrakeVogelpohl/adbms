@@ -24,16 +24,16 @@ void ADBMS_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi)
     ADBMS_Set_ADAX(adbms->adax, &adbms->ICs.adax);
 
     // Write Config 
-    ADBMS_WakeUP_ICs();
-    ADBMS_WakeUP_ICs();
-    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGA, adbms->ICs.cfg_a, adbms->ICs.spi_dataBuf);
-    ADBMS_WakeUP_ICs();
-    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
+    ADBMS_WakeUP_ICs_Polling();
+    ADBMS_WakeUP_ICs_Polling();
+    ADBMS_Write_Data_RegGrp_Polling(adbms->ICs.hspi, WRCFGA, adbms->ICs.cfg_a, adbms->ICs.spi_dataBuf);
+    ADBMS_WakeUP_ICs_Polling();
+    ADBMS_Write_Data_RegGrp_Polling(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
 
     // Turn on sensing
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adcv);
+    ADBMS_Write_CMD_Polling(adbms->ICs.hspi, adbms->ICs.adcv);
     HAL_Delay(1);
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adax);
+    ADBMS_Write_CMD_Polling(adbms->ICs.hspi, adbms->ICs.adax);
     HAL_Delay(8); // ADCs are updated at their conversion rate of 1ms
 }
 
@@ -41,13 +41,13 @@ void ADBMS_UpdateVoltages(adbms_ *adbms)
 {
     // get voltages from ADBMS
     bool pec = 0;
-    ADBMS_WakeUP_ICs();
+    ADBMS_WakeUP_ICs_Polling();
 
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVA, (adbms->ICs.cell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVA, (adbms->ICs.cell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
     adbms->voltage_pec_failure = pec;
 
     // calulate new values with the updated raw ones
@@ -58,15 +58,15 @@ void ADBMS_UpdateTemps(adbms_ *adbms)
 {
     // get temps from ADBMS
     bool pec = 0;
-    ADBMS_WakeUP_ICs();
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXA, (adbms->ICs.aux + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXB, (adbms->ICs.aux + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXC, (adbms->ICs.aux + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDAUXD, (adbms->ICs.aux + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    ADBMS_WakeUP_ICs_Polling();
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXA, (adbms->ICs.aux + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXB, (adbms->ICs.aux + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXC, (adbms->ICs.aux + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXD, (adbms->ICs.aux + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
     adbms->temp_pec_failure = pec;
 
     // need to start new poll for conversion before next read (no continous mode)
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adax);
+    ADBMS_Write_CMD_Polling(adbms->ICs.hspi, adbms->ICs.adax);
 
     // calulate new values with the updated raw ones
     ADBMS_CalculateValues_Temps(adbms);
@@ -215,7 +215,7 @@ void cellBalanceOn(adbms_ *adbms)
         // adbms->cfb[cic].dcc = 0xF;   // for testing
     }
     ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
-    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
+    ADBMS_Write_Data_RegGrp_Polling(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
 }
 
 void cellBalanceOff(adbms_ *adbms)
@@ -228,30 +228,30 @@ void cellBalanceOff(adbms_ *adbms)
         adbms->cfb[cic].dcc = 0;
     }
     ADBMS_Set_Config_B(adbms->cfb, adbms->ICs.cfg_b);
-    ADBMS_Write_Data(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
+    ADBMS_Write_Data_RegGrp_Polling(adbms->ICs.hspi, WRCFGB, adbms->ICs.cfg_b, adbms->ICs.spi_dataBuf);
 }
 
 void UpdateOWCFault(adbms_ *adbms)
 {
     // check openwire fault
-    ADBMS_WakeUP_ICs();
+    ADBMS_WakeUP_ICs_Polling();
     cellBalanceOff(adbms);   // need to turn off cell balancing to check for OWC
 
     /// OWC EVEN Check
     adbms->adsv.cont = 1;
     adbms->adsv.ow = 1; // Enable OW on even-channel 
     ADBMS_Set_ADSV(adbms->adsv, &adbms->ICs.adsv);
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
+    ADBMS_Write_CMD_Polling(adbms->ICs.hspi, adbms->ICs.adsv);
     HAL_Delay(8);    // S-Channels are updated at 8ms
 
     // Get new s-channel voltages
     bool pec = 0;
-    ADBMS_WakeUP_ICs();
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVA, (adbms->ICs.scell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVB, (adbms->ICs.scell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVC, (adbms->ICs.scell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVD, (adbms->ICs.scell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVE, (adbms->ICs.scell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    ADBMS_WakeUP_ICs_Polling();
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVA, (adbms->ICs.scell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVB, (adbms->ICs.scell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVC, (adbms->ICs.scell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVD, (adbms->ICs.scell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVE, (adbms->ICs.scell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
 
     if(pec){
         adbms->current_owc_failures += 1;
@@ -283,16 +283,16 @@ void UpdateOWCFault(adbms_ *adbms)
     adbms->adsv.cont = 1;
     adbms->adsv.ow = 2; // Enable OW on odd-channel 
     ADBMS_Set_ADSV(adbms->adsv, &adbms->ICs.adsv);
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
+    ADBMS_Write_CMD_Polling(adbms->ICs.hspi, adbms->ICs.adsv);
     HAL_Delay(8);    // S-Channels are updated at 8ms
 
     // Get new s-channel voltages
-    ADBMS_WakeUP_ICs();
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVA, (adbms->ICs.scell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVB, (adbms->ICs.scell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVC, (adbms->ICs.scell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVD, (adbms->ICs.scell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data(adbms->ICs.hspi, RDSVE, (adbms->ICs.scell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    ADBMS_WakeUP_ICs_Polling();
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVA, (adbms->ICs.scell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVB, (adbms->ICs.scell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVC, (adbms->ICs.scell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVD, (adbms->ICs.scell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDSVE, (adbms->ICs.scell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
 
     if(pec){
         adbms->current_owc_failures += 1;
@@ -324,7 +324,7 @@ void UpdateOWCFault(adbms_ *adbms)
     adbms->adsv.cont = 0;
     adbms->adsv.ow = 0; // Enable OW on odd-channel 
     ADBMS_Set_ADSV(adbms->adsv, &adbms->ICs.adsv);
-    ADBMS_Write_CMD(adbms->ICs.hspi, adbms->ICs.adsv);
+    ADBMS_Write_CMD_Polling(adbms->ICs.hspi, adbms->ICs.adsv);
     HAL_Delay(1);    // S-Channels are updated at 8ms
 }
 

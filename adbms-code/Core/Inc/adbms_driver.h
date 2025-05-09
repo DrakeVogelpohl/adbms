@@ -98,7 +98,7 @@ void ADBMS_Set_ADSV(adsv_ adsv, uint16_t *adsv_cmd_buffer);
 void ADBMS_Set_ADAX(adax_ adax, uint16_t *adax_cmd_buffer);
 void ADBMS_Set_ADAX2(adax2_ adax2, uint16_t *adax2_cmd_buffer);
 
-void ADBMS_WakeUP_ICs();
-void ADBMS_Write_CMD(SPI_HandleTypeDef *hspi, uint16_t tx_cmd);
-void ADBMS_Write_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf);
-bool ADBMS_Read_Data(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf);
+void ADBMS_WakeUP_ICs_Polling();
+void ADBMS_Write_CMD_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd);
+void ADBMS_Write_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf);
+bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf);
