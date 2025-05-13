@@ -326,3 +326,58 @@ bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, ui
 
     return pec_error;
 }
+
+
+// bool ADBMS_Read_Data_Regs_Polling(SPI_HandleTypeDef *hspi, uint8_t num_regs, uint16_t *tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf)
+// {
+//     uint8_t spi_tx_dataBuf[DATABUF_LEN * 5] = {0};
+//     for(uint8_t creg = 0; creg < num_regs; creg++)
+//     {
+//         spi_tx_dataBuf[DATABUF_LEN * creg + 0] = (uint8_t)(tx_cmd[creg] >> 8);
+//         spi_tx_dataBuf[DATABUF_LEN * creg + 1] = (uint8_t)(tx_cmd[creg]);
+
+//         uint16_t cmd_pec = Pec15_Calc(2, (spi_tx_dataBuf + DATABUF_LEN*creg));
+//         spi_tx_dataBuf[DATABUF_LEN * creg + 2] = (uint8_t)(cmd_pec >> 8);
+//         spi_tx_dataBuf[DATABUF_LEN * creg + 3] = (uint8_t)(cmd_pec);
+//     }
+
+//     // Blocking Transmit Receive the cmd and data
+//     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+//     if (HAL_SPI_TransmitReceive(hspi, spi_tx_dataBuf, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
+//     {
+//         // TODO: do something if fails
+//     }
+//     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+
+//     printf("\nTx\n");
+//     for(int i = 0; i < DATABUF_LEN*num_regs; i++)
+//     {
+//         printf("byte%d: 0x%02x\n", i, spi_tx_dataBuf[i]);
+//     }
+
+//     printf("\nRX\n");
+//     for(int i = 0; i < DATABUF_LEN*num_regs; i++)
+//     {
+//         printf("byte%d: 0x%02x\n", i, spi_dataBuf[i]);
+//     }
+
+//     bool pec_error = 0;
+//     for(uint8_t creg = 0; creg < num_regs; creg++)
+//     {
+//         // Discard data received during transmit phase
+//         uint8_t *rx_dataBuf = spi_dataBuf + (DATABUF_LEN*creg) + CMD_LEN + PEC_LEN;
+
+//         // Move the incoming data from the spi data buffer to the correspoding data buffer array in memory
+//         for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
+//         {
+//             for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++)
+//             {
+//                 dataBuf[creg * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
+//             }
+//             uint16_t rx_pec = (uint16_t)(((rx_dataBuf[DATA_LEN + (DATA_LEN+PEC_LEN)*cic] & 0x03) << 8) | rx_dataBuf[DATA_LEN + 1 + (DATA_LEN+PEC_LEN)*cic]);
+//             uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * (DATA_LEN + PEC_LEN)));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
+//             pec_error |= (rx_pec != calc_pec);
+//         }
+//     }
+//     return pec_error;
+// }
