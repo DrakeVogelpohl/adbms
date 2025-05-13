@@ -67,7 +67,6 @@ DMA_HandleTypeDef hdma_spi1_tx;
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,7 +84,6 @@ static void MX_SPI1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-adbms_ adbms;
 /* USER CODE END 0 */
 
 /**
@@ -131,7 +129,7 @@ int main(void)
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
 
   // init mainboard
-  bms_mainbaord_setup(&hspi1, &hadc1, &hcan1, &hcan2);
+  bms_mainbaord_setup(&hspi1, GPIOA, GPIO_PIN_4, &hadc1, &hcan1, &hcan2);
 
   printf("Board Starting...\n");
 

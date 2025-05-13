@@ -229,6 +229,60 @@ void ADBMS_Set_ADAX2(adax2_ adax2, uint16_t *adax2_cmd_buffer)
                         | (adax2.ch && 0xF);
 }
 
+ADBMS_Pack_CMD(uint16_t tx_cmd, uint8_t *spi_tx_dataBuf)
+{
+    spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
+    spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
+
+    uint16_t cmd_pec = Pec15_Calc(2, spi_tx_dataBuf);
+    spi_tx_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
+    spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
+}
+
+ADBMS_Pack_Write_Data_RegGrp(uint16_t tx_cmd, uint8_t *data, uint8_t *spi_tx_dataBuf)
+{
+    // spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
+    // spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
+
+    // uint16_t cmd_pec = Pec15_Calc(2, spi_tx_dataBuf);
+    // spi_tx_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
+    // spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
+
+    ADBMS_Pack_CMD(tx_cmd, spi_tx_dataBuf);
+
+    // Decrementing because sends to last chip on the stack first
+    for(uint8_t cic = NUM_CHIPS; cic > 0; cic--){
+        // Copy over data from data ptr
+        for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++){
+            spi_tx_dataBuf[4 + cbyte + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = data[(NUM_CHIPS-cic) * DATA_LEN + cbyte];
+        }
+
+        // Caclulate PEC10
+        uint16_t data_pec = Pec10_Calc(false, DATA_LEN, (data + (NUM_CHIPS-cic) * DATA_LEN));  
+        spi_tx_dataBuf[4 + DATA_LEN + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec >> 8);
+        spi_tx_dataBuf[4 + DATA_LEN + 1 + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec);
+    }
+}
+
+bool ADBMS_Process_Read_Data_RegGrp(uint8_t *rx_dataBuf_raw, uint8_t *dataBuf)
+{
+    // Move Rx ptr to skip over data during transmit phase 
+    uint8_t *rx_dataBuf = rx_dataBuf_raw + CMD_LEN + PEC_LEN;
+
+    bool pec_error = 0;
+    for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
+    {
+        for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++)
+        {
+            dataBuf[cic * DATA_LEN + cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
+        }
+        uint16_t rx_pec = (uint16_t)(((rx_dataBuf[DATA_LEN + (DATA_LEN+PEC_LEN)*cic] & 0x03) << 8) | rx_dataBuf[DATA_LEN + 1 + (DATA_LEN+PEC_LEN)*cic]);
+        uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * (DATA_LEN + PEC_LEN)));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
+        pec_error |= (rx_pec != calc_pec);
+    }
+    return pec_error;
+}
+
 void ADBMS_WakeUP_ICs_Polling()
 {
     for(uint8_t i = 0; i < NUM_CHIPS; i++){
@@ -242,55 +296,58 @@ void ADBMS_WakeUP_ICs_Polling()
 
 void ADBMS_Write_CMD_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd)
 {
-    uint8_t spi_dataBuf[4];
-    spi_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
-    spi_dataBuf[1] = (uint8_t)(tx_cmd);
+    uint8_t spi_tx_dataBuf[4];
+    // spi_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
+    // spi_dataBuf[1] = (uint8_t)(tx_cmd);
 
-    uint16_t cmd_pec = Pec15_Calc(2, spi_dataBuf);
-    spi_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
-    spi_dataBuf[3] = (uint8_t)(cmd_pec);
+    // uint16_t cmd_pec = Pec15_Calc(2, spi_dataBuf);
+    // spi_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
+    // spi_dataBuf[3] = (uint8_t)(cmd_pec);
+    ADBMS_Pack_CMD(tx_cmd, spi_tx_dataBuf);
 
     // Blocking Transmit the cmd
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-    if (HAL_SPI_Transmit(hspi, spi_dataBuf, CMD_LEN + PEC_LEN, SPI_TIME_OUT) != HAL_OK)
+    if (HAL_SPI_Transmit(hspi, spi_tx_dataBuf, CMD_LEN + PEC_LEN, SPI_TIME_OUT) != HAL_OK)
     {
         // TODO: do something if fails
     }
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
 
-void ADBMS_Write_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf)
+void ADBMS_Write_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_tx_dataBuf)
 {
-    spi_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
-    spi_dataBuf[1] = (uint8_t)(tx_cmd);
+    // spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
+    // spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
 
-    uint16_t cmd_pec = Pec15_Calc(2, spi_dataBuf);
-    spi_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
-    spi_dataBuf[3] = (uint8_t)(cmd_pec);
+    // uint16_t cmd_pec = Pec15_Calc(2, spi_tx_dataBuf);
+    // spi_tx_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
+    // spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
 
-    // Decrementing because sends to last chip on the stack first
-    for(uint8_t cic = NUM_CHIPS; cic > 0; cic--){
-        // Copy over data from data ptr
-        for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++){
-            spi_dataBuf[4 + cbyte + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = data[(NUM_CHIPS-cic) * DATA_LEN + cbyte];
-        }
+    // // Decrementing because sends to last chip on the stack first
+    // for(uint8_t cic = NUM_CHIPS; cic > 0; cic--){
+    //     // Copy over data from data ptr
+    //     for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++){
+    //         spi_tx_dataBuf[4 + cbyte + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = data[(NUM_CHIPS-cic) * DATA_LEN + cbyte];
+    //     }
 
-        // Caclulate PEC10
-        uint16_t data_pec = Pec10_Calc(false, DATA_LEN, (data + (NUM_CHIPS-cic) * DATA_LEN));  
-        spi_dataBuf[4 + DATA_LEN + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec >> 8);
-        spi_dataBuf[4 + DATA_LEN + 1 + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec);
-    }
+    //     // Caclulate PEC10
+    //     uint16_t data_pec = Pec10_Calc(false, DATA_LEN, (data + (NUM_CHIPS-cic) * DATA_LEN));  
+    //     spi_tx_dataBuf[4 + DATA_LEN + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec >> 8);
+    //     spi_tx_dataBuf[4 + DATA_LEN + 1 + ((NUM_CHIPS-cic)*(DATA_LEN + PEC_LEN))] = (uint8_t)(data_pec);
+    // }
+
+    ADBMS_Pack_Write_Data_RegGrp(tx_cmd, data, spi_tx_dataBuf);
 
     // Blocking Transmit the cmd and data
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-    if (HAL_SPI_Transmit(hspi, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
+    if (HAL_SPI_Transmit(hspi, spi_tx_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
     {
         // TODO: do something if fails
     }
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
 
-bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf)
+bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf, uint8_t *spi_rx_dataBuf)
 {
     uint8_t spi_tx_dataBuf[DATABUF_LEN] = {0};
     spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
@@ -302,29 +359,39 @@ bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, ui
 
     // Blocking Transmit Receive the cmd and data
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-    if (HAL_SPI_TransmitReceive(hspi, spi_tx_dataBuf, spi_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
+    if (HAL_SPI_TransmitReceive(hspi, spi_tx_dataBuf, spi_rx_dataBuf, DATABUF_LEN, SPI_TIME_OUT) != HAL_OK)
     {
         // TODO: do something if fails
     }
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 
-    // Discard data received during transmit phase
-    uint8_t *rx_dataBuf = spi_dataBuf + CMD_LEN + PEC_LEN;
+    return ADBMS_Process_Read_Data_RegGrp(spi_rx_dataBuf, dataBuf);
 
-    // Move the incoming data from the spi data buffer to the correspoding data buffer array in memory
-    bool pec_error = 0;
-    for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
-    {
-        for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++)
-        {
-            dataBuf[cic * DATA_LEN + cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
-        }
-        uint16_t rx_pec = (uint16_t)(((rx_dataBuf[DATA_LEN + (DATA_LEN+PEC_LEN)*cic] & 0x03) << 8) | rx_dataBuf[DATA_LEN + 1 + (DATA_LEN+PEC_LEN)*cic]);
-        uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * (DATA_LEN + PEC_LEN)));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
-        pec_error |= (rx_pec != calc_pec);
-    }
+    // // Discard data received during transmit phase
+    // uint8_t *rx_dataBuf = spi_dataBuf + CMD_LEN + PEC_LEN;
 
-    return pec_error;
+    // // Move the incoming data from the spi data buffer to the correspoding data buffer array in memory
+    // bool pec_error = 0;
+    // for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
+    // {
+    //     for(uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte++)
+    //     {
+    //         dataBuf[cic * DATA_LEN + cbyte] = rx_dataBuf[cbyte + (DATA_LEN+PEC_LEN)*cic];
+    //     }
+    //     uint16_t rx_pec = (uint16_t)(((rx_dataBuf[DATA_LEN + (DATA_LEN+PEC_LEN)*cic] & 0x03) << 8) | rx_dataBuf[DATA_LEN + 1 + (DATA_LEN+PEC_LEN)*cic]);
+    //     uint16_t calc_pec = (uint16_t)Pec10_Calc(true, DATA_LEN, (rx_dataBuf + cic * (DATA_LEN + PEC_LEN)));		// Needs the PEC to calculate the PEC, thus have to pass full buffer
+    //     pec_error |= (rx_pec != calc_pec);
+    // }
+}
+
+bool ADBMS_TransmitReceive_Reg_DMA(adbms6830_ICs *ICs)
+{
+    HAL_GPIO_WritePin(ICs->csb_pinBank, ICs->csb_pin, GPIO_PIN_RESET);
+    bool DMA_Status = HAL_SPI_TransmitReceive_DMA(ICs->hspi, ICs->spi_tx_dataBuf, ICs->spi_rx_dataBuf, DATA_LEN) == HAL_OK;
+    HAL_GPIO_WritePin(ICs->csb_pinBank, ICs->csb_pin, GPIO_PIN_SET);
+
+    // Healthy is high
+    return DMA_Status;
 }
 
 

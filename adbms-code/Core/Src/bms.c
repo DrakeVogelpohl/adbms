@@ -2,7 +2,7 @@
 
 mainboard_ mainboard;
 
-void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uint16_t csb_pin, ADC_HandleTypeDef *hadc, CAN_HandleTypeDef *hcan1, CAN_HandleTypeDef *hcan2);
+void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uint16_t csb_pin, ADC_HandleTypeDef *hadc, CAN_HandleTypeDef *hcan1, CAN_HandleTypeDef *hcan2)
 {
 	// initialize handles
 	mainboard.hadc = hadc;
@@ -27,6 +27,11 @@ void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uin
 	mainboard.tg = CreateTimerGroup(timers);
 
 	mainboard.start_time = HAL_GetTick();
+}
+
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) 
+{
+  ADBMS_DMA_Complete(&mainboard.adbms); 
 }
 
 void tick_mainboard_timers()

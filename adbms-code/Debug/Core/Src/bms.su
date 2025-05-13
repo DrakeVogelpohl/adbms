@@ -1,8 +1,9 @@
 ../Core/Src/bms.c:5:6:bms_mainbaord_setup	120	static
-../Core/Src/bms.c:32:6:tick_mainboard_timers	8	static
-../Core/Src/bms.c:38:6:bms_mainboard_loop	8	static
-../Core/Src/bms.c:45:6:adbms_owc_loop	8	static
-../Core/Src/bms.c:47:6:UpdateValues	8	static
-../Core/Src/bms.c:70:6:CheckFaults	8	static
-../Core/Src/bms.c:96:6:send_data_over_printf	8	static
-../Core/Src/bms.c:111:6:send_data_over_USB	280	static
+../Core/Src/bms.c:32:6:HAL_SPI_TxRxCpltCallback	16	static
+../Core/Src/bms.c:37:6:tick_mainboard_timers	8	static
+../Core/Src/bms.c:43:6:bms_mainboard_loop	8	static
+../Core/Src/bms.c:50:6:adbms_owc_loop	8	static
+../Core/Src/bms.c:52:6:UpdateValues	8	static
+../Core/Src/bms.c:75:6:CheckFaults	8	static
+../Core/Src/bms.c:101:6:send_data_over_printf	8	static
+../Core/Src/bms.c:116:6:send_data_over_USB	280	static
