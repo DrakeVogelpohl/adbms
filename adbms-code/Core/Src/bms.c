@@ -2,7 +2,7 @@
 
 mainboard_ mainboard;
 
-void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, ADC_HandleTypeDef *hadc, CAN_HandleTypeDef *hcan1, CAN_HandleTypeDef *hcan2)
+void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uint16_t csb_pin, ADC_HandleTypeDef *hadc, CAN_HandleTypeDef *hcan1, CAN_HandleTypeDef *hcan2);
 {
 	// initialize handles
 	mainboard.hadc = hadc;
@@ -13,7 +13,7 @@ void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, ADC_HandleTypeDef *hadc, CAN_H
 	mainboard.current_offset = getCurrentOffset(mainboard.hadc);
 
 	// initialize ad chip;
-	ADBMS_Initialize(&mainboard.adbms, hspi);
+	ADBMS_Interface_Initialize(&mainboard.adbms, hspi, csb_pinBank, csb_pin);
 
 	// initialize CAN;
 	BMS_Initialize_Can(&mainboard);

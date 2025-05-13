@@ -1,8 +1,9 @@
 #include "adbms_interface.h"
 
-void ADBMS_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi)
+void ADBMS_Interface_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uint16_t csb_pin)
 {
-    adbms->ICs.hspi = hspi;
+    ADBMS_Init(&adbms->ICs, hspi, csb_pinBank, csb_pin);
+    
     // Set initial configurations
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
     {
@@ -43,11 +44,15 @@ void ADBMS_UpdateVoltages(adbms_ *adbms)
     bool pec = 0;
     ADBMS_WakeUP_ICs_Polling();
 
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVA, (adbms->ICs.cell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVA, (adbms->ICs.cell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
+    // uint16_t vregs[5] = {RDCVA, RDCVB, RDCVC, RDCVD, RDCVE};
+
+    // uint16_t vregs[2] = {RDCVA, RDCVB};
+    // pec |= ADBMS_Read_Data_Regs_Polling(adbms->ICs.hspi, 2, vregs, adbms->ICs.cell, adbms->ICs.spi_rx_dataBuf);
     adbms->voltage_pec_failure = pec;
 
     // calulate new values with the updated raw ones

@@ -25,9 +25,9 @@
 #define NUM_CURRENT_OFFSET_CYCLES 10	/* Numbeer of Cycles to get ADC Offset */
 
 #define NUM_DATA_CAN_VOLTAGES_PER_MSG 7 // will break if this is changed. Based on how data can and DBC are set up
-#define NUM_DATA_CAN_VOLTAGE_MSGS (NUM_CHIPS * NUM_VOLTAGES_CHIP) / NUM_DATA_CAN_VOLTAGES_PER_MSG
+#define NUM_DATA_CAN_VOLTAGE_MSGS ((NUM_CHIPS * NUM_VOLTAGES_CHIP) / NUM_DATA_CAN_VOLTAGES_PER_MSG)
 #define NUM_DATA_CAN_TEMPS_PER_MSG 8    // will break if this is changed. Based on how data can and DBC are set up
-#define NUM_DATA_CAN_TEMP_MSGS (NUM_CHIPS * NUM_TEMPS_CHIP) / NUM_DATA_CAN_TEMPS_PER_MSG
+#define NUM_DATA_CAN_TEMP_MSGS ((NUM_CHIPS * NUM_TEMPS_CHIP) / NUM_DATA_CAN_TEMPS_PER_MSG)
 
 // BMS IC Parameters
 #define CELLS 	16														  /* Bms ic number of Cells                */
@@ -39,7 +39,7 @@
 #define CMD_LEN  2                                                        /* Number of CMD Bytes                   */
 #define DATA_LEN 6                                                        /* Number of Data Bytes                  */
 #define PEC_LEN  2                                                        /* Number of PEC Bytes                   */
-#define DATABUF_LEN (CMD_LEN + PEC_LEN) + (DATA_LEN + PEC_LEN)*NUM_CHIPS  /* CMD Msg + PEC and (DATA + PEC) per IC */
+#define DATABUF_LEN ((CMD_LEN + PEC_LEN) + (DATA_LEN + PEC_LEN)*NUM_CHIPS)  /* CMD Msg + PEC and (DATA + PEC) per IC */
 
 #define NUM_TIMERS 4    // will break if this is changed. This will be replaced by RTOS
 #define NUM_CURRENT_OFFSET_CYCLES 10

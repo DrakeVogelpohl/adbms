@@ -4,7 +4,7 @@
 #include "bms_main_struct.h"
 #include "bms_can.h" 
 
-void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, ADC_HandleTypeDef *hadc, CAN_HandleTypeDef *hcan1, CAN_HandleTypeDef *hcan2);
+void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uint16_t csb_pin, ADC_HandleTypeDef *hadc, CAN_HandleTypeDef *hcan1, CAN_HandleTypeDef *hcan2);
 void bms_mainboard_loop();
 
 void tick_mainboard_timers();

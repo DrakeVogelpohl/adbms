@@ -158,6 +158,14 @@ float ADBMS_getVoltage(int data)
     return voltage_float;
 }
 
+void ADBMS_Init(adbms6830_ICs *ICs, SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uint16_t csb_pin)
+{
+    ICs->hspi           = hspi;
+    ICs->csb_pinBank    = csb_pinBank;
+    ICs->csb_pin        = csb_pin;
+}
+
+
 void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer)
 {
     for(uint8_t cic = 0; cic < NUM_CHIPS; cic++)
@@ -284,7 +292,7 @@ void ADBMS_Write_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, u
 
 bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf)
 {
-    uint8_t spi_tx_dataBuf[4] = {0};
+    uint8_t spi_tx_dataBuf[DATABUF_LEN] = {0};
     spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
     spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
 

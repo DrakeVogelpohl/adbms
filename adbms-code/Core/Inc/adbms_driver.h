@@ -12,8 +12,12 @@
 typedef struct
 {
     SPI_HandleTypeDef *hspi;
+    GPIO_TypeDef *csb_pinBank;
+    uint16_t csb_pin;
 
     uint8_t spi_dataBuf[DATABUF_LEN];
+
+    uint8_t spi_rx_dataBuf[DATABUF_LEN * 5];
 
     // Config groups a,b
     uint8_t cfg_a[NUM_CHIPS * DATA_LEN];
@@ -91,6 +95,8 @@ uint16_t Pec10_Calc(bool isRxCmd, int len, uint8_t *data);
 uint16_t Set_UnderOver_Voltage_Threshold(float voltage);
 float ADBMS_getVoltage(int data);
 
+void ADBMS_Init(adbms6830_ICs *ICs, SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uint16_t csb_pin);
+
 void ADBMS_Set_Config_A(cfa_ *cfg_a, uint8_t *cfg_a_tx_buffer);
 void ADBMS_Set_Config_B(cfb_ *cfg_b, uint8_t *cfg_b_tx_buffer);
 void ADBMS_Set_ADCV(adcv_ adcv, uint16_t *adcv_cmd_buffer);
@@ -102,3 +108,4 @@ void ADBMS_WakeUP_ICs_Polling();
 void ADBMS_Write_CMD_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd);
 void ADBMS_Write_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf);
 bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf);
+bool ADBMS_Read_Data_Regs_Polling(SPI_HandleTypeDef *hspi, uint8_t num_regs, uint16_t *tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf);
