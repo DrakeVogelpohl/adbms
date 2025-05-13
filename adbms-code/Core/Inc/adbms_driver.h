@@ -109,3 +109,5 @@ void ADBMS_Write_CMD_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd);
 void ADBMS_Write_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf);
 bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *data, uint8_t *spi_dataBuf);
 bool ADBMS_Read_Data_Regs_Polling(SPI_HandleTypeDef *hspi, uint8_t num_regs, uint16_t *tx_cmd, uint8_t *dataBuf, uint8_t *spi_dataBuf);
+
+bool ADBMS_Read_Data_Reg_DMA(adbms6830_ICs *ICs, uint16_t tx_cmd);
