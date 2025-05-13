@@ -11,6 +11,9 @@ typedef struct
 {
     adbms6830_ICs ICs;
 
+    uint16_t vregs[NUM_VREG_GRPS_READ];
+    uint16_t tregs[AUX_REG_GRP];
+
     cfa_ cfa[NUM_CHIPS];
     cfb_ cfb[NUM_CHIPS];
     adcv_ adcv;

@@ -29,6 +29,10 @@
 #define NUM_DATA_CAN_TEMPS_PER_MSG 8    // will break if this is changed. Based on how data can and DBC are set up
 #define NUM_DATA_CAN_TEMP_MSGS ((NUM_CHIPS * NUM_TEMPS_CHIP) / NUM_DATA_CAN_TEMPS_PER_MSG)
 
+// Interface Parameters
+#define NUM_VREG_GRPS_READ (NUM_VOLTAGES_CHIP / VOLTAGES_REG_GRP + (NUM_VOLTAGES_CHIP % VOLTAGES_REG_GRP != 0))
+#define NUM_TREG_GRPS_READ AUX_REG_GRP
+
 // BMS IC Parameters
 #define CELLS 	16														  /* Bms ic number of Cells                */
 #define CELL_REG_GRP 6

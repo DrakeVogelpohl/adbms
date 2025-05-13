@@ -3,7 +3,20 @@
 void ADBMS_Interface_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uint16_t csb_pin)
 {
     ADBMS_Init(&adbms->ICs, hspi, csb_pinBank, csb_pin);
-    
+
+    // Define which VoltageReg groups to read
+    adbms->vregs[0] = RDCVA;
+    adbms->vregs[1] = RDCVB;
+    adbms->vregs[2] = RDCVC;
+    adbms->vregs[3] = RDCVD;
+    adbms->vregs[4] = RDCVE;
+
+    // Define which TempReg groups to read
+    adbms->tregs[0] = RDAUXA;
+    adbms->tregs[1] = RDAUXB;
+    adbms->tregs[2] = RDAUXC;
+    adbms->tregs[3] = RDAUXD;
+
     // Set initial configurations
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
     {
@@ -38,33 +51,36 @@ void ADBMS_Interface_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi, GPIO_Typ
     HAL_Delay(8); // ADCs are updated at their conversion rate of 1ms
 }
 
-void ADBMS_DMA_Complete(adbms_ *adbms)
+void UpdateADInternalFault(adbms_ *adbms)
 {
-    // Start new Transmit Receive DMA
-    ADBMS_TransmitReceive_Reg_DMA(&adbms->ICs);
+    // check overvoltage fault
+    adbms->overvoltage_fault_ = adbms->overvoltage_fault_ || (adbms->max_v > OVERVOLTAGE);
 
-    // Fill new Tx buf for next DMA
-    // TODO: Logic to decide what cmd to have next
+    // check undervoltage fault
+    adbms->undervoltage_fault_ = adbms->undervoltage_fault_ || (adbms->min_v < UNDERVOLTAGE);
 
-    // Process Rx data
-    ADBMS_Process_Read_Data_RegGrp(adbms->ICs.spi_rx_dataBuf, adbms->ICs.cell);
+    // check overtemperature fault
+    adbms->overtemperature_fault_ = adbms->overtemperature_fault_ || (adbms->max_temp > OVERTEMP);
+
+    // check undertemperature fault
+    adbms->undertemperature_fault_ = adbms->undertemperature_fault_ || (adbms->min_temp < UNDERTEMP);
+
+    // TODO: check status regs for faults - need calcuate status reg values fn that handles status reg pec fualts
 }
+
 
 void ADBMS_UpdateVoltages(adbms_ *adbms)
 {
     // get voltages from ADBMS
-    bool pec = 0;
+    uint8_t pec = 0;
     ADBMS_WakeUP_ICs_Polling();
 
-    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVA, (adbms->ICs.cell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    // pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_dataBuf);
-    // uint16_t vregs[5] = {RDCVA, RDCVB, RDCVC, RDCVD, RDCVE};
-
-    // uint16_t vregs[2] = {RDCVA, RDCVB};
-    // pec |= ADBMS_Read_Data_Regs_Polling(adbms->ICs.hspi, 2, vregs, adbms->ICs.cell, adbms->ICs.spi_rx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVA, (adbms->ICs.cell + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_tx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVB, (adbms->ICs.cell + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_tx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVC, (adbms->ICs.cell + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_tx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVD, (adbms->ICs.cell + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_tx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDCVE, (adbms->ICs.cell + 4 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_tx_dataBuf);
+    adbms->total_pec_failures += pec;
     adbms->voltage_pec_failure = pec;
 
     // calulate new values with the updated raw ones
@@ -74,12 +90,13 @@ void ADBMS_UpdateVoltages(adbms_ *adbms)
 void ADBMS_UpdateTemps(adbms_ *adbms)
 {
     // get temps from ADBMS
-    bool pec = 0;
+    uint8_t pec = 0;
     ADBMS_WakeUP_ICs_Polling();
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXA, (adbms->ICs.aux + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_rx_dataBuf);
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXB, (adbms->ICs.aux + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_rx_dataBuf);
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXC, (adbms->ICs.aux + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_rx_dataBuf);
-    pec |= ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXD, (adbms->ICs.aux + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_rx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXA, (adbms->ICs.aux + 0 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_rx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXB, (adbms->ICs.aux + 1 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_rx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXC, (adbms->ICs.aux + 2 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_rx_dataBuf);
+    pec += ADBMS_Read_Data_RegGrp_Polling(adbms->ICs.hspi, RDAUXD, (adbms->ICs.aux + 3 * NUM_CHIPS * DATA_LEN), adbms->ICs.spi_rx_dataBuf);
+    adbms->total_pec_failures += pec;
     adbms->temp_pec_failure = pec;
 
     // need to start new poll for conversion before next read (no continous mode)
@@ -113,8 +130,7 @@ void ADBMS_CalculateValues_Voltages(adbms_ *adbms)
     adbms->min_v = FLT_MAX;
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
     {
-        uint8_t num_reg_grps = NUM_VOLTAGES_CHIP / VOLTAGES_REG_GRP + (NUM_VOLTAGES_CHIP % VOLTAGES_REG_GRP != 0);
-        for (uint8_t creg_grp = 0; creg_grp < num_reg_grps; creg_grp++)
+        for (uint8_t creg_grp = 0; creg_grp < NUM_VREG_GRPS_READ; creg_grp++)
         {
             for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
             {
@@ -195,21 +211,16 @@ void ADBMS_CalculateValues_Temps(adbms_ *adbms)
     
 }
 
-void UpdateADInternalFault(adbms_ *adbms)
+void ADBMS_DMA_Complete(adbms_ *adbms)
 {
-    // check overvoltage fault
-    adbms->overvoltage_fault_ = adbms->overvoltage_fault_ || (adbms->max_v > OVERVOLTAGE);
+    // Start new Transmit Receive DMA
+    ADBMS_TransmitReceive_Reg_DMA(&adbms->ICs);
 
-    // check undervoltage fault
-    adbms->undervoltage_fault_ = adbms->undervoltage_fault_ || (adbms->min_v < UNDERVOLTAGE);
+    // Fill new Tx buf for next DMA
+    // TODO: Logic to decide what cmd to have next
 
-    // check overtemperature fault
-    adbms->overtemperature_fault_ = adbms->overtemperature_fault_ || (adbms->max_temp > OVERTEMP);
-
-    // check undertemperature fault
-    adbms->undertemperature_fault_ = adbms->undertemperature_fault_ || (adbms->min_temp < UNDERTEMP);
-
-    // TODO: check status regs for faults - need calcuate status reg values fn that handles status reg pec fualts
+    // Process Rx data
+    bool pec = ADBMS_Process_Read_Data_RegGrp(adbms->ICs.spi_rx_dataBuf, adbms->ICs.cell);
 }
 
 void cellBalanceOn(adbms_ *adbms)
