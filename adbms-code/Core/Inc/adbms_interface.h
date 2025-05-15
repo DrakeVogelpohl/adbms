@@ -12,7 +12,9 @@ typedef struct
     adbms6830_ICs ICs;
 
     uint16_t vregs[NUM_VREG_GRPS_READ];
+    uint8_t vreg_index;
     uint16_t tregs[AUX_REG_GRP];
+    uint8_t treg_index;
 
     cfa_ cfa[NUM_CHIPS];
     cfb_ cfb[NUM_CHIPS];
@@ -59,7 +61,9 @@ void ADBMS_UpdateTemps(adbms_ *adbms);
 void UpdateOWCFault(adbms_ *adbms);
 
 void ADBMS_CalculateValues_Voltages(adbms_ *adbms);
+void ADBMS_CalculateValue_Grp_Voltages(adbms_ *adbms);
 void ADBMS_CalculateValues_Temps(adbms_ *adbms);
+void ADBMS_CalculateValue_Grp_Temps(adbms_ *adbms);
 
 bool ADBMS_PEC_Check(adbms_ *adbms);
 

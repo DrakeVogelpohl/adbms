@@ -217,10 +217,49 @@ void ADBMS_DMA_Complete(adbms_ *adbms)
     ADBMS_TransmitReceive_Reg_DMA(&adbms->ICs);
 
     // Fill new Tx buf for next DMA
-    // TODO: Logic to decide what cmd to have next
+    adbms->vreg_index += 1;
+    if(adbms->vreg_index >= NUM_VREG_GRPS_READ) adbms->vreg_index = 0;
+
+    ADBMS_Pack_CMD(adbms->vregs[adbms->vreg_index], adbms->ICs.spi_tx_dataBuf);
 
     // Process Rx data
     bool pec = ADBMS_Process_Read_Data_RegGrp(adbms->ICs.spi_rx_dataBuf, adbms->ICs.cell);
+    adbms->total_pec_failures += pec;
+    adbms->voltage_pec_failure = pec;
+    if(!pec) ADBMS_CalculateValue_Grp_Voltages(adbms);
+}
+
+void ADBMS_CalculateValue_Grp_Voltages(adbms_ *adbms)
+{
+    // reset current pec failures if there is no current failure
+    if(!adbms->voltage_pec_failure && !adbms->temp_pec_failure && !adbms->status_reg_pec_failure) { 
+        adbms->current_pec_failures = 0;
+    }
+
+    // if there is a pec failure, process it and don't update values
+    if(adbms->voltage_pec_failure) {
+        adbms->current_pec_failures += adbms->voltage_pec_failure;
+        if(adbms->current_pec_failures > PEC_FAILURE_THRESHOLD) {
+            adbms->pec_fault_ = 1;
+        }else {
+            adbms->pec_fault_ = 0;
+        }
+        return;
+    }
+    
+    for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
+    {
+        uint8_t creg_grp = adbms->vreg_index - 1;   // -1 because already increameted for next DMA
+        if(creg_grp < 0) creg_grp = NUM_VREG_GRPS_READ;
+
+        for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
+        {
+            if(creg_grp*DATA_LEN/2 + cbyte/2 >= NUM_VOLTAGES_CHIP) break;   // only read 14 when getting 15 -- TODO CHANGE COMMENT
+            int16_t raw_val = (((uint16_t)adbms->ICs.cell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte + 1]) << 8) | adbms->ICs.cell[creg_grp * NUM_CHIPS * DATA_LEN + cic * DATA_LEN + cbyte];
+            float curr_voltage = ADBMS_getVoltage(raw_val);
+            adbms->voltages[cic*NUM_VOLTAGES_CHIP + creg_grp*DATA_LEN/2 + cbyte/2] = curr_voltage;
+        }
+    }
 }
 
 void cellBalanceOn(adbms_ *adbms)

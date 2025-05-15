@@ -9,11 +9,11 @@
 ../Core/Src/adbms_driver.c:206:6:ADBMS_Set_ADSV	1
 ../Core/Src/adbms_driver.c:216:6:ADBMS_Set_ADAX	2
 ../Core/Src/adbms_driver.c:226:6:ADBMS_Set_ADAX2	2
-../Core/Src/adbms_driver.c:232:1:ADBMS_Pack_CMD	1
-../Core/Src/adbms_driver.c:242:1:ADBMS_Pack_Write_Data_RegGrp	3
+../Core/Src/adbms_driver.c:232:6:ADBMS_Pack_CMD	1
+../Core/Src/adbms_driver.c:242:6:ADBMS_Pack_Write_Data_RegGrp	3
 ../Core/Src/adbms_driver.c:267:6:ADBMS_Process_Read_Data_RegGrp	3
 ../Core/Src/adbms_driver.c:286:6:ADBMS_WakeUP_ICs_Polling	2
 ../Core/Src/adbms_driver.c:297:6:ADBMS_Write_CMD_Polling	1
 ../Core/Src/adbms_driver.c:317:6:ADBMS_Write_Data_RegGrp_Polling	1
 ../Core/Src/adbms_driver.c:350:6:ADBMS_Read_Data_RegGrp_Polling	1
-../Core/Src/adbms_driver.c:387:6:ADBMS_TransmitReceive_Reg_DMA	1
+../Core/Src/adbms_driver.c:388:6:ADBMS_TransmitReceive_Reg_DMA	1

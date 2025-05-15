@@ -133,7 +133,6 @@ int main(void)
 
   printf("Board Starting...\n");
 
-  bool bms_fault;
   /* USER CODE END 2 */
 
   /* Infinite loop */

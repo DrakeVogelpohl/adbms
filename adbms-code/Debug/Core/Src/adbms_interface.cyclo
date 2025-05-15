@@ -5,8 +5,8 @@
 ../Core/Src/adbms_interface.c:109:6:ADBMS_CalculateValues_Voltages	12
 ../Core/Src/adbms_interface.c:157:6:ADBMS_CalculateValues_Temps	17
 ../Core/Src/adbms_interface.c:214:6:ADBMS_DMA_Complete	1
-../Core/Src/adbms_interface.c:226:6:cellBalanceOn	5
-../Core/Src/adbms_interface.c:249:6:cellBalanceOff	2
-../Core/Src/adbms_interface.c:262:6:UpdateOWCFault	15
-../Core/Src/adbms_interface.c:359:6:ADBMS_Print_Vals	5
-../Core/Src/adbms_interface.c:403:6:ADBMS_USB_Serial_Print_Vals	5
+../Core/Src/adbms_interface.c:227:6:cellBalanceOn	5
+../Core/Src/adbms_interface.c:250:6:cellBalanceOff	2
+../Core/Src/adbms_interface.c:263:6:UpdateOWCFault	15
+../Core/Src/adbms_interface.c:360:6:ADBMS_Print_Vals	5
+../Core/Src/adbms_interface.c:404:6:ADBMS_USB_Serial_Print_Vals	5

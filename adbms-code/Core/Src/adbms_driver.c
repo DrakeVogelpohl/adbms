@@ -229,7 +229,7 @@ void ADBMS_Set_ADAX2(adax2_ adax2, uint16_t *adax2_cmd_buffer)
                         | (adax2.ch && 0xF);
 }
 
-ADBMS_Pack_CMD(uint16_t tx_cmd, uint8_t *spi_tx_dataBuf)
+void ADBMS_Pack_CMD(uint16_t tx_cmd, uint8_t *spi_tx_dataBuf)
 {
     spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
     spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
@@ -239,7 +239,7 @@ ADBMS_Pack_CMD(uint16_t tx_cmd, uint8_t *spi_tx_dataBuf)
     spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
 }
 
-ADBMS_Pack_Write_Data_RegGrp(uint16_t tx_cmd, uint8_t *data, uint8_t *spi_tx_dataBuf)
+void ADBMS_Pack_Write_Data_RegGrp(uint16_t tx_cmd, uint8_t *data, uint8_t *spi_tx_dataBuf)
 {
     // spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
     // spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
@@ -350,12 +350,13 @@ void ADBMS_Write_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, u
 bool ADBMS_Read_Data_RegGrp_Polling(SPI_HandleTypeDef *hspi, uint16_t tx_cmd, uint8_t *dataBuf, uint8_t *spi_rx_dataBuf)
 {
     uint8_t spi_tx_dataBuf[DATABUF_LEN] = {0};
-    spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
-    spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
+    // spi_tx_dataBuf[0] = (uint8_t)(tx_cmd >> 8);
+    // spi_tx_dataBuf[1] = (uint8_t)(tx_cmd);
 
-    uint16_t cmd_pec = Pec15_Calc(2, spi_tx_dataBuf);
-    spi_tx_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
-    spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
+    // uint16_t cmd_pec = Pec15_Calc(2, spi_tx_dataBuf);
+    // spi_tx_dataBuf[2] = (uint8_t)(cmd_pec >> 8);
+    // spi_tx_dataBuf[3] = (uint8_t)(cmd_pec);
+    ADBMS_Pack_CMD(tx_cmd, spi_tx_dataBuf);
 
     // Blocking Transmit Receive the cmd and data
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
