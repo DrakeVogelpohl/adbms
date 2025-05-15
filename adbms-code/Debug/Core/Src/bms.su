@@ -4,6 +4,6 @@
 ../Core/Src/bms.c:43:6:bms_mainboard_loop	8	static
 ../Core/Src/bms.c:50:6:adbms_owc_loop	8	static
 ../Core/Src/bms.c:52:6:UpdateValues	8	static
-../Core/Src/bms.c:75:6:CheckFaults	8	static
-../Core/Src/bms.c:101:6:send_data_over_printf	8	static
-../Core/Src/bms.c:116:6:send_data_over_USB	280	static
+../Core/Src/bms.c:76:6:CheckFaults	8	static
+../Core/Src/bms.c:102:6:send_data_over_printf	8	static
+../Core/Src/bms.c:117:6:send_data_over_USB	280	static

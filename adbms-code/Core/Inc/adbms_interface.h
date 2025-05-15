@@ -60,8 +60,9 @@ void ADBMS_Interface_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi, GPIO_Typ
 void UpdateADInternalFault(adbms_ *adbms);
 
 void ADBMS_DMA_Complete(adbms_ *adbms);
-void ADBMS_UpdateVoltages(adbms_ *adbms);
-void ADBMS_UpdateTemps(adbms_ *adbms);
+// void ADBMS_UpdateVoltages(adbms_ *adbms);
+void ADBMS_Update_Voltages(adbms_ *adbms);
+// void ADBMS_UpdateTemps(adbms_ *adbms);
 void UpdateOWCFault(adbms_ *adbms);
 
 void ADBMS_CalculateValues_Voltages(adbms_ *adbms);

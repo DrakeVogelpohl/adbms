@@ -52,8 +52,9 @@ void adbms_owc_loop(){ UpdateOWCFault(&mainboard.adbms); }
 void UpdateValues()
 {
 	// ADBMS values
-	ADBMS_UpdateVoltages(&mainboard.adbms);
-	ADBMS_UpdateTemps(&mainboard.adbms);
+	// ADBMS_UpdateVoltages(&mainboard.adbms);
+	// ADBMS_UpdateTemps(&mainboard.adbms);
+	ADBMS_Update_Voltages(&mainboard.adbms);
 
 	UpdateADInternalFault(&mainboard.adbms);
 
