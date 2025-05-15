@@ -3,6 +3,10 @@
 #include "adbms_driver.h"
 #include "thermistor_driver.h"
 #include "bms_system_prams.h"
+#include "stm32f4xx_it.h"
+#include "stm32f4xx_hal.h"
+#include "usb_device.h"
+#include "usbd_cdc_if.h"
 #include <float.h>
 
 // Container that holds all the adbms values. 
