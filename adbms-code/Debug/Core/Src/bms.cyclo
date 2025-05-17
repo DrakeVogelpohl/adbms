@@ -1,9 +1,9 @@
 ../Core/Src/bms.c:5:6:bms_mainbaord_setup	1
-../Core/Src/bms.c:32:6:HAL_SPI_TxRxCpltCallback	1
-../Core/Src/bms.c:37:6:tick_mainboard_timers	1
-../Core/Src/bms.c:43:6:bms_mainboard_loop	1
-../Core/Src/bms.c:50:6:adbms_owc_loop	1
-../Core/Src/bms.c:52:6:UpdateValues	1
-../Core/Src/bms.c:76:6:CheckFaults	10
-../Core/Src/bms.c:102:6:send_data_over_printf	1
-../Core/Src/bms.c:117:6:send_data_over_USB	2
+../Core/Src/bms.c:33:6:DMA_Callback	1
+../Core/Src/bms.c:43:6:tick_mainboard_timers	1
+../Core/Src/bms.c:49:6:bms_mainboard_loop	1
+../Core/Src/bms.c:56:6:adbms_owc_loop	1
+../Core/Src/bms.c:58:6:UpdateValues	1
+../Core/Src/bms.c:85:6:CheckFaults	10
+../Core/Src/bms.c:111:6:send_data_over_printf	1
+../Core/Src/bms.c:126:6:send_data_over_USB	2

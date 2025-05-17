@@ -14,6 +14,8 @@ void CheckFaults();
 
 void adbms_owc_loop();
 
+void DMA_Callback();
+
 void send_data_over_printf();
 void send_data_over_USB();
 

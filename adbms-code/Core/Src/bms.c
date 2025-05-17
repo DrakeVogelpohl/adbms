@@ -29,9 +29,15 @@ void bms_mainbaord_setup(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csb_pinBank, uin
 	mainboard.start_time = HAL_GetTick();
 }
 
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) 
+int counter;
+void DMA_Callback()
 {
-  ADBMS_DMA_Complete(&mainboard.adbms); 
+	counter += 1;
+
+//	for(uint8_t c = 0; c < DATABUF_LEN; c++){
+//		printf("Byte%d: 0x%02x\n", c, mainboard.adbms.ICs.spi_rx_dataBuf[c]);
+//	}
+	ADBMS_DMA_Complete(&mainboard.adbms);
 }
 
 void tick_mainboard_timers()
@@ -51,6 +57,9 @@ void adbms_owc_loop(){ UpdateOWCFault(&mainboard.adbms); }
 
 void UpdateValues()
 {
+	printf("callback: %d\n", counter);
+    ADBMS_TransmitReceive_Reg_DMA(&mainboard.adbms.ICs);
+
 	// ADBMS values
 	// ADBMS_UpdateVoltages(&mainboard.adbms);
 	// ADBMS_UpdateTemps(&mainboard.adbms);

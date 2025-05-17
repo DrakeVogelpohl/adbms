@@ -61,8 +61,6 @@ CAN_HandleTypeDef hcan1;
 CAN_HandleTypeDef hcan2;
 
 SPI_HandleTypeDef hspi1;
-DMA_HandleTypeDef hdma_spi1_rx;
-DMA_HandleTypeDef hdma_spi1_tx;
 
 TIM_HandleTypeDef htim2;
 
@@ -72,7 +70,6 @@ TIM_HandleTypeDef htim2;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_CAN1_Init(void);
@@ -84,6 +81,10 @@ static void MX_SPI1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	DMA_Callback();
+}
 /* USER CODE END 0 */
 
 /**
@@ -115,7 +116,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_ADC1_Init();
   MX_TIM2_Init();
   MX_CAN1_Init();
@@ -129,10 +129,9 @@ int main(void)
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
 
   // init mainboard
-  bms_mainbaord_setup(&hspi1, GPIOA, GPIO_PIN_4, &hadc1, &hcan1, &hcan2);
-
   printf("Board Starting...\n");
 
+  bms_mainbaord_setup(&hspi1, GPIOA, GPIO_PIN_4, &hadc1, &hcan1, &hcan2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -410,25 +409,6 @@ static void MX_TIM2_Init(void)
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
-
-}
-
-/**
-  * Enable DMA controller clock
-  */
-static void MX_DMA_Init(void)
-{
-
-  /* DMA controller clock enable */
-  __HAL_RCC_DMA2_CLK_ENABLE();
-
-  /* DMA interrupt init */
-  /* DMA2_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
-  /* DMA2_Stream3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
 
 }
 

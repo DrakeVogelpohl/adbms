@@ -51,8 +51,8 @@ void ADBMS_Interface_Initialize(adbms_ *adbms, SPI_HandleTypeDef *hspi, GPIO_Typ
     HAL_Delay(8); // ADCs are updated at their conversion rate of 1ms
 
     ADBMS_Pack_CMD(adbms->vregs[adbms->vreg_index], adbms->ICs.spi_tx_dataBuf);
+    ADBMS_WakeUP_ICs_Polling();
     ADBMS_TransmitReceive_Reg_DMA(&adbms->ICs);
-
 }
 
 void UpdateADInternalFault(adbms_ *adbms)
@@ -216,20 +216,22 @@ void UpdateADInternalFault(adbms_ *adbms)
 
 void ADBMS_DMA_Complete(adbms_ *adbms)
 {
+    HAL_GPIO_WritePin(adbms->ICs.csb_pinBank, adbms->ICs.csb_pin, GPIO_PIN_SET);
+
     // Start new Transmit Receive DMA
-    ADBMS_TransmitReceive_Reg_DMA(&adbms->ICs);
+//    ADBMS_TransmitReceive_Reg_DMA(&adbms->ICs);
 
     // Fill new Tx buf for next DMA
-    adbms->vreg_index += 1;
-    if(adbms->vreg_index >= NUM_VREG_GRPS_READ) adbms->vreg_index = 0;
+//    adbms->vreg_index += 1;
+//    if(adbms->vreg_index >= NUM_VREG_GRPS_READ) adbms->vreg_index = 0;
 
-    ADBMS_Pack_CMD(adbms->vregs[adbms->vreg_index], adbms->ICs.spi_tx_dataBuf);
-
-    // Process Rx data
-    bool pec = ADBMS_Process_Read_Data_RegGrp(adbms->ICs.spi_rx_dataBuf, adbms->ICs.cell);
-    adbms->total_pec_failures += pec;
-    adbms->voltage_pec_failure = pec;
-    if(!pec) ADBMS_CalculateValue_Grp_Voltages(adbms);
+//    ADBMS_Pack_CMD(adbms->vregs[adbms->vreg_index], adbms->ICs.spi_tx_dataBuf);
+//
+//    // Process Rx data
+//    bool pec = ADBMS_Process_Read_Data_RegGrp(adbms->ICs.spi_rx_dataBuf, adbms->ICs.cell);
+//    adbms->total_pec_failures += pec;
+//    adbms->voltage_pec_failure = pec;
+//    if(!pec) ADBMS_CalculateValue_Grp_Voltages(adbms);
 }
 
 void ADBMS_CalculateValue_Grp_Voltages(adbms_ *adbms)
@@ -252,8 +254,9 @@ void ADBMS_CalculateValue_Grp_Voltages(adbms_ *adbms)
     
     for (uint8_t cic = 0; cic < NUM_CHIPS; cic++)
     {
-        uint8_t creg_grp = adbms->vreg_index - 1;   // -1 because already increameted for next DMA
-        if(creg_grp < 0) creg_grp = NUM_VREG_GRPS_READ;
+    	uint8_t creg_grp = 0;
+//        uint8_t creg_grp = adbms->vreg_index - 1;   // -1 because already increameted for next DMA
+//        if(creg_grp < 0) creg_grp = NUM_VREG_GRPS_READ;
 
         for (uint8_t cbyte = 0; cbyte < DATA_LEN; cbyte+=2)
         {
@@ -267,7 +270,7 @@ void ADBMS_CalculateValue_Grp_Voltages(adbms_ *adbms)
 
 void ADBMS_Update_Voltages(adbms_ *adbms)
 {
-    
+
 }
 
 void cellBalanceOn(adbms_ *adbms)
