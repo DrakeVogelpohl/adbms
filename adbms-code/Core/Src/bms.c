@@ -33,11 +33,18 @@ int counter;
 void DMA_Callback()
 {
 	counter += 1;
-
+	mainboard.adbms.dma_data_ready = 1;
 //	for(uint8_t c = 0; c < DATABUF_LEN; c++){
 //		printf("Byte%d: 0x%02x\n", c, mainboard.adbms.ICs.spi_rx_dataBuf[c]);
 //	}
-	ADBMS_DMA_Complete(&mainboard.adbms);
+}
+
+void check_DMA()
+{
+//	printf("callback: %d\n", counter);
+	HAL_Delay(1);
+	if(mainboard.adbms.dma_data_ready) ADBMS_DMA_Complete(&mainboard.adbms);
+//	HAL_Delay(1);
 }
 
 void tick_mainboard_timers()
@@ -58,7 +65,7 @@ void adbms_owc_loop(){ UpdateOWCFault(&mainboard.adbms); }
 void UpdateValues()
 {
 	printf("callback: %d\n", counter);
-    ADBMS_TransmitReceive_Reg_DMA(&mainboard.adbms.ICs);
+//    ADBMS_TransmitReceive_Reg_DMA(&mainboard.adbms.ICs);
 
 	// ADBMS values
 	// ADBMS_UpdateVoltages(&mainboard.adbms);

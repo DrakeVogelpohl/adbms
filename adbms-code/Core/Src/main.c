@@ -138,6 +138,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    check_DMA();
     tick_mainboard_timers();
     
     /* USER CODE END WHILE */

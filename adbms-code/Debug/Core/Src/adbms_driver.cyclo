@@ -16,4 +16,4 @@
 ../Core/Src/adbms_driver.c:297:6:ADBMS_Write_CMD_Polling	1
 ../Core/Src/adbms_driver.c:317:6:ADBMS_Write_Data_RegGrp_Polling	1
 ../Core/Src/adbms_driver.c:350:6:ADBMS_Read_Data_RegGrp_Polling	1
-../Core/Src/adbms_driver.c:388:6:ADBMS_TransmitReceive_Reg_DMA	1
+../Core/Src/adbms_driver.c:388:6:ADBMS_TransmitReceive_Reg_DMA	2

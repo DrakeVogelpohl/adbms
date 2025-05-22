@@ -1,9 +1,10 @@
 ../Core/Src/bms.c:5:6:bms_mainbaord_setup	1
 ../Core/Src/bms.c:33:6:DMA_Callback	1
-../Core/Src/bms.c:43:6:tick_mainboard_timers	1
-../Core/Src/bms.c:49:6:bms_mainboard_loop	1
-../Core/Src/bms.c:56:6:adbms_owc_loop	1
-../Core/Src/bms.c:58:6:UpdateValues	1
-../Core/Src/bms.c:85:6:CheckFaults	10
-../Core/Src/bms.c:111:6:send_data_over_printf	1
-../Core/Src/bms.c:126:6:send_data_over_USB	2
+../Core/Src/bms.c:42:6:check_DMA	2
+../Core/Src/bms.c:50:6:tick_mainboard_timers	1
+../Core/Src/bms.c:56:6:bms_mainboard_loop	1
+../Core/Src/bms.c:63:6:adbms_owc_loop	1
+../Core/Src/bms.c:65:6:UpdateValues	1
+../Core/Src/bms.c:92:6:CheckFaults	10
+../Core/Src/bms.c:118:6:send_data_over_printf	1
+../Core/Src/bms.c:133:6:send_data_over_USB	2

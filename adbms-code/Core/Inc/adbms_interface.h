@@ -15,6 +15,8 @@ typedef struct
 {
     adbms6830_ICs ICs;
 
+    bool dma_data_ready;
+
     uint16_t vregs[NUM_VREG_GRPS_READ];
     uint8_t vreg_index;
     uint16_t tregs[AUX_REG_GRP];

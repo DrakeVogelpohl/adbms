@@ -216,10 +216,11 @@ void UpdateADInternalFault(adbms_ *adbms)
 
 void ADBMS_DMA_Complete(adbms_ *adbms)
 {
+    adbms->dma_data_ready = 0;
     HAL_GPIO_WritePin(adbms->ICs.csb_pinBank, adbms->ICs.csb_pin, GPIO_PIN_SET);
 
     // Start new Transmit Receive DMA
-//    ADBMS_TransmitReceive_Reg_DMA(&adbms->ICs);
+   ADBMS_TransmitReceive_Reg_DMA(&adbms->ICs);
 
     // Fill new Tx buf for next DMA
 //    adbms->vreg_index += 1;

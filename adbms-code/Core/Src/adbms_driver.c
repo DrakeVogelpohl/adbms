@@ -389,7 +389,10 @@ bool ADBMS_TransmitReceive_Reg_DMA(adbms6830_ICs *ICs)
 {
 	HAL_GPIO_WritePin(ICs->csb_pinBank, ICs->csb_pin, GPIO_PIN_RESET);
     bool DMA_Status = HAL_SPI_TransmitReceive_IT(ICs->hspi, ICs->spi_tx_dataBuf, ICs->spi_rx_dataBuf, DATABUF_LEN) == HAL_OK;
-    // if(!DMA_Status) HAL_GPIO_WritePin(ICs->csb_pinBank, ICs->csb_pin, GPIO_PIN_SET);
+    if(!DMA_Status){
+    	printf("\n\nDMA BAD :(\n\n");
+    	HAL_GPIO_WritePin(ICs->csb_pinBank, ICs->csb_pin, GPIO_PIN_SET);
+    }
 
     // Healthy is high
     return DMA_Status;
